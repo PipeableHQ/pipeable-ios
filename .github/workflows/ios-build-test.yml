@@ -33,7 +33,7 @@ jobs:
         run: |
           set -o pipefail
           xcodebuild -project Pipeable.xcodeproj \
-                     -scheme PipeableTests \
+                     -scheme Pipeable \
                      -sdk iphonesimulator \
                      -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.2' \
                      test | xcpretty
