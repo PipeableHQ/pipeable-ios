@@ -28,6 +28,6 @@ jobs:
           xcodebuild -project "Pipeable.xcodeproj" \
                      -scheme Pipeable \
                      -sdk iphonesimulator \
-                     -destination 'platform=iOS Simulator,name=iPhone 14 Pro,OS=latest' \
+                     -destination 'platform=iOS Simulator,name=Any iOS Simulator Device' \
                      clean test | xcpretty
 
