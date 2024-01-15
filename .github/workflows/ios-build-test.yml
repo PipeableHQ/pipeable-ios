@@ -28,6 +28,5 @@ jobs:
           xcodebuild -project "Pipeable.xcodeproj" \
                      -scheme Pipeable \
                      -sdk iphonesimulator \
-                     -destination 'platform=iOS Simulator' \
                      clean test | xcpretty
 
