@@ -17,6 +17,12 @@ jobs:
       - name: checkout repository
         uses: actions/checkout@v3
 
+      - name: Set up Xcode
+        uses: actions/setup-xcode@v2
+        with:
+          xcode-version: 'latest'
+
+
       - name: Install dependencies
         run: |
           gem install xcpretty
