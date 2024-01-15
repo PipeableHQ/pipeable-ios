@@ -8,15 +8,6 @@
       <BuildActionEntries>
          <BuildActionEntry
             buildForTesting = "YES"
-            buildForRunning = "NO"
-            buildForProfiling = "NO"
-            buildForArchiving = "NO"
-            buildForAnalyzing = "NO">
-            <AutocreatedTestPlanReference>
-            </AutocreatedTestPlanReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
             buildForRunning = "YES"
             buildForProfiling = "YES"
             buildForArchiving = "YES"
@@ -28,6 +19,8 @@
                BlueprintName = "Pipeable"
                ReferencedContainer = "container:Pipeable.xcodeproj">
             </BuildableReference>
+            <AutocreatedTestPlanReference>
+            </AutocreatedTestPlanReference>
          </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
