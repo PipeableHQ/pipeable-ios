@@ -22,10 +22,6 @@ jobs:
           gem install xcpretty
 
 
-      # - name: List available simulators
-      #   run: xcrun simctl list devices available
-
-
       - name: Build and Test
         run: |
           set -o pipefail
