@@ -27,6 +27,6 @@ jobs:
           set -o pipefail
           xcodebuild -scheme Pipeable \
                      -sdk iphonesimulator \
-                     -destination 'platform=iOS Simulator,name=iPhone 14 Pro,OS=16.2' \
+                     -destination 'platform=iOS Simulator,name=iPhone 12 Pro,OS=16.2' \
                      clean build test | xcpretty
 
