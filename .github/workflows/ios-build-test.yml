@@ -22,8 +22,8 @@ jobs:
           gem install xcpretty
 
 
-      - name: List available simulators
-        run: xcrun simctl list devices available
+      # - name: List available simulators
+      #   run: xcrun simctl list devices available
 
 
       - name: Build and Test
@@ -31,6 +31,6 @@ jobs:
           set -o pipefail
           xcodebuild -scheme Pipeable \
                      -sdk iphonesimulator \
-                     -destination generic/platform=iOS \
+                     -destination 'platform=iOS Simulator,name=iPhone 14 Pro,OS=16.2' \
                      clean build test | xcpretty
 
