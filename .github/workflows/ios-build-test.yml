@@ -21,8 +21,7 @@ jobs:
       - name: Build and Test
         run: |
           set -o pipefail
-          xcodebuild -workspace project.xcworkspace \
-                     -scheme YourScheme \
+          xcodebuild -scheme Pipeable \
                      -sdk iphonesimulator \
                      -destination 'platform=iOS Simulator,name=iPhone 15,OS=17.1' \
                      clean build test | xcpretty
