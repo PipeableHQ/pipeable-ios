@@ -1,78 +1,77 @@
-name: iOS Build and test
+name: iOS Build and Test
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
+
   pull_request:
 
 jobs:
-  build:
-    runs-on: macos-latest
-    strategy:
-      matrix:
-        destination: ['name="iPhone 14 Pro",OS=latest']
+  build-and-test:
+    runs-on: macos-12
 
     steps:
-    - uses: actions/checkout@v2
+      - name: Set Xcode 14
+        run: |
+          sudo xcode-select -switch /Applications/Xcode_14.1.app
 
-    - name: Swift Lint
-      run: swiftlint
+      - name: checkout repository
+        uses: actions/checkout@v3
 
-    - name: Run Test
-      run: |
-        set -o pipefail
-        xcodebuild -scheme Pipeable -derivedDataPath Build/ -destination ${{ matrix.destination }} -configuration Debug ONLY_ACTIVE_ARCH=NO ENABLE_TESTABILITY=YES -enableCodeCoverage YES clean build test | xcpretty -c;
+      - name: Install dependencies
+        run: |
+          gem install xcpretty
 
-    # - name: Code Coverage Report
-    #   working-directory: MixpanelDemo/build/Logs/Test
-    #   run: |
-    #     xcrun xccov view --report --files-for-target Mixpanel.framework  *.xcresult
-    #     xcrun xccov view --report --only-targets *.xcresult
+      - name: List available simulators
+        run: xcrun simctl list devices available
 
+      - name: List destination
+        run: xcodebuild -showdestinations -project Pipeable.xcodeproj -scheme Pipeable
 
+      - name: Build
+        run: |
+          set -o pipefail
+          xcodebuild build \
+                     -scheme Pipeable \
+                     -destination 'platform=iOS Simulator,name=Any iOS Simulator Device' | xcpretty
 
-# name: iOS Build and Test
+      - name: Build and Test
+        run: |
+          set -o pipefail
+          xcodebuild -scheme Pipeable \
+                     -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.2' \
+                     test | xcpretty
+
+# name: iOS Build and test
 
 # on:
 #   push:
-#     branches:
-#       - main
-
+#     branches: [ main ]
 #   pull_request:
 
 # jobs:
-#   build-and-test:
-#     runs-on: macos-12
+#   build:
+#     runs-on: macos-latest
+#     strategy:
+#       matrix:
+#         destination: ['name="iPhone 14 Pro",OS=latest']
 
 #     steps:
-#       - name: Set Xcode 14
-#         run: |
-#           sudo xcode-select -switch /Applications/Xcode_14.1.app
+#     - uses: actions/checkout@v2
 
-#       - name: checkout repository
-#         uses: actions/checkout@v3
+#     - name: Swift Lint
+#       run: swiftlint
 
-#       - name: Install dependencies
-#         run: |
-#           gem install xcpretty
+#     - name: Run Test
+#       run: |
+#         set -o pipefail
+#         xcodebuild -scheme Pipeable -derivedDataPath Build/ -destination ${{ matrix.destination }} -configuration Debug ONLY_ACTIVE_ARCH=NO ENABLE_TESTABILITY=YES -enableCodeCoverage YES clean build test | xcpretty -c;
 
-#       - name: List available simulators
-#         run: xcrun simctl list devices available
+#     # - name: Code Coverage Report
+#     #   working-directory: MixpanelDemo/build/Logs/Test
+#     #   run: |
+#     #     xcrun xccov view --report --files-for-target Mixpanel.framework  *.xcresult
+#     #     xcrun xccov view --report --only-targets *.xcresult
 
-#       - name: List destination
-#         run: xcodebuild -showdestinations -project Pipeable.xcodeproj -scheme Pipeable
-
-#       - name: Build
-#         run: |
-#           set -o pipefail
-#           xcodebuild build \
-#                      -scheme Pipeable \
-#                      -destination 'platform=iOS Simulator,name=Any iOS Simulator Device' | xcpretty
-
-#       - name: Build and Test
-#         run: |
-#           set -o pipefail
-#           xcodebuild -scheme Pipeable \
-#                      -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.2' \
-#                      test | xcpretty
 
