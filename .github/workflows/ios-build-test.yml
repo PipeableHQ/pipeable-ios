@@ -23,19 +23,6 @@ jobs:
         run: |
           gem install xcpretty
 
-      - name: List available simulators
-        run: xcrun simctl list devices available
-
-      - name: List destination
-        run: xcodebuild -showdestinations -project Pipeable.xcodeproj -scheme Pipeable
-
-      - name: Build
-        run: |
-          set -o pipefail
-          xcodebuild build \
-                     -scheme Pipeable \
-                     -destination 'platform=iOS Simulator,name=Any iOS Simulator Device' | xcpretty
-
       - name: Build and Test
         run: |
           set -o pipefail
