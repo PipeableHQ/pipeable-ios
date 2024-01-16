@@ -19,6 +19,9 @@ jobs:
       - name: checkout repository
         uses: actions/checkout@v3
 
+      - name: Swift Lint
+        run: swiftlint --strict
+
       - name: Install dependencies
         run: |
           gem install xcpretty
@@ -29,36 +32,4 @@ jobs:
           xcodebuild -scheme Pipeable \
                      -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.1' \
                      test | xcpretty
-
-# name: iOS Build and test
-
-# on:
-#   push:
-#     branches: [ main ]
-#   pull_request:
-
-# jobs:
-#   build:
-#     runs-on: macos-latest
-#     strategy:
-#       matrix:
-#         destination: ['name="iPhone 14 Pro",OS=latest']
-
-#     steps:
-#     - uses: actions/checkout@v2
-
-#     - name: Swift Lint
-#       run: swiftlint
-
-#     - name: Run Test
-#       run: |
-#         set -o pipefail
-#         xcodebuild -scheme Pipeable -derivedDataPath Build/ -destination ${{ matrix.destination }} -configuration Debug ONLY_ACTIVE_ARCH=NO ENABLE_TESTABILITY=YES -enableCodeCoverage YES clean build test | xcpretty -c;
-
-#     # - name: Code Coverage Report
-#     #   working-directory: MixpanelDemo/build/Logs/Test
-#     #   run: |
-#     #     xcrun xccov view --report --files-for-target Mixpanel.framework  *.xcresult
-#     #     xcrun xccov view --report --only-targets *.xcresult
-
 
