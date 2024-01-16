@@ -1,0 +1,64 @@
+name: iOS Build and Test
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: macos-12
+
+    steps:
+      - name: Set Xcode 14
+        run: |
+          sudo xcode-select -switch /Applications/Xcode_14.1.app
+
+      - name: checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: |
+          gem install xcpretty
+
+      - name: Build and Test
+        run: |
+          set -o pipefail
+          xcodebuild -scheme Pipeable \
+                     -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.1' \
+                     test | xcpretty
+
+# name: iOS Build and test
+
+# on:
+#   push:
+#     branches: [ main ]
+#   pull_request:
+
+# jobs:
+#   build:
+#     runs-on: macos-latest
+#     strategy:
+#       matrix:
+#         destination: ['name="iPhone 14 Pro",OS=latest']
+
+#     steps:
+#     - uses: actions/checkout@v2
+
+#     - name: Swift Lint
+#       run: swiftlint
+
+#     - name: Run Test
+#       run: |
+#         set -o pipefail
+#         xcodebuild -scheme Pipeable -derivedDataPath Build/ -destination ${{ matrix.destination }} -configuration Debug ONLY_ACTIVE_ARCH=NO ENABLE_TESTABILITY=YES -enableCodeCoverage YES clean build test | xcpretty -c;
+
+#     # - name: Code Coverage Report
+#     #   working-directory: MixpanelDemo/build/Logs/Test
+#     #   run: |
+#     #     xcrun xccov view --report --files-for-target Mixpanel.framework  *.xcresult
+#     #     xcrun xccov view --report --only-targets *.xcresult
+
+

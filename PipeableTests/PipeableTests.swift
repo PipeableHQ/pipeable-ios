@@ -1,9 +1,7 @@
 //
 //  PipeableTests.swift
 //  PipeableTests
-//
-//  Created by Petar Dobrev on 1/10/24.
-//
+
 
 import XCTest
 @testable import Pipeable

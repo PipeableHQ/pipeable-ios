@@ -1,9 +1,7 @@
 //
 //  Pipeable.h
 //  Pipeable
-//
-//  Created by Petar Dobrev on 1/10/24.
-//
+
 
 #import <Foundation/Foundation.h>
 
