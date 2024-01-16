@@ -7,80 +7,80 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A451BCE72B4EFE1600A93D09 /* Pipeable.docc in Sources */ = {isa = PBXBuildFile; fileRef = A451BCE62B4EFE1600A93D09 /* Pipeable.docc */; };
-		A451BCED2B4EFE1600A93D09 /* Pipeable.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A451BCE22B4EFE1600A93D09 /* Pipeable.framework */; };
-		A451BCF22B4EFE1600A93D09 /* PipeableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A451BCF12B4EFE1600A93D09 /* PipeableTests.swift */; };
-		A451BCF32B4EFE1600A93D09 /* Pipeable.h in Headers */ = {isa = PBXBuildFile; fileRef = A451BCE52B4EFE1600A93D09 /* Pipeable.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A4A7A9262B56BD7500982E63 /* Pipeable.docc in Sources */ = {isa = PBXBuildFile; fileRef = A4A7A9252B56BD7500982E63 /* Pipeable.docc */; };
+		A4A7A92C2B56BD7500982E63 /* Pipeable.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4A7A9212B56BD7500982E63 /* Pipeable.framework */; };
+		A4A7A9312B56BD7500982E63 /* PipeableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4A7A9302B56BD7500982E63 /* PipeableTests.swift */; };
+		A4A7A9322B56BD7500982E63 /* Pipeable.h in Headers */ = {isa = PBXBuildFile; fileRef = A4A7A9242B56BD7500982E63 /* Pipeable.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		A451BCEE2B4EFE1600A93D09 /* PBXContainerItemProxy */ = {
+		A4A7A92D2B56BD7500982E63 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = A451BCD92B4EFE1600A93D09 /* Project object */;
+			containerPortal = A4A7A9182B56BD7500982E63 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = A451BCE12B4EFE1600A93D09;
+			remoteGlobalIDString = A4A7A9202B56BD7500982E63;
 			remoteInfo = Pipeable;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		A451BCE22B4EFE1600A93D09 /* Pipeable.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pipeable.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		A451BCE52B4EFE1600A93D09 /* Pipeable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Pipeable.h; sourceTree = "<group>"; };
-		A451BCE62B4EFE1600A93D09 /* Pipeable.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Pipeable.docc; sourceTree = "<group>"; };
-		A451BCEC2B4EFE1600A93D09 /* PipeableTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PipeableTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		A451BCF12B4EFE1600A93D09 /* PipeableTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PipeableTests.swift; sourceTree = "<group>"; };
+		A4A7A9212B56BD7500982E63 /* Pipeable.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pipeable.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A4A7A9242B56BD7500982E63 /* Pipeable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Pipeable.h; sourceTree = "<group>"; };
+		A4A7A9252B56BD7500982E63 /* Pipeable.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Pipeable.docc; sourceTree = "<group>"; };
+		A4A7A92B2B56BD7500982E63 /* PipeableTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PipeableTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A4A7A9302B56BD7500982E63 /* PipeableTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PipeableTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		A451BCDF2B4EFE1600A93D09 /* Frameworks */ = {
+		A4A7A91E2B56BD7500982E63 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		A451BCE92B4EFE1600A93D09 /* Frameworks */ = {
+		A4A7A9282B56BD7500982E63 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A451BCED2B4EFE1600A93D09 /* Pipeable.framework in Frameworks */,
+				A4A7A92C2B56BD7500982E63 /* Pipeable.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		A451BCD82B4EFE1600A93D09 = {
+		A4A7A9172B56BD7500982E63 = {
 			isa = PBXGroup;
 			children = (
-				A451BCE42B4EFE1600A93D09 /* Pipeable */,
-				A451BCF02B4EFE1600A93D09 /* PipeableTests */,
-				A451BCE32B4EFE1600A93D09 /* Products */,
+				A4A7A9232B56BD7500982E63 /* Pipeable */,
+				A4A7A92F2B56BD7500982E63 /* PipeableTests */,
+				A4A7A9222B56BD7500982E63 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		A451BCE32B4EFE1600A93D09 /* Products */ = {
+		A4A7A9222B56BD7500982E63 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				A451BCE22B4EFE1600A93D09 /* Pipeable.framework */,
-				A451BCEC2B4EFE1600A93D09 /* PipeableTests.xctest */,
+				A4A7A9212B56BD7500982E63 /* Pipeable.framework */,
+				A4A7A92B2B56BD7500982E63 /* PipeableTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		A451BCE42B4EFE1600A93D09 /* Pipeable */ = {
+		A4A7A9232B56BD7500982E63 /* Pipeable */ = {
 			isa = PBXGroup;
 			children = (
-				A451BCE52B4EFE1600A93D09 /* Pipeable.h */,
-				A451BCE62B4EFE1600A93D09 /* Pipeable.docc */,
+				A4A7A9242B56BD7500982E63 /* Pipeable.h */,
+				A4A7A9252B56BD7500982E63 /* Pipeable.docc */,
 			);
 			path = Pipeable;
 			sourceTree = "<group>";
 		};
-		A451BCF02B4EFE1600A93D09 /* PipeableTests */ = {
+		A4A7A92F2B56BD7500982E63 /* PipeableTests */ = {
 			isa = PBXGroup;
 			children = (
-				A451BCF12B4EFE1600A93D09 /* PipeableTests.swift */,
+				A4A7A9302B56BD7500982E63 /* PipeableTests.swift */,
 			);
 			path = PipeableTests;
 			sourceTree = "<group>";
@@ -88,25 +88,25 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		A451BCDD2B4EFE1600A93D09 /* Headers */ = {
+		A4A7A91C2B56BD7500982E63 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A451BCF32B4EFE1600A93D09 /* Pipeable.h in Headers */,
+				A4A7A9322B56BD7500982E63 /* Pipeable.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		A451BCE12B4EFE1600A93D09 /* Pipeable */ = {
+		A4A7A9202B56BD7500982E63 /* Pipeable */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = A451BCF62B4EFE1600A93D09 /* Build configuration list for PBXNativeTarget "Pipeable" */;
+			buildConfigurationList = A4A7A9352B56BD7500982E63 /* Build configuration list for PBXNativeTarget "Pipeable" */;
 			buildPhases = (
-				A451BCDD2B4EFE1600A93D09 /* Headers */,
-				A451BCDE2B4EFE1600A93D09 /* Sources */,
-				A451BCDF2B4EFE1600A93D09 /* Frameworks */,
-				A451BCE02B4EFE1600A93D09 /* Resources */,
+				A4A7A91C2B56BD7500982E63 /* Headers */,
+				A4A7A91D2B56BD7500982E63 /* Sources */,
+				A4A7A91E2B56BD7500982E63 /* Frameworks */,
+				A4A7A91F2B56BD7500982E63 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -114,46 +114,46 @@
 			);
 			name = Pipeable;
 			productName = Pipeable;
-			productReference = A451BCE22B4EFE1600A93D09 /* Pipeable.framework */;
+			productReference = A4A7A9212B56BD7500982E63 /* Pipeable.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		A451BCEB2B4EFE1600A93D09 /* PipeableTests */ = {
+		A4A7A92A2B56BD7500982E63 /* PipeableTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = A451BCF92B4EFE1600A93D09 /* Build configuration list for PBXNativeTarget "PipeableTests" */;
+			buildConfigurationList = A4A7A9382B56BD7500982E63 /* Build configuration list for PBXNativeTarget "PipeableTests" */;
 			buildPhases = (
-				A451BCE82B4EFE1600A93D09 /* Sources */,
-				A451BCE92B4EFE1600A93D09 /* Frameworks */,
-				A451BCEA2B4EFE1600A93D09 /* Resources */,
+				A4A7A9272B56BD7500982E63 /* Sources */,
+				A4A7A9282B56BD7500982E63 /* Frameworks */,
+				A4A7A9292B56BD7500982E63 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				A451BCEF2B4EFE1600A93D09 /* PBXTargetDependency */,
+				A4A7A92E2B56BD7500982E63 /* PBXTargetDependency */,
 			);
 			name = PipeableTests;
 			productName = PipeableTests;
-			productReference = A451BCEC2B4EFE1600A93D09 /* PipeableTests.xctest */;
+			productReference = A4A7A92B2B56BD7500982E63 /* PipeableTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		A451BCD92B4EFE1600A93D09 /* Project object */ = {
+		A4A7A9182B56BD7500982E63 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1520;
 				LastUpgradeCheck = 1520;
 				TargetAttributes = {
-					A451BCE12B4EFE1600A93D09 = {
+					A4A7A9202B56BD7500982E63 = {
 						CreatedOnToolsVersion = 15.2;
 					};
-					A451BCEB2B4EFE1600A93D09 = {
+					A4A7A92A2B56BD7500982E63 = {
 						CreatedOnToolsVersion = 15.2;
 					};
 				};
 			};
-			buildConfigurationList = A451BCDC2B4EFE1600A93D09 /* Build configuration list for PBXProject "Pipeable" */;
+			buildConfigurationList = A4A7A91B2B56BD7500982E63 /* Build configuration list for PBXProject "Pipeable" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -161,26 +161,26 @@
 				en,
 				Base,
 			);
-			mainGroup = A451BCD82B4EFE1600A93D09;
-			productRefGroup = A451BCE32B4EFE1600A93D09 /* Products */;
+			mainGroup = A4A7A9172B56BD7500982E63;
+			productRefGroup = A4A7A9222B56BD7500982E63 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				A451BCE12B4EFE1600A93D09 /* Pipeable */,
-				A451BCEB2B4EFE1600A93D09 /* PipeableTests */,
+				A4A7A9202B56BD7500982E63 /* Pipeable */,
+				A4A7A92A2B56BD7500982E63 /* PipeableTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		A451BCE02B4EFE1600A93D09 /* Resources */ = {
+		A4A7A91F2B56BD7500982E63 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		A451BCEA2B4EFE1600A93D09 /* Resources */ = {
+		A4A7A9292B56BD7500982E63 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -190,34 +190,34 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		A451BCDE2B4EFE1600A93D09 /* Sources */ = {
+		A4A7A91D2B56BD7500982E63 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A451BCE72B4EFE1600A93D09 /* Pipeable.docc in Sources */,
+				A4A7A9262B56BD7500982E63 /* Pipeable.docc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		A451BCE82B4EFE1600A93D09 /* Sources */ = {
+		A4A7A9272B56BD7500982E63 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A451BCF22B4EFE1600A93D09 /* PipeableTests.swift in Sources */,
+				A4A7A9312B56BD7500982E63 /* PipeableTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		A451BCEF2B4EFE1600A93D09 /* PBXTargetDependency */ = {
+		A4A7A92E2B56BD7500982E63 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = A451BCE12B4EFE1600A93D09 /* Pipeable */;
-			targetProxy = A451BCEE2B4EFE1600A93D09 /* PBXContainerItemProxy */;
+			target = A4A7A9202B56BD7500982E63 /* Pipeable */;
+			targetProxy = A4A7A92D2B56BD7500982E63 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		A451BCF42B4EFE1600A93D09 /* Debug */ = {
+		A4A7A9332B56BD7500982E63 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -283,7 +283,7 @@
 			};
 			name = Debug;
 		};
-		A451BCF52B4EFE1600A93D09 /* Release */ = {
+		A4A7A9342B56BD7500982E63 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -342,7 +342,7 @@
 			};
 			name = Release;
 		};
-		A451BCF72B4EFE1600A93D09 /* Debug */ = {
+		A4A7A9362B56BD7500982E63 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -373,7 +373,7 @@
 			};
 			name = Debug;
 		};
-		A451BCF82B4EFE1600A93D09 /* Release */ = {
+		A4A7A9372B56BD7500982E63 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -404,7 +404,7 @@
 			};
 			name = Release;
 		};
-		A451BCFA2B4EFE1600A93D09 /* Debug */ = {
+		A4A7A9392B56BD7500982E63 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -420,7 +420,7 @@
 			};
 			name = Debug;
 		};
-		A451BCFB2B4EFE1600A93D09 /* Release */ = {
+		A4A7A93A2B56BD7500982E63 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -439,34 +439,34 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		A451BCDC2B4EFE1600A93D09 /* Build configuration list for PBXProject "Pipeable" */ = {
+		A4A7A91B2B56BD7500982E63 /* Build configuration list for PBXProject "Pipeable" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				A451BCF42B4EFE1600A93D09 /* Debug */,
-				A451BCF52B4EFE1600A93D09 /* Release */,
+				A4A7A9332B56BD7500982E63 /* Debug */,
+				A4A7A9342B56BD7500982E63 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		A451BCF62B4EFE1600A93D09 /* Build configuration list for PBXNativeTarget "Pipeable" */ = {
+		A4A7A9352B56BD7500982E63 /* Build configuration list for PBXNativeTarget "Pipeable" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				A451BCF72B4EFE1600A93D09 /* Debug */,
-				A451BCF82B4EFE1600A93D09 /* Release */,
+				A4A7A9362B56BD7500982E63 /* Debug */,
+				A4A7A9372B56BD7500982E63 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		A451BCF92B4EFE1600A93D09 /* Build configuration list for PBXNativeTarget "PipeableTests" */ = {
+		A4A7A9382B56BD7500982E63 /* Build configuration list for PBXNativeTarget "PipeableTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				A451BCFA2B4EFE1600A93D09 /* Debug */,
-				A451BCFB2B4EFE1600A93D09 /* Release */,
+				A4A7A9392B56BD7500982E63 /* Debug */,
+				A4A7A93A2B56BD7500982E63 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = A451BCD92B4EFE1600A93D09 /* Project object */;
+	rootObject = A4A7A9182B56BD7500982E63 /* Project object */;
 }
