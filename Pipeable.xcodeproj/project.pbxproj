@@ -106,6 +106,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = A4A7A9352B56BD7500982E63 /* Build configuration list for PBXNativeTarget "Pipeable" */;
 			buildPhases = (
+				A45D76742B596CE20046DACF /* Linter */,
 				A4A7A91C2B56BD7500982E63 /* Headers */,
 				A4A7A91D2B56BD7500982E63 /* Sources */,
 				A4A7A91E2B56BD7500982E63 /* Frameworks */,
@@ -191,6 +192,28 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		A45D76742B596CE20046DACF /* Linter */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = Linter;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\nif which /opt/homebrew/bin/swiftlint >/dev/null; then\n    swiftlint\nelse\n    echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		A4A7A91D2B56BD7500982E63 /* Sources */ = {
