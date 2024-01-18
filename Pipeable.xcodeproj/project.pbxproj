@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A434C6162B5964B300B8011C /* Pipeable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A434C6152B5964B300B8011C /* Pipeable.swift */; };
 		A4A7A9262B56BD7500982E63 /* Pipeable.docc in Sources */ = {isa = PBXBuildFile; fileRef = A4A7A9252B56BD7500982E63 /* Pipeable.docc */; };
 		A4A7A92C2B56BD7500982E63 /* Pipeable.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4A7A9212B56BD7500982E63 /* Pipeable.framework */; };
 		A4A7A9312B56BD7500982E63 /* PipeableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4A7A9302B56BD7500982E63 /* PipeableTests.swift */; };
@@ -24,6 +25,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		A434C6152B5964B300B8011C /* Pipeable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pipeable.swift; sourceTree = "<group>"; };
+		A450D1BB2B59750800079EAF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		A4A7A9212B56BD7500982E63 /* Pipeable.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pipeable.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4A7A9242B56BD7500982E63 /* Pipeable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Pipeable.h; sourceTree = "<group>"; };
 		A4A7A9252B56BD7500982E63 /* Pipeable.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Pipeable.docc; sourceTree = "<group>"; };
@@ -71,7 +74,9 @@
 		A4A7A9232B56BD7500982E63 /* Pipeable */ = {
 			isa = PBXGroup;
 			children = (
+				A450D1BB2B59750800079EAF /* Info.plist */,
 				A4A7A9242B56BD7500982E63 /* Pipeable.h */,
+				A434C6152B5964B300B8011C /* Pipeable.swift */,
 				A4A7A9252B56BD7500982E63 /* Pipeable.docc */,
 			);
 			path = Pipeable;
@@ -103,6 +108,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = A4A7A9352B56BD7500982E63 /* Build configuration list for PBXNativeTarget "Pipeable" */;
 			buildPhases = (
+				A45D76742B596CE20046DACF /* Linter */,
 				A4A7A91C2B56BD7500982E63 /* Headers */,
 				A4A7A91D2B56BD7500982E63 /* Sources */,
 				A4A7A91E2B56BD7500982E63 /* Frameworks */,
@@ -189,12 +195,35 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		A45D76742B596CE20046DACF /* Linter */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = Linter;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/zsh;
+			shellScript = "if [[ \"$(uname -m)\" == arm64 ]]; then\n    export PATH=\"/opt/homebrew/bin:$PATH\"\nfi\n\nif which swiftlint > /dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		A4A7A91D2B56BD7500982E63 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				A4A7A9262B56BD7500982E63 /* Pipeable.docc in Sources */,
+				A434C6162B5964B300B8011C /* Pipeable.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -353,10 +382,13 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_MODULE_VERIFIER = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Pipeable/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -385,10 +417,13 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_MODULE_VERIFIER = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Pipeable/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -409,11 +444,12 @@
 		A4A7A9392B56BD7500982E63 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 34SLJ27NL6;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.pipeable.pipeable.PipeableTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -426,11 +462,12 @@
 		A4A7A93A2B56BD7500982E63 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 34SLJ27NL6;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.pipeable.pipeable.PipeableTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
