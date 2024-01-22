@@ -17,6 +17,7 @@ let package = Package(
         .target(
             name: "Pipeable",
             dependencies: [],
+            path: "Sources",
             exclude: ["Samples"] // Exclude the Samples directory
         ),
 
