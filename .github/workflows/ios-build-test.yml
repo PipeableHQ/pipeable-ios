@@ -52,7 +52,7 @@ jobs:
           sudo xcode-select -switch /Applications/Xcode_14.1.app
 
       - name: Swift Lint
-        run: swiftlint --strict
+        run: swiftlint --strict --config ../../.swiftlint.yml
 
       - name: Swift Format
         run: swiftformat .
