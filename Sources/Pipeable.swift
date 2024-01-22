@@ -4,7 +4,7 @@ import WebKit
 // swiftlint:disable type_body_length
 // swiftlint:disable file_length
 
-class PipeablePage {
+public class PipeablePage {
     var webView: WKWebView
     var frame: WKFrameInfo?
     private var delegate: Delegate?
@@ -141,7 +141,7 @@ class PipeablePage {
         }
     }
 
-    init(_ webView: WKWebView, _ frame: WKFrameInfo?) {
+    public init(_ webView: WKWebView, _ frame: WKFrameInfo?) {
         self.webView = webView
         self.frame = frame
 
@@ -161,7 +161,7 @@ class PipeablePage {
         }
     }
 
-    func goto(_ url: String) async throws {
+    public func goto(_ url: String) async throws {
         print("page goto \(url)")
 
         loadPageSignal.isPageLoaded = false
@@ -175,14 +175,14 @@ class PipeablePage {
         return try await waitForPageLoad()
     }
 
-    func reload() async throws {
+    public func reload() async throws {
         loadPageSignal.isPageLoaded = false
         await webView.reload()
         return try await waitForPageLoad()
     }
 
     // The async function you'll await
-    func waitForPageLoad() async throws {
+    public func waitForPageLoad() async throws {
         if frame != nil {
             // Iframes are already loaded, if we can address them.
             return
@@ -197,13 +197,13 @@ class PipeablePage {
         }
     }
 
-    func waitForURL(_ predicate: @escaping (String) -> Bool) async throws {
+    public func waitForURL(_ predicate: @escaping (String) -> Bool) async throws {
         try await withCheckedThrowingContinuation { continuation in
             self.loadPageSignal.addWaitForURL(predicate, continuation: continuation)
         }
     }
 
-    func querySelector(_ selector: String) async throws -> PipeableElement? {
+    public func querySelector(_ selector: String) async throws -> PipeableElement? {
         try await waitForPageLoad()
 
         let result = try await webView.callAsyncJavaScript(
@@ -223,7 +223,7 @@ class PipeablePage {
         return nil
     }
 
-    func querySelectorAll(_ selector: String) async throws -> [PipeableElement] {
+    public func querySelectorAll(_ selector: String) async throws -> [PipeableElement] {
         try await waitForPageLoad()
 
         let result = try await webView.callAsyncJavaScript(
@@ -246,7 +246,7 @@ class PipeablePage {
         return []
     }
 
-    func xpathSelector(_ xpath: String) async throws -> [PipeableElement] {
+    public func xpathSelector(_ xpath: String) async throws -> [PipeableElement] {
         try await waitForPageLoad()
 
         let result = try await webView.callAsyncJavaScript(
@@ -269,7 +269,7 @@ class PipeablePage {
         return []
     }
 
-    func waitForXPath(_ xpath: String, timeout: Int = 30000, visible _: Bool = false) async throws -> PipeableElement? {
+    public func waitForXPath(_ xpath: String, timeout: Int = 30000, visible _: Bool = false) async throws -> PipeableElement? {
         try await waitForPageLoad()
 
         print("Wait for XPath \(xpath) got past waitForPageLoad")
@@ -298,7 +298,7 @@ class PipeablePage {
         return nil
     }
 
-    func waitForSelector(_ selector: String, timeout: Int = 30000, visible: Bool = false) async throws -> PipeableElement? {
+    public func waitForSelector(_ selector: String, timeout: Int = 30000, visible: Bool = false) async throws -> PipeableElement? {
         try await waitForPageLoad()
 
         let result = try await webView.callAsyncJavaScript(
@@ -324,7 +324,7 @@ class PipeablePage {
         return nil
     }
 
-    func waitForXHR(_ url: String, timeout: Int = 30000) async throws -> XHRResult? {
+    public func waitForXHR(_ url: String, timeout: Int = 30000) async throws -> XHRResult? {
         try await waitForPageLoad()
 
         let result = try await webView.callAsyncJavaScript(
@@ -348,7 +348,7 @@ class PipeablePage {
         return xhrResult
     }
 
-    func evaluate(_ javascript: String) async throws -> String {
+    public func evaluate(_ javascript: String) async throws -> String {
         let result = try await webView.callAsyncJavaScript(
             javascript,
             arguments: [:],
@@ -365,7 +365,7 @@ class PipeablePage {
     }
 
     // TODO: Figure out error handling here.
-    func loadCookies(fromJSONString jsonString: String) {
+    public func loadCookies(fromJSONString jsonString: String) {
         guard let data = jsonString.data(using: .utf8) else {
             return
         }
@@ -393,7 +393,7 @@ class PipeablePage {
     }
 }
 
-struct XHRResult: Decodable {
+public struct XHRResult: Decodable {
     enum ResponseType: String, Decodable {
         case none = ""
         case text
@@ -419,7 +419,7 @@ enum PipeableError: Error {
     case unknownError
 }
 
-class PipeableElement {
+public class PipeableElement {
     var page: PipeablePage
     let elementId: String
 
