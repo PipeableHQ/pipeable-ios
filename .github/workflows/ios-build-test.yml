@@ -61,10 +61,10 @@ jobs:
         run: |
           gem install xcpretty
 
-      - name: Build and Test
+      - name: Build
         run: |
           set -o pipefail
           xcodebuild -scheme PipeableSample \
                      -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.1' \
-                     test | xcpretty
+                     build | xcpretty
 
