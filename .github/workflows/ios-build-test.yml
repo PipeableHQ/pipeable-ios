@@ -39,10 +39,11 @@ jobs:
   build-and-test-sample-app:
     runs-on: macos-12
 
-    steps:
-      - name: Switch to the samples app
-        run: cd Samples/PipeableSample/
+    defaults:
+      run:
+        working-directory: Samples/PipeableSample
 
+    steps:
       - name: Set Xcode 14
         run: |
           sudo xcode-select -switch /Applications/Xcode_14.1.app
