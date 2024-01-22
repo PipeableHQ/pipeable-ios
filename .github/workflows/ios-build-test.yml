@@ -8,10 +8,41 @@ on:
   pull_request:
 
 jobs:
-  build-and-test:
+  build-and-test-framework:
     runs-on: macos-12
 
     steps:
+      - name: Set Xcode 14
+        run: |
+          sudo xcode-select -switch /Applications/Xcode_14.1.app
+
+      - name: checkout repository
+        uses: actions/checkout@v3
+
+      - name: Swift Lint
+        run: swiftlint --strict
+
+      - name: Swift Format
+        run: swiftformat .
+
+      - name: Install dependencies
+        run: |
+          gem install xcpretty
+
+      - name: Build and Test
+        run: |
+          set -o pipefail
+          xcodebuild -scheme Pipeable \
+                     -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.1' \
+                     test | xcpretty
+
+  build-and-test-sample-app:
+    runs-on: macos-12
+
+    steps:
+      - name: Switch to the samples app
+        run: cd Samples/PipeableSample/
+
       - name: Set Xcode 14
         run: |
           sudo xcode-select -switch /Applications/Xcode_14.1.app
