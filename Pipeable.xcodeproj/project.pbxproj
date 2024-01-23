@@ -26,7 +26,7 @@
 
 /* Begin PBXFileReference section */
 		A434C6152B5964B300B8011C /* Pipeable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pipeable.swift; sourceTree = "<group>"; };
-		A450D1BB2B59750800079EAF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		A450D1BB2B59750800079EAF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A4A7A9212B56BD7500982E63 /* Pipeable.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pipeable.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4A7A9242B56BD7500982E63 /* Pipeable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Pipeable.h; sourceTree = "<group>"; };
 		A4A7A9252B56BD7500982E63 /* Pipeable.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Pipeable.docc; sourceTree = "<group>"; };
@@ -53,10 +53,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A44C786F2B5EC2E20002B655 /* Framework */ = {
+			isa = PBXGroup;
+			children = (
+				A4A7A9242B56BD7500982E63 /* Pipeable.h */,
+				A450D1BB2B59750800079EAF /* Info.plist */,
+			);
+			path = Framework;
+			sourceTree = "<group>";
+		};
 		A4A7A9172B56BD7500982E63 = {
 			isa = PBXGroup;
 			children = (
-				A4A7A9232B56BD7500982E63 /* Pipeable */,
+				A44C786F2B5EC2E20002B655 /* Framework */,
+				A4A7A9232B56BD7500982E63 /* Sources */,
 				A4A7A92F2B56BD7500982E63 /* PipeableTests */,
 				A4A7A9222B56BD7500982E63 /* Products */,
 			);
@@ -71,15 +81,13 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		A4A7A9232B56BD7500982E63 /* Pipeable */ = {
+		A4A7A9232B56BD7500982E63 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				A450D1BB2B59750800079EAF /* Info.plist */,
-				A4A7A9242B56BD7500982E63 /* Pipeable.h */,
 				A434C6152B5964B300B8011C /* Pipeable.swift */,
 				A4A7A9252B56BD7500982E63 /* Pipeable.docc */,
 			);
-			path = Pipeable;
+			path = Sources;
 			sourceTree = "<group>";
 		};
 		A4A7A92F2B56BD7500982E63 /* PipeableTests */ = {
@@ -385,7 +393,7 @@
 				ENABLE_MODULE_VERIFIER = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Pipeable/Info.plist;
+				INFOPLIST_FILE = Framework/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -422,7 +430,7 @@
 				ENABLE_MODULE_VERIFIER = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Pipeable/Info.plist;
+				INFOPLIST_FILE = Framework/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
