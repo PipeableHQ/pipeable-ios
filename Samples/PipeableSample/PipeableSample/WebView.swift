@@ -3,8 +3,6 @@ import Pipeable
 import SwiftUI
 import WebKit
 
-// swiftlint:disable file_length
-
 enum ResultStatus {
     case success
     case failure
