@@ -65,5 +65,5 @@ jobs:
         run: |
           xcodebuild -scheme PipeableSample \
                      -destination 'platform=iOS Simulator,name=iPhone 14,OS=17.2' \
-                     build
+                     build | xcpretty
 
