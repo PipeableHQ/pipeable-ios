@@ -103,47 +103,6 @@ struct WebViewWrapper: UIViewControllerRepresentable {
     }
 
     mutating func urlChanged(url: URL, webView: WKWebView) {
-        //        print("URL changed " + url.absoluteString)
-
-//        if (url.absoluteString.contains("redirect_if_logged_in") || url.absoluteString.contains("https://www.airbnb.com/oauth_login_with_redirect?")) {
-//            hasSeenRedirect = true
-//        }
-
-//        if (!hasBeenHandled && hasSeenRedirect && url.absoluteString == "https://www.airbnb.com/") {
-//
-//            // We can stop loading the page in the background, so we don't distract the user.
-//            webView.stopLoading()
-//            webView.loadHTMLString("<html><body></body></html>", baseURL: nil)
-//
-//            // At this point, we've handled the request, we can stop tracking.
-//            h    mutating func urlChanged(url: URL, webView: WKWebView) {
-//        print("URL changed " + url.absoluteString)
-
-//        if (url.absoluteString.contains("redirect_if_logged_in") || url.absoluteString.contains("https://www.airbnb.com/oauth_login_with_redirect?")) {
-//            hasSeenRedirect = true
-//        }
-
-//        if (!hasBeenHandled && hasSeenRedirect && url.absoluteString == "https://www.airbnb.com/") {
-//
-//            // We can stop loading the page in the background, so we don't distract the user.
-//            webView.stopLoading()
-//            webView.loadHTMLString("<html><body></body></html>", baseURL: nil)
-//
-//            // At this point, we've handled the request, we can stop tracking.
-//            hasBeenHandled = true
-//
-//            Task {
-//                do {
-//                    let cookiesJSON = try await getCookiesJSON(webView: webView)
-//                    print(cookiesJSON)
-//                    let userAgent = try await getUserAgent(webView: webView)
-//
-//                    successHandler(cookiesJSON, userAgent)
-//                } catch {
-//                    print("Failed to get cookies JSON: \(error)")
-//                }
-//            }
-//        }
     }
 }
 
