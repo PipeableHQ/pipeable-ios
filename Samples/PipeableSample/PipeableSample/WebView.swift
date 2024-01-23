@@ -3,6 +3,8 @@ import Pipeable
 import SwiftUI
 import WebKit
 
+// swiftlint:disable file_length
+
 enum ResultStatus {
     case success
     case failure
@@ -76,9 +78,7 @@ struct WebViewWrapper: UIViewControllerRepresentable {
 
     // This function makes the WKWebView
     func makeUIViewController(context: UIViewControllerRepresentableContext<WebViewWrapper>) -> WKWebViewController {
-        let uiViewController = WKWebViewController()
-        uiViewController.onClose = onClose
-        uiViewController.onStatusChange = onStatusChange
+        let uiViewController = WKWebViewController(onClose: onClose, onStatusChange: onStatusChange)
         uiViewController.orders = orders
         return uiViewController
     }
@@ -154,6 +154,17 @@ class WKWebViewController: UIViewController {
     var onClose: (() -> Void)
     var onStatusChange: ((_ status: Status, _ orders: [AmazonOrder]) -> Void)
     var orders: [AmazonOrder] = []
+
+    init(onClose: @escaping () -> Void, onStatusChange: @escaping (_ status: Status, _ orders: [AmazonOrder]) -> Void) {
+        self.webView = WKWebView()
+        self.onClose = onClose
+        self.onStatusChange = onStatusChange
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     override func loadView() {
         let config = WKWebViewConfiguration()
@@ -245,7 +256,7 @@ class WKWebViewController: UIViewController {
                     let orderDateEl = try await orderEl.querySelector(".a-size-small")
 
                     let orderDateRawText = try await orderDateEl?.textContent()
-                    let orderDate = orderDateRawText
+                    let orderDate = orderDateRawText?
                         .replacingOccurrences(
                             of: "Ordered on",
                             with: "",
@@ -258,7 +269,7 @@ class WKWebViewController: UIViewController {
                         )
                         .trimmingCharacters(in: .whitespacesAndNewlines)
 
-                    let anOrder = AmazonOrder(item: imageAlt, date: orderDate)
+                    let anOrder = AmazonOrder(item: imageAlt ?? "", date: orderDate ?? "")
                     orders.append(anOrder)
                 }
             }
