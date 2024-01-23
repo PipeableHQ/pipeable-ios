@@ -33,7 +33,7 @@ jobs:
         run: |
           set -o pipefail
           xcodebuild -scheme Pipeable \
-                     -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.1' \
+                     -destination 'platform=iOS Simulator,name=iPhone 14,OS=17.2' \
                      test | xcpretty
 
   build-and-test-sample-app:
@@ -64,6 +64,6 @@ jobs:
       - name: Build
         run: |
           xcodebuild -scheme PipeableSample \
-                     -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.1' \
+                     -destination 'platform=iOS Simulator,name=iPhone 14,OS=17.2' \
                      build
 
