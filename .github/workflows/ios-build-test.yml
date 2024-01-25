@@ -57,7 +57,8 @@ jobs:
           cache: 'npm'
           cache-dependency-path: Sources/sophiajs/package-lock.json
       
-      - run: npm ci
+      - name: Install JS deps
+        run: npm ci
         working-directory: ./Sources/sophiajs
 
       - name: Set Xcode 15
