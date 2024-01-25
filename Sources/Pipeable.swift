@@ -148,10 +148,13 @@ public class PipeablePage {
         let config = webView.configuration
 
         var contents: String?
-   
-        let frameworkBundle = Bundle.module
-        let pathInFramework = frameworkBundle.path(forResource: "sophia", ofType: "js")
+
+        let frameworkBundle = Bundle(for: PipeablePage.self)
+
+        let what = frameworkBundle.url(forResource: "sophia", withExtension: "js")
         
+        let pathInFramework = frameworkBundle.path(forResource: "sophia", ofType: "js")
+
         if let filepath = pathInFramework {
             contents = try? String(contentsOfFile: filepath, encoding: .utf8)
         }

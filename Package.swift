@@ -7,6 +7,7 @@ let package = Package(
     products: [
         .library(
             name: "Pipeable",
+            type: .dynamic,  // This specifies the library as dynamic
             targets: ["Pipeable"]
         )
     ],

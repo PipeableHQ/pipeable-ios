@@ -12,8 +12,23 @@
 		A450D1CD2B5EB4AC00079EAF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A450D1CC2B5EB4AC00079EAF /* Assets.xcassets */; };
 		A450D1D02B5EB4AC00079EAF /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A450D1CF2B5EB4AC00079EAF /* Preview Assets.xcassets */; };
 		A450D1DC2B5EB7C200079EAF /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A450D1DB2B5EB7C200079EAF /* WebView.swift */; };
-		A4F364C32B629270008D0707 /* Pipeable in Frameworks */ = {isa = PBXBuildFile; productRef = A4F364C22B629270008D0707 /* Pipeable */; };
+		A47E2D892B62B479003D70A1 /* Pipeable.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A47E2D862B62B3CB003D70A1 /* Pipeable.framework */; };
+		A47E2D8A2B62B479003D70A1 /* Pipeable.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A47E2D862B62B3CB003D70A1 /* Pipeable.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		A47E2D8B2B62B479003D70A1 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				A47E2D8A2B62B479003D70A1 /* Pipeable.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		A450D1C52B5EB4AA00079EAF /* PipeableSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PipeableSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -22,6 +37,7 @@
 		A450D1CC2B5EB4AC00079EAF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A450D1CF2B5EB4AC00079EAF /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		A450D1DB2B5EB7C200079EAF /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
+		A47E2D862B62B3CB003D70A1 /* Pipeable.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Pipeable.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -29,7 +45,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A4F364C32B629270008D0707 /* Pipeable in Frameworks */,
+				A47E2D892B62B479003D70A1 /* Pipeable.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -41,6 +57,7 @@
 			children = (
 				A450D1C72B5EB4AA00079EAF /* PipeableSample */,
 				A450D1C62B5EB4AA00079EAF /* Products */,
+				A47E2D852B62B3CB003D70A1 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -72,6 +89,14 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
+		A47E2D852B62B3CB003D70A1 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				A47E2D862B62B3CB003D70A1 /* Pipeable.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -82,6 +107,7 @@
 				A450D1C12B5EB4AA00079EAF /* Sources */,
 				A450D1C22B5EB4AA00079EAF /* Frameworks */,
 				A450D1C32B5EB4AA00079EAF /* Resources */,
+				A47E2D8B2B62B479003D70A1 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -89,7 +115,6 @@
 			);
 			name = PipeableSample;
 			packageProductDependencies = (
-				A4F364C22B629270008D0707 /* Pipeable */,
 			);
 			productName = PipeableSample;
 			productReference = A450D1C52B5EB4AA00079EAF /* PipeableSample.app */;
@@ -281,12 +306,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PipeableSample/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Pipeable Sample";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -300,6 +327,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.pipeable.sampleapp.PipeableSample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -311,12 +339,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PipeableSample/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Pipeable Sample";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -330,6 +360,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.pipeable.sampleapp.PipeableSample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -365,13 +396,6 @@
 			relativePath = ../..;
 		};
 /* End XCLocalSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		A4F364C22B629270008D0707 /* Pipeable */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = Pipeable;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = A450D1BD2B5EB4AA00079EAF /* Project object */;
 }

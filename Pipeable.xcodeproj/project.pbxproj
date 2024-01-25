@@ -8,11 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		A434C6162B5964B300B8011C /* Pipeable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A434C6152B5964B300B8011C /* Pipeable.swift */; };
-		A45BE4FB2B628B84008D070B /* sophia.js in Resources */ = {isa = PBXBuildFile; fileRef = A45BE4FA2B628B84008D070B /* sophia.js */; };
 		A4A7A9262B56BD7500982E63 /* Pipeable.docc in Sources */ = {isa = PBXBuildFile; fileRef = A4A7A9252B56BD7500982E63 /* Pipeable.docc */; };
 		A4A7A92C2B56BD7500982E63 /* Pipeable.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4A7A9212B56BD7500982E63 /* Pipeable.framework */; };
 		A4A7A9312B56BD7500982E63 /* PipeableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4A7A9302B56BD7500982E63 /* PipeableTests.swift */; };
 		A4A7A9322B56BD7500982E63 /* Pipeable.h in Headers */ = {isa = PBXBuildFile; fileRef = A4A7A9242B56BD7500982E63 /* Pipeable.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A4C365FC2B62A3C5000D3F50 /* sophia.js in Resources */ = {isa = PBXBuildFile; fileRef = A4C365FB2B62A3C5000D3F50 /* sophia.js */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -28,12 +28,12 @@
 /* Begin PBXFileReference section */
 		A434C6152B5964B300B8011C /* Pipeable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pipeable.swift; sourceTree = "<group>"; };
 		A450D1BB2B59750800079EAF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		A45BE4FA2B628B84008D070B /* sophia.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = sophia.js; path = Resources/sophia.js; sourceTree = SOURCE_ROOT; };
 		A4A7A9212B56BD7500982E63 /* Pipeable.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pipeable.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4A7A9242B56BD7500982E63 /* Pipeable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Pipeable.h; sourceTree = "<group>"; };
 		A4A7A9252B56BD7500982E63 /* Pipeable.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Pipeable.docc; sourceTree = "<group>"; };
 		A4A7A92B2B56BD7500982E63 /* PipeableTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PipeableTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4A7A9302B56BD7500982E63 /* PipeableTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PipeableTests.swift; sourceTree = "<group>"; };
+		A4C365FB2B62A3C5000D3F50 /* sophia.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = sophia.js; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,19 +64,17 @@
 			path = Framework;
 			sourceTree = "<group>";
 		};
-		A45BE4F92B628B13008D070B /* Resources */ = {
+		A4A4FE252B62A3280094C7D0 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				A45BE4FA2B628B84008D070B /* sophia.js */,
+				A4C365FB2B62A3C5000D3F50 /* sophia.js */,
 			);
-			name = Resources;
-			path = Framework/Resources;
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		A4A7A9172B56BD7500982E63 = {
 			isa = PBXGroup;
 			children = (
-				A45BE4F92B628B13008D070B /* Resources */,
 				A44C786F2B5EC2E20002B655 /* Framework */,
 				A4A7A9232B56BD7500982E63 /* Sources */,
 				A4A7A92F2B56BD7500982E63 /* PipeableTests */,
@@ -96,6 +94,7 @@
 		A4A7A9232B56BD7500982E63 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				A4A4FE252B62A3280094C7D0 /* Resources */,
 				A434C6152B5964B300B8011C /* Pipeable.swift */,
 				A4A7A9252B56BD7500982E63 /* Pipeable.docc */,
 			);
@@ -204,7 +203,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A45BE4FB2B628B84008D070B /* sophia.js in Resources */,
+				A4C365FC2B62A3C5000D3F50 /* sophia.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -234,7 +233,7 @@
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/zsh;
+			shellPath = /bin/sh;
 			shellScript = "export PATH=$PATH:/opt/homebrew/bin/\n\ncd Sources/sophiajs\nnpm run build\n";
 			showEnvVarsInLog = 0;
 		};
