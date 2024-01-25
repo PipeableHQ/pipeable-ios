@@ -93,5 +93,5 @@ iOSInjectionProject/
 .DS_Store
 
 # JS build artifacts
-Sources/js/**.*
+Sources/Resources/sophia.js
 
