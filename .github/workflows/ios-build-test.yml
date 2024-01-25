@@ -39,9 +39,9 @@ jobs:
   build-and-test-sample-app:
     runs-on: macos-13
 
-    defaults:
-      run:
-        working-directory: Samples/PipeableSample
+    # defaults:
+    #   run:
+    #     working-directory: Samples/PipeableSample
 
     steps:
       - name: checkout repository
