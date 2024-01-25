@@ -7,7 +7,8 @@ let package = Package(
     products: [
         .library(
             name: "Pipeable",
-            targets: ["Pipeable"])
+            targets: ["Pipeable"]
+        )
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -17,11 +18,17 @@ let package = Package(
         .target(
             name: "Pipeable",
             dependencies: [],
-            path: "Sources"
+            path: "Sources",
+            exclude: ["sophiajs"],
+            resources: [
+                .process("Resources")
+            ]
         ),
 
         .testTarget(
             name: "PipeableTests",
-            dependencies: ["Pipeable"])
+            dependencies: ["Pipeable"],
+            path: "PipeableTests"
+        )
     ]
 )

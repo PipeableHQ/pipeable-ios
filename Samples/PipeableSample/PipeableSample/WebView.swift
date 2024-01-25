@@ -124,32 +124,10 @@ class WKWebViewController: UIViewController {
     }
 
     override func loadView() {
-        let config = WKWebViewConfiguration()
-        var contents: String?
-        if let filepath = Bundle.main.path(forResource: "js/sophia", ofType: "js") {
-            do {
-                contents = try String(contentsOfFile: filepath, encoding: .utf8)
-            } catch {
-                // Handle the error
-                print("Error reading the text file")
-            }
-        } else {
-            print("File not found")
-        }
-
-        if let unwrappedContents = contents {
-            let userScriptIframe = WKUserScript(
-                source: unwrappedContents,
-                injectionTime: .atDocumentStart,
-                forMainFrameOnly: false
-            )
-            config.userContentController.addUserScript(userScriptIframe)
-        }
-
         self.view = UIView()
 
         // Set up resizing rules.
-        webView = WKWebView(frame: .zero, configuration: config)
+        webView = WKWebView(frame: .zero)
 
         // Only for iOS versions above 16.4
         if #available(iOS 16.4, *) {

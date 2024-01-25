@@ -12,7 +12,7 @@
 		A450D1CD2B5EB4AC00079EAF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A450D1CC2B5EB4AC00079EAF /* Assets.xcassets */; };
 		A450D1D02B5EB4AC00079EAF /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A450D1CF2B5EB4AC00079EAF /* Preview Assets.xcassets */; };
 		A450D1DC2B5EB7C200079EAF /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A450D1DB2B5EB7C200079EAF /* WebView.swift */; };
-		A4DAFA232B5EBEBD003DE453 /* Pipeable in Frameworks */ = {isa = PBXBuildFile; productRef = A4DAFA222B5EBEBD003DE453 /* Pipeable */; };
+		A4F364C32B629270008D0707 /* Pipeable in Frameworks */ = {isa = PBXBuildFile; productRef = A4F364C22B629270008D0707 /* Pipeable */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,7 +29,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A4DAFA232B5EBEBD003DE453 /* Pipeable in Frameworks */,
+				A4F364C32B629270008D0707 /* Pipeable in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -89,7 +89,7 @@
 			);
 			name = PipeableSample;
 			packageProductDependencies = (
-				A4DAFA222B5EBEBD003DE453 /* Pipeable */,
+				A4F364C22B629270008D0707 /* Pipeable */,
 			);
 			productName = PipeableSample;
 			productReference = A450D1C52B5EB4AA00079EAF /* PipeableSample.app */;
@@ -367,7 +367,7 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		A4DAFA222B5EBEBD003DE453 /* Pipeable */ = {
+		A4F364C22B629270008D0707 /* Pipeable */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Pipeable;
 		};

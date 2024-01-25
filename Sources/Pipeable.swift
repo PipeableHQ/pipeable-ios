@@ -145,6 +145,28 @@ public class PipeablePage {
         self.webView = webView
         self.frame = frame
 
+        let config = webView.configuration
+
+        var contents: String?
+   
+        let frameworkBundle = Bundle.module
+        let pathInFramework = frameworkBundle.path(forResource: "sophia", ofType: "js")
+        
+        if let filepath = pathInFramework {
+            contents = try? String(contentsOfFile: filepath, encoding: .utf8)
+        }
+
+        if let unwrappedContents = contents {
+            let userScriptIframe = WKUserScript(
+                source: unwrappedContents,
+                injectionTime: .atDocumentStart,
+                forMainFrameOnly: false
+            )
+            config.userContentController.addUserScript(userScriptIframe)
+        } else {
+            fatalError("Could not find bundled JS")
+        }
+
         loadPageSignal = LoadPageSignal()
 
         // This is the main frame / page.
@@ -417,6 +439,7 @@ enum PipeableError: Error {
     case authenticationFailed
     case dataNotFound
     case unknownError
+    case initializationError
 }
 
 public class PipeableElement {
