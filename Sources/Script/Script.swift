@@ -97,3 +97,34 @@ public func prepareJSContext() -> (JSContext, DispatchGroup) {
 
     return (context, dispatchGroup)
 }
+
+public enum ScriptError: Error {
+    case error(reason: String)
+}
+
+public func runScript(_ script: String) -> Result<JSValue, ScriptError> {
+    let (context, dispatchGroup) = prepareJSContext()
+    context.evaluateScript("""
+    var __output = {};
+    async function asyncCallWithError() {
+        \(script)
+    }
+    asyncCallWithError().then(
+        (result) => {
+            __output.result = result;
+        },
+        (e) => {
+            __output.error = e.toString();
+        }
+    );
+    """)
+
+    dispatchGroup.wait()
+    let error = context.objectForKeyedSubscript("__output").objectForKeyedSubscript("error")
+    if error != nil && !error!.isUndefined {
+        return .failure(ScriptError.error(reason: error!.toString()))
+    }
+
+    let result = context.objectForKeyedSubscript("__output").objectForKeyedSubscript("result")
+    return .success(result!)
+}
