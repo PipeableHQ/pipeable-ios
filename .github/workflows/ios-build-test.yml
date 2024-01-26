@@ -50,10 +50,6 @@ jobs:
   build-and-test-sample-app:
     runs-on: macos-13
 
-    # defaults:
-    #   run:
-    #     working-directory: Samples/PipeableSample
-
     steps:
       - name: checkout repository
         uses: actions/checkout@v3
