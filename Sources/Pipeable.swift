@@ -150,9 +150,6 @@ public class PipeablePage {
         var contents: String?
 
         let frameworkBundle = Bundle(for: PipeablePage.self)
-
-        let what = frameworkBundle.url(forResource: "sophia", withExtension: "js")
-
         let pathInFramework = frameworkBundle.path(forResource: "sophia", ofType: "js")
 
         if let filepath = pathInFramework {
