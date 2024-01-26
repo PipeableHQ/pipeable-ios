@@ -5,8 +5,6 @@ enum UrlError: Error {
     case emptyUrl
 }
 
-let dispatchGroup = DispatchGroup()
-
 // This is a fake Page that will be replaced by the real page.
 class FakePage {
     func goto(_ url: String) async throws {
@@ -20,20 +18,17 @@ class FakePage {
 }
 
 @objc protocol PageJSExport: JSExport {
-    static func create() -> PageWrapper
     func gotoWithCompletion(_ url: String, _ completionHandler: JSValue)
 }
 
 // Page wrapper wraps the Page Swift API so that it makes it easy/possible to implement the Page Script API.
 class PageWrapper: NSObject, PageJSExport {
     let page: FakePage
+    let dispatchGroup: DispatchGroup
 
-    class func create() -> PageWrapper {
-        return PageWrapper()
-    }
-
-    override init() {
+    init(_ dispatchGroup: DispatchGroup) {
         self.page = FakePage()
+        self.dispatchGroup = dispatchGroup
         super.init()
     }
 
@@ -42,7 +37,7 @@ class PageWrapper: NSObject, PageJSExport {
         func taskRun() async {
             dispatchGroup.enter()
             defer {
-                dispatchGroup.leave()
+                self.dispatchGroup.leave()
             }
             do {
                 try await page.goto(url)
@@ -59,7 +54,7 @@ class PageWrapper: NSObject, PageJSExport {
     }
 }
 
-public func prepareJSContext() -> (JSContext, DispatchGroup) {
+public func prepareJSContext(_ dispatchGroup: DispatchGroup) -> JSContext {
     // swiftlint:disable:next force_unwrapping
     let context = JSContext()!
     context.exceptionHandler = { _, error in print("\(String(describing: error))") }
@@ -76,7 +71,7 @@ public func prepareJSContext() -> (JSContext, DispatchGroup) {
         }
     }
 
-    let page = PageWrapper()
+    let page = PageWrapper(dispatchGroup)
 
     context.setObject(page, forKeyedSubscript: "page" as (NSCopying & NSObjectProtocol))
 
@@ -95,36 +90,48 @@ public func prepareJSContext() -> (JSContext, DispatchGroup) {
     page.goto = page.goto.bind(page);
     """)
 
-    return (context, dispatchGroup)
+    return context
 }
 
 public enum ScriptError: Error {
     case error(reason: String)
+    case unexpectedError
 }
 
-public func runScript(_ script: String) -> Result<JSValue, ScriptError> {
-    let (context, dispatchGroup) = prepareJSContext()
-    context.evaluateScript("""
-    var __output = {};
-    async function asyncCallWithError() {
-        \(script)
-    }
-    asyncCallWithError().then(
-        (result) => {
-            __output.result = result;
-        },
-        (e) => {
-            __output.error = e.toString();
+public func runScript(_ script: String) async throws -> JSValue {
+    return try await withCheckedThrowingContinuation { continuation in
+        let dispatchGroup = DispatchGroup()
+        let context = prepareJSContext(dispatchGroup)
+        context.evaluateScript("""
+        var __error = undefined;
+        var __result = undefined;
+        async function asyncCallWithError() {
+            \(script)
         }
-    );
-    """)
+        asyncCallWithError().then(
+            (result) => {
+                __result = result;
+            },
+            (e) => {
+                __error = e.toString();
+            }
+        );
+        """)
 
-    dispatchGroup.wait()
-    let error = context.objectForKeyedSubscript("__output").objectForKeyedSubscript("error")
-    if error != nil && !error!.isUndefined {
-        return .failure(ScriptError.error(reason: error!.toString()))
+        dispatchGroup.notify(queue: .main) {
+            if let error = context.objectForKeyedSubscript("__error") {
+                if !error.isUndefined {
+                    continuation.resume(throwing: ScriptError.error(reason: error.toString()))
+                    return
+                }
+            }
+
+            if let result = context.objectForKeyedSubscript("__result") {
+                continuation.resume(returning: result)
+                return
+            }
+
+            continuation.resume(throwing: ScriptError.unexpectedError)
+        }
     }
-
-    let result = context.objectForKeyedSubscript("__output").objectForKeyedSubscript("result")
-    return .success(result!)
 }
