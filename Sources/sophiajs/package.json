@@ -1,0 +1,20 @@
+{
+  "name": "sophiajs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc && cp ./dist/sophia.js ../Resources/",
+    "dev": "tsc-watch --onSuccess \"cp ./dist/sophia.js '../Resources/'\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "esbuild": "^0.19.2",
+    "esbuild-plugin-tsc": "^0.4.0",
+    "prettier": "^3.0.3",
+    "tsc-watch": "^6.0.4",
+    "typescript": "^5.2.2"
+  }
+}
