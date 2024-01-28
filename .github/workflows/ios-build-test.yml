@@ -43,7 +43,7 @@ jobs:
           set -o pipefail
           xcodebuild -workspace Pipeable.xcworkspace -scheme PipeableSDK \
                      -destination 'platform=iOS Simulator,name=iPhone 15,OS=17.2' \
-                     clean test | xcpretty
+                     test
 
 
   build-and-test-sample-app:
