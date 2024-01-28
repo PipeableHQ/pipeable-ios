@@ -2,7 +2,7 @@
 //  PipeableTests.swift
 //  PipeableTests
 
-@testable import Pipeable
+@testable import PipeableSDK
 import XCTest
 
 final class PipeableTests: XCTestCase {

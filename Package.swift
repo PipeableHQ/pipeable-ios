@@ -20,9 +20,8 @@ let package = Package(
             name: "PipeableSDK",
             dependencies: [],
             path: "Sources/PipeableSDK",
-            exclude: ["sophiajs"],
             resources: [
-                .process("Resources")
+                .process("../Resources")
             ]
         ),
 
