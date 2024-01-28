@@ -5,6 +5,6 @@
       location = "group:Samples/PipeableSample/PipeableSample.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:/Users/pesho/src/pipeable/pipeable-ios/PipeableSDK.xcodeproj">
+      location = "group:PipeableSDK.xcodeproj">
    </FileRef>
 </Workspace>
