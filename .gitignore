@@ -92,6 +92,3 @@ iOSInjectionProject/
 # OSX Annoying files
 .DS_Store
 
-# JS build artifacts
-Sources/Resources/sophia.js
-

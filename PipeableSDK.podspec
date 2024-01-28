@@ -92,8 +92,6 @@ Pod::Spec.new do |spec|
   #
 
   spec.source_files  = "Sources", "Framework"
-  # spec.exclude_files = "Sources/Resources/sophia.js"
-
   spec.public_header_files = "Framework/*.h"
 
 
