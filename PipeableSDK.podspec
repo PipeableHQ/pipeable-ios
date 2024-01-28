@@ -16,7 +16,7 @@ Pod::Spec.new do |spec|
   #
 
   spec.name         = "PipeableSDK"
-  spec.version      = "0.0.4"
+  spec.version      = "0.0.5"
   spec.summary      = "WebView automation framework for iOS"
 
   # This description is used to generate tags and improve search results.
@@ -92,7 +92,7 @@ Pod::Spec.new do |spec|
   #
 
   spec.source_files  = "Sources", "Framework"
-  spec.exclude_files = "Sources/Resources/sophia.js"
+  # spec.exclude_files = "Sources/Resources/sophia.js"
 
   spec.public_header_files = "Framework/*.h"
 
@@ -106,7 +106,7 @@ Pod::Spec.new do |spec|
   #
 
   # spec.resource  = "icon.png"
-  # spec.resources = "Resources/*.png"
+  spec.resources = "Sources/Resources/sophia.js"
 
   # spec.preserve_paths = "FilesToSave", "MoreFilesToSave"
 
