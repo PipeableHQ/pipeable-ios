@@ -15,7 +15,7 @@ Pod::Spec.new do |spec|
   #  summary should be tweet-length, and the description more in depth.
   #
 
-  spec.name         = "pipeable"
+  spec.name         = "PipeableSDK"
   spec.version      = "0.0.4"
   spec.summary      = "WebView automation framework for iOS"
 

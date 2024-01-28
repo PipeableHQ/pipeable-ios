@@ -1,5 +1,5 @@
 import Foundation
-import Pipeable
+import PipeableSDK
 import SwiftUI
 import WebKit
 
