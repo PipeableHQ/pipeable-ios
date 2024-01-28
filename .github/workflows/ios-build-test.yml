@@ -18,7 +18,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version-file: '.nvmrc'
-          cache-dependency-path: Sources/sophiajs/package-lock.json
 
       - name: Install JS deps
         run: npm ci
@@ -38,6 +37,9 @@ jobs:
         run: |
           gem install xcpretty
 
+      - name: List targets
+        run: xcodebuild -list
+
       - name: Build and Test
         run: |
           set -o pipefail
@@ -56,7 +58,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version-file: '.nvmrc'
-          cache-dependency-path: Sources/sophiajs/package-lock.json
       
       - name: Install JS deps
         run: npm ci
