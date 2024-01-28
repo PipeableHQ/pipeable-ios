@@ -106,7 +106,7 @@ Pod::Spec.new do |spec|
   #
 
   # spec.resource  = "icon.png"
-  spec.resources = "Sources/Resources/sophia.js"
+  spec.resources = "Sources/Resources/*.js"
 
   # spec.preserve_paths = "FilesToSave", "MoreFilesToSave"
 
