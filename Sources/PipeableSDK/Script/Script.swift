@@ -82,13 +82,11 @@ class PipeableElementWrapper: NSObject, PipeableElementJSExport {
     }
 
     func clickWithCompletion(_ completionHandler: JSValue) {
-        print("entering")
         dispatchGroup.enter()
 
         @Sendable
         func taskRun() async {
             defer {
-                print("leaving")
                 self.dispatchGroup.leave()
             }
             do {
@@ -124,13 +122,11 @@ class PageWrapper: NSObject, PageJSExport {
     }
 
     func gotoWithCompletion(_ url: String, _ completionHandler: JSValue) {
-        print("entering")
         dispatchGroup.enter()
 
         @Sendable
         func taskRun() async {
             defer {
-                print("leaving")
                 self.dispatchGroup.leave()
             }
             do {
@@ -148,13 +144,11 @@ class PageWrapper: NSObject, PageJSExport {
     }
 
     func querySelectorWithCompletion(_ selector: String, _ completionHandler: JSValue) {
-        print("entering")
         dispatchGroup.enter()
 
         @Sendable
         func taskRun() async {
             defer {
-                print("leaving")
                 self.dispatchGroup.leave()
             }
             do {
