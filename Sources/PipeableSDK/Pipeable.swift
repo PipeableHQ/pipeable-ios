@@ -150,9 +150,6 @@ public class PipeablePage {
         var contents: String?
 
         let frameworkBundle = Bundle(for: PipeablePage.self)
-
-        let what = frameworkBundle.url(forResource: "sophia", withExtension: "js")
-
         let pathInFramework = frameworkBundle.path(forResource: "sophia", ofType: "js")
 
         if let filepath = pathInFramework {
@@ -419,7 +416,7 @@ public class PipeablePage {
 }
 
 public struct XHRResult: Decodable {
-    enum ResponseType: String, Decodable {
+    public enum ResponseType: String, Decodable {
         case none = ""
         case text
         case arraybuffer
@@ -428,11 +425,11 @@ public struct XHRResult: Decodable {
         case json
     }
 
-    var status: Int
-    var body: String
-    var headers: String
-    var url: String
-    var responseType: ResponseType
+    public var status: Int
+    public var body: String
+    public var headers: String
+    public var url: String
+    public var responseType: ResponseType
 }
 
 // TODO: This is not complete or valid

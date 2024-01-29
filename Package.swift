@@ -2,13 +2,13 @@
 import PackageDescription
 
 let package = Package(
-    name: "Pipeable",
+    name: "PipeableSDK",
     platforms: [.iOS(.v15)],
     products: [
         .library(
-            name: "Pipeable",
+            name: "PipeableSDK",
             type: .dynamic,  // This specifies the library as dynamic
-            targets: ["Pipeable"]
+            targets: ["PipeableSDK"]
         )
     ],
     dependencies: [
@@ -17,18 +17,17 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "Pipeable",
+            name: "PipeableSDK",
             dependencies: [],
-            path: "Sources",
-            exclude: ["sophiajs"],
+            path: "Sources/PipeableSDK",
             resources: [
-                .process("Resources")
+                .process("../Resources")
             ]
         ),
 
         .testTarget(
-            name: "PipeableTests",
-            dependencies: ["Pipeable"],
+            name: "PipeableSDKTests",
+            dependencies: ["PipeableSDK"],
             path: "PipeableTests"
         )
     ]

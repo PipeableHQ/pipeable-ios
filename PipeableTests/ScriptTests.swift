@@ -1,4 +1,4 @@
-@testable import Pipeable
+@testable import PipeableSDK
 import XCTest
 
 final class ScriptTests: XCTestCase {

@@ -11,9 +11,9 @@
 		A4A7A9262B56BD7500982E63 /* Pipeable.docc in Sources */ = {isa = PBXBuildFile; fileRef = A4A7A9252B56BD7500982E63 /* Pipeable.docc */; };
 		A4A7A9312B56BD7500982E63 /* PipeableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4A7A9302B56BD7500982E63 /* PipeableTests.swift */; };
 		A4A7A9322B56BD7500982E63 /* Pipeable.h in Headers */ = {isa = PBXBuildFile; fileRef = A4A7A9242B56BD7500982E63 /* Pipeable.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A4C365FC2B62A3C5000D3F50 /* sophia.js in Resources */ = {isa = PBXBuildFile; fileRef = A4C365FB2B62A3C5000D3F50 /* sophia.js */; };
 		E8AC39A52B615C1D00D413BF /* Script.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8AC39A42B615C1D00D413BF /* Script.swift */; };
 		E8F7B28E2B639E160040B77B /* ScriptTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8F7B28C2B639E160040B77B /* ScriptTests.swift */; };
-		A4C365FC2B62A3C5000D3F50 /* sophia.js in Resources */ = {isa = PBXBuildFile; fileRef = A4C365FB2B62A3C5000D3F50 /* sophia.js */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,14 +29,14 @@
 /* Begin PBXFileReference section */
 		A434C6152B5964B300B8011C /* Pipeable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pipeable.swift; sourceTree = "<group>"; };
 		A450D1BB2B59750800079EAF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		A4A7A9212B56BD7500982E63 /* Pipeable.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pipeable.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A4A7A9212B56BD7500982E63 /* PipeableSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PipeableSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4A7A9242B56BD7500982E63 /* Pipeable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Pipeable.h; sourceTree = "<group>"; };
 		A4A7A9252B56BD7500982E63 /* Pipeable.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Pipeable.docc; sourceTree = "<group>"; };
-		A4A7A92B2B56BD7500982E63 /* PipeableTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PipeableTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A4A7A92B2B56BD7500982E63 /* PipeableSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PipeableSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4A7A9302B56BD7500982E63 /* PipeableTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PipeableTests.swift; sourceTree = "<group>"; };
+		A4C365FB2B62A3C5000D3F50 /* sophia.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = sophia.js; sourceTree = "<group>"; };
 		E8AC39A42B615C1D00D413BF /* Script.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Script.swift; sourceTree = "<group>"; };
 		E8F7B28C2B639E160040B77B /* ScriptTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptTests.swift; sourceTree = "<group>"; };
-		A4C365FB2B62A3C5000D3F50 /* sophia.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = sophia.js; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,7 +51,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E8AC39A92B6160C800D413BF /* Pipeable.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -88,8 +87,8 @@
 		A4A7A9222B56BD7500982E63 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				A4A7A9212B56BD7500982E63 /* Pipeable.framework */,
-				A4A7A92B2B56BD7500982E63 /* PipeableTests.xctest */,
+				A4A7A9212B56BD7500982E63 /* PipeableSDK.framework */,
+				A4A7A92B2B56BD7500982E63 /* PipeableSDKTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -97,10 +96,8 @@
 		A4A7A9232B56BD7500982E63 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				E8AC39A12B615BC900D413BF /* Script */,
+				A4E25B402B6698E400F3DFDE /* PipeableSDK */,
 				A4A4FE252B62A3280094C7D0 /* Resources */,
-				A434C6152B5964B300B8011C /* Pipeable.swift */,
-				A4A7A9252B56BD7500982E63 /* Pipeable.docc */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -112,6 +109,16 @@
 				E8F7B28C2B639E160040B77B /* ScriptTests.swift */,
 			);
 			path = PipeableTests;
+			sourceTree = "<group>";
+		};
+		A4E25B402B6698E400F3DFDE /* PipeableSDK */ = {
+			isa = PBXGroup;
+			children = (
+				A4A7A9252B56BD7500982E63 /* Pipeable.docc */,
+				A434C6152B5964B300B8011C /* Pipeable.swift */,
+				E8AC39A12B615BC900D413BF /* Script */,
+			);
+			path = PipeableSDK;
 			sourceTree = "<group>";
 		};
 		E8AC39A12B615BC900D413BF /* Script */ = {
@@ -136,9 +143,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		A4A7A9202B56BD7500982E63 /* Pipeable */ = {
+		A4A7A9202B56BD7500982E63 /* PipeableSDK */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = A4A7A9352B56BD7500982E63 /* Build configuration list for PBXNativeTarget "Pipeable" */;
+			buildConfigurationList = A4A7A9352B56BD7500982E63 /* Build configuration list for PBXNativeTarget "PipeableSDK" */;
 			buildPhases = (
 				A45D76742B596CE20046DACF /* Linter */,
 				A45BE4F42B626AF5008D070B /* Build JS */,
@@ -151,14 +158,14 @@
 			);
 			dependencies = (
 			);
-			name = Pipeable;
+			name = PipeableSDK;
 			productName = Pipeable;
-			productReference = A4A7A9212B56BD7500982E63 /* Pipeable.framework */;
+			productReference = A4A7A9212B56BD7500982E63 /* PipeableSDK.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		A4A7A92A2B56BD7500982E63 /* PipeableTests */ = {
+		A4A7A92A2B56BD7500982E63 /* PipeableSDKTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = A4A7A9382B56BD7500982E63 /* Build configuration list for PBXNativeTarget "PipeableTests" */;
+			buildConfigurationList = A4A7A9382B56BD7500982E63 /* Build configuration list for PBXNativeTarget "PipeableSDKTests" */;
 			buildPhases = (
 				A4A7A9272B56BD7500982E63 /* Sources */,
 				A4A7A9282B56BD7500982E63 /* Frameworks */,
@@ -169,9 +176,9 @@
 			dependencies = (
 				A4A7A92E2B56BD7500982E63 /* PBXTargetDependency */,
 			);
-			name = PipeableTests;
+			name = PipeableSDKTests;
 			productName = PipeableTests;
-			productReference = A4A7A92B2B56BD7500982E63 /* PipeableTests.xctest */;
+			productReference = A4A7A92B2B56BD7500982E63 /* PipeableSDKTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -192,7 +199,7 @@
 					};
 				};
 			};
-			buildConfigurationList = A4A7A91B2B56BD7500982E63 /* Build configuration list for PBXProject "Pipeable" */;
+			buildConfigurationList = A4A7A91B2B56BD7500982E63 /* Build configuration list for PBXProject "PipeableSDK" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -205,8 +212,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				A4A7A9202B56BD7500982E63 /* Pipeable */,
-				A4A7A92A2B56BD7500982E63 /* PipeableTests */,
+				A4A7A9202B56BD7500982E63 /* PipeableSDK */,
+				A4A7A92A2B56BD7500982E63 /* PipeableSDKTests */,
 			);
 		};
 /* End PBXProject section */
@@ -296,7 +303,7 @@
 /* Begin PBXTargetDependency section */
 		A4A7A92E2B56BD7500982E63 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = A4A7A9202B56BD7500982E63 /* Pipeable */;
+			target = A4A7A9202B56BD7500982E63 /* PipeableSDK */;
 			targetProxy = A4A7A92D2B56BD7500982E63 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -546,7 +553,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		A4A7A91B2B56BD7500982E63 /* Build configuration list for PBXProject "Pipeable" */ = {
+		A4A7A91B2B56BD7500982E63 /* Build configuration list for PBXProject "PipeableSDK" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A4A7A9332B56BD7500982E63 /* Debug */,
@@ -555,7 +562,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		A4A7A9352B56BD7500982E63 /* Build configuration list for PBXNativeTarget "Pipeable" */ = {
+		A4A7A9352B56BD7500982E63 /* Build configuration list for PBXNativeTarget "PipeableSDK" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A4A7A9362B56BD7500982E63 /* Debug */,
@@ -564,7 +571,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		A4A7A9382B56BD7500982E63 /* Build configuration list for PBXNativeTarget "PipeableTests" */ = {
+		A4A7A9382B56BD7500982E63 /* Build configuration list for PBXNativeTarget "PipeableSDKTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A4A7A9392B56BD7500982E63 /* Debug */,

@@ -12,18 +12,18 @@
 		A450D1CD2B5EB4AC00079EAF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A450D1CC2B5EB4AC00079EAF /* Assets.xcassets */; };
 		A450D1D02B5EB4AC00079EAF /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A450D1CF2B5EB4AC00079EAF /* Preview Assets.xcassets */; };
 		A450D1DC2B5EB7C200079EAF /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A450D1DB2B5EB7C200079EAF /* WebView.swift */; };
-		A47E2D892B62B479003D70A1 /* Pipeable.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A47E2D862B62B3CB003D70A1 /* Pipeable.framework */; };
-		A47E2D8A2B62B479003D70A1 /* Pipeable.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A47E2D862B62B3CB003D70A1 /* Pipeable.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A4F1A2F42B669A960037EA99 /* PipeableSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4F1A2F32B669A960037EA99 /* PipeableSDK.framework */; };
+		A4F1A2F52B669A960037EA99 /* PipeableSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A4F1A2F32B669A960037EA99 /* PipeableSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		A47E2D8B2B62B479003D70A1 /* Embed Frameworks */ = {
+		A4F1A2F62B669A960037EA99 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				A47E2D8A2B62B479003D70A1 /* Pipeable.framework in Embed Frameworks */,
+				A4F1A2F52B669A960037EA99 /* PipeableSDK.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -38,6 +38,7 @@
 		A450D1CF2B5EB4AC00079EAF /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		A450D1DB2B5EB7C200079EAF /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
 		A47E2D862B62B3CB003D70A1 /* Pipeable.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Pipeable.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A4F1A2F32B669A960037EA99 /* PipeableSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PipeableSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -45,7 +46,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A47E2D892B62B479003D70A1 /* Pipeable.framework in Frameworks */,
+				A4F1A2F42B669A960037EA99 /* PipeableSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -92,6 +93,7 @@
 		A47E2D852B62B3CB003D70A1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A4F1A2F32B669A960037EA99 /* PipeableSDK.framework */,
 				A47E2D862B62B3CB003D70A1 /* Pipeable.framework */,
 			);
 			name = Frameworks;
@@ -107,7 +109,7 @@
 				A450D1C12B5EB4AA00079EAF /* Sources */,
 				A450D1C22B5EB4AA00079EAF /* Frameworks */,
 				A450D1C32B5EB4AA00079EAF /* Resources */,
-				A47E2D8B2B62B479003D70A1 /* Embed Frameworks */,
+				A4F1A2F62B669A960037EA99 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);

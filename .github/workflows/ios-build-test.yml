@@ -18,7 +18,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version-file: '.nvmrc'
-          cache-dependency-path: Sources/sophiajs/package-lock.json
 
       - name: Install JS deps
         run: npm ci
@@ -38,10 +37,13 @@ jobs:
         run: |
           gem install xcpretty
 
+      - name: List targets
+        run: xcodebuild -workspace Pipeable.xcworkspace -list
+
       - name: Build and Test
         run: |
           set -o pipefail
-          xcodebuild -workspace Pipeable.xcworkspace -scheme Pipeable \
+          xcodebuild -workspace Pipeable.xcworkspace -scheme PipeableSDK \
                      -destination 'platform=iOS Simulator,name=iPhone 15,OS=17.2' \
                      test | xcpretty
 
@@ -56,7 +58,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version-file: '.nvmrc'
-          cache-dependency-path: Sources/sophiajs/package-lock.json
       
       - name: Install JS deps
         run: npm ci
@@ -81,5 +82,5 @@ jobs:
           set -o pipefail
           xcodebuild -workspace Pipeable.xcworkspace -scheme PipeableSample \
                      -destination 'platform=iOS Simulator,name=iPhone 15,OS=17.2' \
-                     build | xcpretty
+                     clean build | xcpretty
 

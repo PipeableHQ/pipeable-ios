@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "A4A7A9202B56BD7500982E63"
-               BuildableName = "Pipeable.framework"
-               BlueprintName = "Pipeable"
-               ReferencedContainer = "container:Pipeable.xcodeproj">
+               BuildableName = "PipeableSDK.framework"
+               BlueprintName = "PipeableSDK"
+               ReferencedContainer = "container:PipeableSDK.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -35,9 +35,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "A4A7A92A2B56BD7500982E63"
-               BuildableName = "PipeableTests.xctest"
-               BlueprintName = "PipeableTests"
-               ReferencedContainer = "container:Pipeable.xcodeproj">
+               BuildableName = "PipeableSDKTests.xctest"
+               BlueprintName = "PipeableSDKTests"
+               ReferencedContainer = "container:PipeableSDK.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -63,9 +63,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "A4A7A9202B56BD7500982E63"
-            BuildableName = "Pipeable.framework"
-            BlueprintName = "Pipeable"
-            ReferencedContainer = "container:Pipeable.xcodeproj">
+            BuildableName = "PipeableSDK.framework"
+            BlueprintName = "PipeableSDK"
+            ReferencedContainer = "container:PipeableSDK.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>
