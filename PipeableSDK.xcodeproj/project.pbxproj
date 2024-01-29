@@ -254,7 +254,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "source ~/.profile\nexport PATH=$PATH:/opt/homebrew/bin/\n\ncd Sources/sophiajs\nnpm run build\n";
+			shellScript = "[ -e ~/.profile ] && source ~/.profile\nexport PATH=$PATH:/opt/homebrew/bin/\n\ncd Sources/sophiajs\nnpm run build\n";
 			showEnvVarsInLog = 0;
 		};
 		A45D76742B596CE20046DACF /* Linter */ = {
