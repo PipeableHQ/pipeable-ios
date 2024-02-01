@@ -25,7 +25,7 @@ jobs:
 
       - name: Set Xcode 15
         run: |
-          sudo xcode-select -switch /Applications/Xcode_15.1.app
+          sudo xcode-select -switch /Applications/Xcode_15.2.app
 
       - name: Swift Lint
         run: swiftlint --strict
