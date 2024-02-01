@@ -9,7 +9,7 @@ on:
 
 jobs:
   build-and-test-framework:
-    runs-on: macos-13
+    runs-on: macos-13-xlarge
 
     steps:
       - name: checkout repository
@@ -26,12 +26,6 @@ jobs:
       - name: Set Xcode 15
         run: |
           sudo xcode-select -switch /Applications/Xcode_15.2.app
-
-      - name: Install yeetd
-        run: |
-          wget https://github.com/biscuitehh/yeetd/releases/download/1.0/yeetd-normal.pkg
-          sudo installer -pkg yeetd-normal.pkg -target /
-          yeetd &
 
       - name: Swift Lint
         run: swiftlint --strict
