@@ -22,7 +22,7 @@ final class ScriptTests: XCTestCase {
             _ = try await runScript(script)
             XCTFail("An empty url error is expected")
         } catch let ScriptError.error(reason) {
-            XCTAssertEqual(reason, "Bad url.")
+            XCTAssertEqual(reason, "Empty url")
         } catch {
             XCTFail("An empty url error is expected")
         }

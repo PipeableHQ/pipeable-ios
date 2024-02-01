@@ -82,21 +82,44 @@ public class PipeablePage {
         }
 
         func webView(_ webView: WKWebView, didFinish _: WKNavigation) {
-            print("nav finished \(webView.url?.absoluteString ?? "")")
             loadPageSignal.signalURLLoadedResult(webView.url?.absoluteString)
         }
 
-        func webView(_ webView: WKWebView, didStartProvisionalNavigation _: WKNavigation) {
-            print("nav started \(webView.url?.absoluteString ?? "")")
+        func webView(_: WKWebView, didStartProvisionalNavigation _: WKNavigation) {
             loadPageSignal.isPageLoaded = false
         }
 
         func webView(_ webView: WKWebView, didFail _: WKNavigation, withError error: Error) {
-            loadPageSignal.signalURLLoadedResult(webView.url?.absoluteString, withError: error)
+            loadPageSignal.signalURLLoadedResult(
+                webView.url?.absoluteString,
+                withError: PipeableError.navigationError(error.localizedDescription)
+            )
         }
 
         func webView(_ webView: WKWebView, didFailProvisionalNavigation _: WKNavigation, withError error: Error) {
-            loadPageSignal.signalURLLoadedResult(webView.url?.absoluteString, withError: error)
+            loadPageSignal.signalURLLoadedResult(
+                webView.url?.absoluteString,
+                withError: PipeableError.navigationError(error.localizedDescription)
+            )
+        }
+
+        func webView(_: WKWebView, didReceive _: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+            completionHandler(.performDefaultHandling, nil)
+        }
+
+        func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
+            loadPageSignal.signalURLLoadedResult(
+                webView.url?.absoluteString,
+                withError: PipeableError.navigationError("Terminated")
+            )
+        }
+
+        func webView(_: WKWebView, decidePolicyFor _: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+            decisionHandler(.allow)
+        }
+
+        func webView(_: WKWebView, decidePolicyFor _: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
+            decisionHandler(.allow)
         }
     }
 
@@ -141,7 +164,7 @@ public class PipeablePage {
         }
     }
 
-    public init(_ webView: WKWebView, _ frame: WKFrameInfo?) {
+    public init(_ webView: WKWebView, _ frame: WKFrameInfo? = nil) {
         self.webView = webView
         self.frame = frame
 
@@ -189,12 +212,16 @@ public class PipeablePage {
         loadPageSignal.isPageLoaded = false
 
         if let urlObj = URL(string: url) {
-            await webView.load(URLRequest(url: urlObj))
+            let request = URLRequest(url: urlObj, timeoutInterval: 3)
+
+            DispatchQueue.main.async {
+                self.webView.load(request)
+            }
         } else {
-            throw PipeableError.urlMalformed("Incorrect URL \(url)")
+            throw PipeableError.navigationError("Incorrect URL \(url)")
         }
 
-        return try await waitForPageLoad()
+        try await waitForPageLoad()
     }
 
     public func reload() async throws {
@@ -413,6 +440,10 @@ public class PipeablePage {
             }
         }
     }
+
+    public func url() -> URL? {
+        return webView.url
+    }
 }
 
 public struct XHRResult: Decodable {
@@ -434,11 +465,9 @@ public struct XHRResult: Decodable {
 
 // TODO: This is not complete or valid
 enum PipeableError: Error {
-    case urlMalformed(String)
+    case navigationError(String)
+    case elementNotFound
     case invalidResponse
-    case authenticationFailed
-    case dataNotFound
-    case unknownError
     case initializationError
 }
 
