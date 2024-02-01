@@ -7,6 +7,7 @@ import WebKit
 public class PipeablePage {
     var webView: WKWebView
     var frame: WKFrameInfo?
+
     private var delegate: Delegate?
 
     var frameInfoResolver: FrameInfoResolver = .init()
@@ -23,6 +24,8 @@ public class PipeablePage {
         var isPageLoaded = false
         var loadCompletion: CheckedContinuation<Void, Error>?
 
+        var currentUrl: String?
+
         // TODO: Make the predicate actually not just be a function, but string | regex | function
         var waitForURLContinuations: [String: CheckedContinuation<Void, Error>] = [:]
         var waitForURLPredicates: [String: (String) -> Bool] = [:]
@@ -30,6 +33,12 @@ public class PipeablePage {
 
         func addWaitForURL(_ predicate: @escaping (String) -> Bool, continuation: CheckedContinuation<Void, Error>) {
             synchronizationQueue.sync {
+                // If we are already on the url, continue
+                if let url = currentUrl, predicate(url) {
+                    continuation.resume(returning: ())
+                    return
+                }
+
                 var uniqueKey: String
 
                 repeat {
@@ -57,6 +66,8 @@ public class PipeablePage {
 
             if let url = url {
                 synchronizationQueue.sync {
+                    currentUrl = url
+
                     for (key, predicate) in self.waitForURLPredicates where predicate(url) {
                         // invoke and finish.
                         if let unwrappedError = error {
@@ -141,7 +152,7 @@ public class PipeablePage {
         }
     }
 
-    public init(_ webView: WKWebView, _ frame: WKFrameInfo?) {
+    public init(_ webView: WKWebView, _ frame: WKFrameInfo? = nil) {
         self.webView = webView
         self.frame = frame
 
@@ -413,6 +424,72 @@ public class PipeablePage {
             }
         }
     }
+
+    public func getCookiesJSON(webView: WKWebView) async throws -> String {
+        return try await withCheckedThrowingContinuation { continuation in
+            Task {
+                await MainActor.run {
+                    webView.configuration.websiteDataStore.httpCookieStore.getAllCookies { cookies in
+                        let cookieObjects = cookies.map {
+                            Cookie(
+                                name: $0.name,
+                                value: $0.value,
+                                domain: $0.domain,
+                                path: $0.path
+                            )
+                        }
+                        do {
+                            let jsonData = try JSONEncoder().encode(cookieObjects)
+                            if let jsonString = String(data: jsonData, encoding: .utf8) {
+                                continuation.resume(returning: jsonString)
+                            } else {
+                                continuation.resume(throwing: NSError(
+                                    domain: "Invalid JSON data",
+                                    code: -1,
+                                    userInfo: nil
+                                ))
+                            }
+                        } catch {
+                            continuation.resume(throwing: error)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public func getUserAgent(webView: WKWebView) async throws -> String {
+        return try await withCheckedThrowingContinuation { continuation in
+            Task {
+                await MainActor.run {
+                    webView.evaluateJavaScript("navigator.userAgent") { result, error in
+                        if let error = error {
+                            continuation.resume(throwing: error)
+                        } else if let userAgent = result as? String {
+                            continuation.resume(returning: userAgent)
+                        } else {
+                            continuation.resume(returning: "")
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public func deleteAllCookies() {
+        let dataStore = WKWebsiteDataStore.default()
+        let dataTypes = WKWebsiteDataStore.allWebsiteDataTypes()
+        let dateFrom = Date(timeIntervalSince1970: 0)
+
+        dataStore.removeData(ofTypes: dataTypes, modifiedSince: dateFrom) {}
+    }
+}
+
+struct Cookie: Codable {
+    let name: String
+    let value: String
+    let domain: String
+    let path: String
 }
 
 public struct XHRResult: Decodable {

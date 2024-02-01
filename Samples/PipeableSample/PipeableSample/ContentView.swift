@@ -7,26 +7,40 @@
 
 import SwiftUI
 
-struct AmazonOrder: Identifiable {
+struct ListEntry: Identifiable {
     var id = UUID()
     let item: String
     let date: String
+}
+
+enum ResultStatus {
+    case success
+    case failure
 }
 
 struct ContentView: View {
     @State var showWeb = false
     @State var password = ""
     @State var centralIndex = 0
-    @State private var orders: [AmazonOrder] = []
+    @State private var orders: [ListEntry] = []
 
     var body: some View {
         ZStack {
             MainScreen(orders: $orders) {
-                deleteAllCookies()
                 showWeb = true
             }
             .sheet(isPresented: $showWeb) {
-                PipeableWebView(
+//                AmazonWebView(
+//                    orders: $orders,
+//                    onClose: {
+//                        showWeb = false
+//                    },
+//                    onResult: { _ in
+//                        showWeb = false
+//                    }
+//                )
+
+                AirBnbWebView(
                     orders: $orders,
                     onClose: {
                         showWeb = false
@@ -40,7 +54,6 @@ struct ContentView: View {
     }
 }
 
-
 struct CardBoundsKey: PreferenceKey {
     static var defaultValue: [CGRect] = []
     static func reduce(value: inout [CGRect], nextValue: () -> [CGRect]) {
@@ -52,7 +65,7 @@ struct MainScreen: View {
     @Environment(\.colorScheme)
     var colorScheme
 
-    @Binding var orders: [AmazonOrder]
+    @Binding var orders: [ListEntry]
     var onButtonTapped: () -> Void
 
     var body: some View {
@@ -69,17 +82,17 @@ struct MainScreen: View {
             }
 
             HStack(alignment: .center) {
-                Text("Connect with your Amazon account to fetch your latest orders and use the information in your app!"
+                Text("Connect with your account to fetch your latest orders and use the information in your app!"
                 )
-                    .font(.title3)
-                    .padding(.all, 10)
-                    .background(
-                        RoundedRectangle(cornerRadius: 15)
-                            .stroke(Color.secondary, lineWidth: 2)
-                    )
-                    .background(Color.secondary.opacity(0.2))
-                    .cornerRadius(15)
-                    .padding(.all, 10)
+                .font(.title3)
+                .padding(.all, 10)
+                .background(
+                    RoundedRectangle(cornerRadius: 15)
+                        .stroke(Color.secondary, lineWidth: 2)
+                )
+                .background(Color.secondary.opacity(0.2))
+                .cornerRadius(15)
+                .padding(.all, 10)
 
                 Spacer()
             }
@@ -91,14 +104,12 @@ struct MainScreen: View {
                     .frame(width: 30)
                     .padding()
 
-
                 VStack(alignment: .leading) {
-                    Button("Connect your Amazon account") {
+                    Button("Connect your account") {
                         onButtonTapped()
                     }
                     .font(.headline)
                 }
-
 
                 Spacer()
             }
@@ -107,13 +118,13 @@ struct MainScreen: View {
             .cornerRadius(10)
             .padding()
 
-            Text("Orders").font(.title2).bold()
+            Text("Entries").font(.title2).bold()
 
             List(orders) { order in
                 HStack {
                     Text(order.item)
                     Spacer()
-                    Text("Ordered on \(order.date)").frame(width: 120)
+                    Text("\(order.date)").frame(width: 120)
                         .font(.footnote)
                 }
             }
@@ -123,7 +134,6 @@ struct MainScreen: View {
         }
     }
 }
-
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
