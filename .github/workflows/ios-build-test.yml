@@ -13,7 +13,7 @@ jobs:
 
     steps:
       - name: checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
         with:
@@ -37,9 +37,6 @@ jobs:
         run: |
           gem install xcpretty
 
-      - name: List targets
-        run: xcodebuild -workspace Pipeable.xcworkspace -list
-
       - name: Build and Test
         run: |
           set -o pipefail
@@ -53,7 +50,7 @@ jobs:
 
     steps:
       - name: checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
         with:
@@ -65,7 +62,7 @@ jobs:
 
       - name: Set Xcode 15
         run: |
-          sudo xcode-select -switch /Applications/Xcode_15.1.app
+          sudo xcode-select -switch /Applications/Xcode_15.2.app
 
       - name: Swift Lint
         run: swiftlint --strict
