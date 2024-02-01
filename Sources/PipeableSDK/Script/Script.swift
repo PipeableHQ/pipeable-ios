@@ -5,7 +5,7 @@ import JavaScriptCore
 class FakePage {
     func goto(_ url: String) async throws {
         if url.isEmpty {
-            throw PipeableError.urlMalformed("Empty url")
+            throw PipeableError.navigationError("Empty url")
         }
         print("Navigating to url: \(url) ...")
         try await Task.sleep(nanoseconds: 1_000_000_000)
@@ -34,7 +34,7 @@ class FakePipeableElement {
 
     public func click() async throws {
         if elementId.isEmpty {
-            throw PipeableError.dataNotFound
+            throw PipeableError.elementNotFound
         }
         print("Clicking on element with id: \(elementId) ...")
         try await Task.sleep(nanoseconds: 1_000_000_000)
@@ -93,7 +93,7 @@ class PipeableElementWrapper: NSObject, PipeableElementJSExport {
                 try await element.click()
                 successFullClicksClount += 1
                 completionHandler.call(withArguments: [[:]])
-            } catch PipeableError.dataNotFound {
+            } catch PipeableError.elementNotFound {
                 completionHandler.call(withArguments: [["error": "Element not found."]])
             } catch {
                 completionHandler.call(withArguments: [["error": "Unexpected error \(error)"]])
@@ -132,8 +132,8 @@ class PageWrapper: NSObject, PageJSExport {
             do {
                 try await page.goto(url)
                 completionHandler.call(withArguments: [[:]])
-            } catch PipeableError.urlMalformed {
-                completionHandler.call(withArguments: [["error": "Bad url."]])
+            } catch PipeableError.navigationError(let errorMessage) {
+                completionHandler.call(withArguments: [["error": "\(errorMessage)"]])
             } catch {
                 completionHandler.call(withArguments: [["error": "Unexpected error \(error)"]])
             }

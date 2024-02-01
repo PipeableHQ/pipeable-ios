@@ -37,9 +37,6 @@ jobs:
         run: |
           gem install xcpretty
 
-      - name: List targets
-        run: xcodebuild -workspace Pipeable.xcworkspace -list
-
       - name: Build and Test
         run: |
           set -o pipefail

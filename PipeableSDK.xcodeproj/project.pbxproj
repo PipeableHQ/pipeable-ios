@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A40EAC692B6BC88B00A6B6B3 /* PipeableXCTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40EAC682B6BC88B00A6B6B3 /* PipeableXCTestCase.swift */; };
+		A40EAC6C2B6BD0A100A6B6B3 /* PipeablePage_GotoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40EAC6B2B6BD0A100A6B6B3 /* PipeablePage_GotoTests.swift */; };
 		A434C6162B5964B300B8011C /* Pipeable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A434C6152B5964B300B8011C /* Pipeable.swift */; };
 		A4A7A9262B56BD7500982E63 /* Pipeable.docc in Sources */ = {isa = PBXBuildFile; fileRef = A4A7A9252B56BD7500982E63 /* Pipeable.docc */; };
 		A4A7A9312B56BD7500982E63 /* PipeableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4A7A9302B56BD7500982E63 /* PipeableTests.swift */; };
@@ -27,6 +29,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		A40EAC682B6BC88B00A6B6B3 /* PipeableXCTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PipeableXCTestCase.swift; sourceTree = "<group>"; };
+		A40EAC6B2B6BD0A100A6B6B3 /* PipeablePage_GotoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PipeablePage_GotoTests.swift; sourceTree = "<group>"; };
 		A434C6152B5964B300B8011C /* Pipeable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pipeable.swift; sourceTree = "<group>"; };
 		A450D1BB2B59750800079EAF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A4A7A9212B56BD7500982E63 /* PipeableSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PipeableSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -107,6 +111,8 @@
 			children = (
 				A4A7A9302B56BD7500982E63 /* PipeableTests.swift */,
 				E8F7B28C2B639E160040B77B /* ScriptTests.swift */,
+				A40EAC682B6BC88B00A6B6B3 /* PipeableXCTestCase.swift */,
+				A40EAC6B2B6BD0A100A6B6B3 /* PipeablePage_GotoTests.swift */,
 			);
 			path = PipeableTests;
 			sourceTree = "<group>";
@@ -293,6 +299,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A40EAC692B6BC88B00A6B6B3 /* PipeableXCTestCase.swift in Sources */,
+				A40EAC6C2B6BD0A100A6B6B3 /* PipeablePage_GotoTests.swift in Sources */,
 				E8F7B28E2B639E160040B77B /* ScriptTests.swift in Sources */,
 				A4A7A9312B56BD7500982E63 /* PipeableTests.swift in Sources */,
 			);
