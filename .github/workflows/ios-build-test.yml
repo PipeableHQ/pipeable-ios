@@ -27,12 +27,14 @@ jobs:
         run: |
           sudo xcode-select -switch /Applications/Xcode_15.2.app
 
-      # Disable for testing.
-      # - name: Swift Lint
-      #   run: swiftlint --strict
+      - name: Install SwiftLint
+        run: brew install swiftlint
 
-      # - name: Swift Format
-      #   run: swiftformat .
+      - name: Swift Lint
+        run: swiftlint --strict
+
+      - name: Swift Format
+        run: swiftformat .
 
       - name: Install dependencies
         run: |
