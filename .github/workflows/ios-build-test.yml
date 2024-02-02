@@ -9,7 +9,7 @@ on:
 
 jobs:
   build-and-test-framework:
-    runs-on: macos-13
+    runs-on: macos-14
 
     steps:
       - name: checkout repository
