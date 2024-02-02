@@ -9,7 +9,7 @@ on:
 
 jobs:
   build-and-test-framework:
-    runs-on: macos-13
+    runs-on: macos-14
 
     steps:
       - name: checkout repository
@@ -25,7 +25,10 @@ jobs:
 
       - name: Set Xcode 15
         run: |
-          sudo xcode-select -switch /Applications/Xcode_15.1.app
+          sudo xcode-select -switch /Applications/Xcode_15.2.app
+
+      - name: Install SwiftLint
+        run: brew install swiftlint
 
       - name: Swift Lint
         run: swiftlint --strict
@@ -46,7 +49,7 @@ jobs:
 
 
   build-and-test-sample-app:
-    runs-on: macos-13
+    runs-on: macos-14
 
     steps:
       - name: checkout repository
@@ -63,6 +66,9 @@ jobs:
       - name: Set Xcode 15
         run: |
           sudo xcode-select -switch /Applications/Xcode_15.1.app
+
+      - name: Install SwiftLint
+        run: brew install swiftlint
 
       - name: Swift Lint
         run: swiftlint --strict
