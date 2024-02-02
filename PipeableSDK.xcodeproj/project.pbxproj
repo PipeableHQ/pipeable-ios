@@ -14,6 +14,12 @@
 		A4A7A9312B56BD7500982E63 /* PipeableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4A7A9302B56BD7500982E63 /* PipeableTests.swift */; };
 		A4A7A9322B56BD7500982E63 /* Pipeable.h in Headers */ = {isa = PBXBuildFile; fileRef = A4A7A9242B56BD7500982E63 /* Pipeable.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A4C365FC2B62A3C5000D3F50 /* sophia.js in Resources */ = {isa = PBXBuildFile; fileRef = A4C365FB2B62A3C5000D3F50 /* sophia.js */; };
+		E81BD5AA2B6D4233007DFC02 /* BaseWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E81BD5A92B6D4233007DFC02 /* BaseWrapper.swift */; };
+		E81BD5AE2B6D430A007DFC02 /* PageWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E81BD5AD2B6D430A007DFC02 /* PageWrapper.swift */; };
+		E81BD5B02B6D45B6007DFC02 /* ElementWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E81BD5AF2B6D45B6007DFC02 /* ElementWrapper.swift */; };
+		E81BD5B42B6D4963007DFC02 /* PageScript_GotoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E81BD5B32B6D4963007DFC02 /* PageScript_GotoTests.swift */; };
+		E81BD5B62B6D5092007DFC02 /* Fakes.swift in Sources */ = {isa = PBXBuildFile; fileRef = E81BD5B52B6D5092007DFC02 /* Fakes.swift */; };
+		E832B5CC2B6D411900791C57 /* ScriptContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = E832B5CB2B6D411900791C57 /* ScriptContext.swift */; };
 		E8AC39A52B615C1D00D413BF /* Script.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8AC39A42B615C1D00D413BF /* Script.swift */; };
 		E8F7B28E2B639E160040B77B /* ScriptTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8F7B28C2B639E160040B77B /* ScriptTests.swift */; };
 /* End PBXBuildFile section */
@@ -39,6 +45,12 @@
 		A4A7A92B2B56BD7500982E63 /* PipeableSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PipeableSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4A7A9302B56BD7500982E63 /* PipeableTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PipeableTests.swift; sourceTree = "<group>"; };
 		A4C365FB2B62A3C5000D3F50 /* sophia.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = sophia.js; sourceTree = "<group>"; };
+		E81BD5A92B6D4233007DFC02 /* BaseWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseWrapper.swift; sourceTree = "<group>"; };
+		E81BD5AD2B6D430A007DFC02 /* PageWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageWrapper.swift; sourceTree = "<group>"; };
+		E81BD5AF2B6D45B6007DFC02 /* ElementWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElementWrapper.swift; sourceTree = "<group>"; };
+		E81BD5B32B6D4963007DFC02 /* PageScript_GotoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageScript_GotoTests.swift; sourceTree = "<group>"; };
+		E81BD5B52B6D5092007DFC02 /* Fakes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fakes.swift; sourceTree = "<group>"; };
+		E832B5CB2B6D411900791C57 /* ScriptContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ScriptContext.swift; path = Sources/PipeableSDK/ScriptContext.swift; sourceTree = SOURCE_ROOT; };
 		E8AC39A42B615C1D00D413BF /* Script.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Script.swift; sourceTree = "<group>"; };
 		E8F7B28C2B639E160040B77B /* ScriptTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -113,6 +125,7 @@
 				E8F7B28C2B639E160040B77B /* ScriptTests.swift */,
 				A40EAC682B6BC88B00A6B6B3 /* PipeableXCTestCase.swift */,
 				A40EAC6B2B6BD0A100A6B6B3 /* PipeablePage_GotoTests.swift */,
+				E81BD5B32B6D4963007DFC02 /* PageScript_GotoTests.swift */,
 			);
 			path = PipeableTests;
 			sourceTree = "<group>";
@@ -131,6 +144,11 @@
 			isa = PBXGroup;
 			children = (
 				E8AC39A42B615C1D00D413BF /* Script.swift */,
+				E832B5CB2B6D411900791C57 /* ScriptContext.swift */,
+				E81BD5A92B6D4233007DFC02 /* BaseWrapper.swift */,
+				E81BD5AD2B6D430A007DFC02 /* PageWrapper.swift */,
+				E81BD5AF2B6D45B6007DFC02 /* ElementWrapper.swift */,
+				E81BD5B52B6D5092007DFC02 /* Fakes.swift */,
 			);
 			path = Script;
 			sourceTree = "<group>";
@@ -289,8 +307,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E81BD5B62B6D5092007DFC02 /* Fakes.swift in Sources */,
+				E81BD5AA2B6D4233007DFC02 /* BaseWrapper.swift in Sources */,
+				E832B5CC2B6D411900791C57 /* ScriptContext.swift in Sources */,
 				A4A7A9262B56BD7500982E63 /* Pipeable.docc in Sources */,
 				E8AC39A52B615C1D00D413BF /* Script.swift in Sources */,
+				E81BD5AE2B6D430A007DFC02 /* PageWrapper.swift in Sources */,
+				E81BD5B02B6D45B6007DFC02 /* ElementWrapper.swift in Sources */,
 				A434C6162B5964B300B8011C /* Pipeable.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -302,6 +325,7 @@
 				A40EAC692B6BC88B00A6B6B3 /* PipeableXCTestCase.swift in Sources */,
 				A40EAC6C2B6BD0A100A6B6B3 /* PipeablePage_GotoTests.swift in Sources */,
 				E8F7B28E2B639E160040B77B /* ScriptTests.swift in Sources */,
+				E81BD5B42B6D4963007DFC02 /* PageScript_GotoTests.swift in Sources */,
 				A4A7A9312B56BD7500982E63 /* PipeableTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
