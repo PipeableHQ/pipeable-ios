@@ -70,18 +70,19 @@ class ScriptContext: NSObject, ScriptContextJSExport {
     func clickWithCompletion(_ completionHandler: JSValue)
 }
 
-class PipeableElementWrapper: NSObject, PipeableElementJSExport {
-    let element: FakePipeableElement
-    let dispatchGroup: DispatchGroup
-    var successFullClicksClount = 0
+enum CompletionResult {
+    case error(String)
+    case success(NSObject?)
+}
 
-    init(_ dispatchGroup: DispatchGroup, element: FakePipeableElement) {
-        self.element = element
+class BaseWrapper: NSObject {
+    let dispatchGroup: DispatchGroup
+    init(_ dispatchGroup: DispatchGroup) {
         self.dispatchGroup = dispatchGroup
         super.init()
     }
 
-    func clickWithCompletion(_ completionHandler: JSValue) {
+    func doWithCompletion(_ completionHandler: JSValue, _ call: @escaping () async throws -> CompletionResult) {
         dispatchGroup.enter()
 
         @Sendable
@@ -90,17 +91,45 @@ class PipeableElementWrapper: NSObject, PipeableElementJSExport {
                 self.dispatchGroup.leave()
             }
             do {
-                try await element.click()
-                successFullClicksClount += 1
-                completionHandler.call(withArguments: [[:]])
-            } catch PipeableError.elementNotFound {
-                completionHandler.call(withArguments: [["error": "Element not found."]])
+                let result = try await call()
+                switch result {
+                case let .error(error):
+                    completionHandler.call(withArguments: [["error": error]])
+                case let .success(result):
+                    if let result = result {
+                        completionHandler.call(withArguments: [["result": result]])
+                    } else {
+                        completionHandler.call(withArguments: [[:]])
+                    }
+                }
             } catch {
                 completionHandler.call(withArguments: [["error": "Unexpected error \(error)"]])
             }
         }
         Task {
             await taskRun()
+        }
+    }
+}
+
+class PipeableElementWrapper: BaseWrapper, PipeableElementJSExport {
+    let element: FakePipeableElement
+    var successFullClicksClount = 0
+
+    init(_ dispatchGroup: DispatchGroup, _ element: FakePipeableElement) {
+        self.element = element
+        super.init(dispatchGroup)
+    }
+
+    func clickWithCompletion(_ completionHandler: JSValue) {
+        doWithCompletion(completionHandler) {
+            do {
+                try await self.element.click()
+                self.successFullClicksClount += 1
+            } catch PipeableError.elementNotFound {
+                completionHandler.call(withArguments: [["error": "Element not found."]])
+            }
+            return CompletionResult.success(nil)
         }
     }
 }
@@ -111,57 +140,32 @@ class PipeableElementWrapper: NSObject, PipeableElementJSExport {
 }
 
 // Page wrapper wraps the Page Swift API so that it makes it easy/possible to implement the Page Script API.
-class PageWrapper: NSObject, PageJSExport {
+class PageWrapper: BaseWrapper, PageJSExport {
     let page: FakePage
-    let dispatchGroup: DispatchGroup
 
-    init(_ dispatchGroup: DispatchGroup) {
+    override init(_ dispatchGroup: DispatchGroup) {
         self.page = FakePage()
-        self.dispatchGroup = dispatchGroup
-        super.init()
+        super.init(dispatchGroup)
     }
 
     func gotoWithCompletion(_ url: String, _ completionHandler: JSValue) {
-        dispatchGroup.enter()
-
-        @Sendable
-        func taskRun() async {
-            defer {
-                self.dispatchGroup.leave()
-            }
+        doWithCompletion(completionHandler) {
             do {
-                try await page.goto(url)
-                completionHandler.call(withArguments: [[:]])
-            } catch PipeableError.navigationError(let errorMessage) {
+                try await self.page.goto(url)
+            } catch let PipeableError.navigationError(errorMessage) {
                 completionHandler.call(withArguments: [["error": "\(errorMessage)"]])
-            } catch {
-                completionHandler.call(withArguments: [["error": "Unexpected error \(error)"]])
             }
-        }
-        Task {
-            await taskRun()
+            return CompletionResult.success(nil)
         }
     }
 
     func querySelectorWithCompletion(_ selector: String, _ completionHandler: JSValue) {
-        dispatchGroup.enter()
-
-        @Sendable
-        func taskRun() async {
-            defer {
-                self.dispatchGroup.leave()
+        doWithCompletion(completionHandler) {
+            let element = try await self.page.querySelector(selector)
+            if let element = element {
+                return CompletionResult.success(PipeableElementWrapper(self.dispatchGroup, element))
             }
-            do {
-                let element = try await page.querySelector(selector)
-                // swiftlint:disable:next force_unwrapping
-                let wrapped = element != nil ? PipeableElementWrapper(dispatchGroup, element: element!) : nil
-                completionHandler.call(withArguments: [["result": wrapped]])
-            } catch {
-                completionHandler.call(withArguments: [["error": "Unexpected error \(error)"]])
-            }
-        }
-        Task {
-            await taskRun()
+            return CompletionResult.success(nil)
         }
     }
 }
@@ -194,43 +198,25 @@ public func prepareJSContext(_ dispatchGroup: DispatchGroup) -> JSContext {
         forKeyedSubscript: "PipeableElementWrapper" as (NSCopying & NSObjectProtocol))
 
     context.evaluateScript("""
-    PageWrapper.prototype.goto = function(url) {
-        return new Promise((resolve, reject) => {
-            this.gotoWithCompletion(url, function(result) {
-                if (result && result.error) {
-                    reject(result.error);
-                } else {
-                    resolve();
-                }
+    function completionToAsync(functionName) {
+        return function(...args) {
+            return new Promise((resolve, reject) => {
+                this[functionName](...args, function(result) {
+                    if (result && result.error) {
+                        reject(result.error);
+                    } else if (result && result.result) {
+                        resolve(result.result);
+                    } else {
+                        resolve();
+                    }
+                });
             });
-        });
+        }
     }
-    PageWrapper.prototype.querySelector = function(selector) {
-        return new Promise((resolve, reject) => {
-            this.querySelectorWithCompletion(selector, function(result) {
-                if (result && result.error) {
-                    reject(result.error);
-                } else if (result && result.result) {
-                    resolve(result.result);
-                } else {
-                    resolve();
-                }
-            });
-        });
-    }
-    PipeableElementWrapper.prototype.click = function() {
-        return new Promise((resolve, reject) => {
-            this.clickWithCompletion(function(result) {
-                if (result && result.error) {
-                    reject(result.error);
-                } else if (result && result.result) {
-                    resolve(result.result);
-                } else {
-                    resolve();
-                }
-            });
-        });
-    }
+
+    PageWrapper.prototype.goto = completionToAsync("gotoWithCompletion");
+    PageWrapper.prototype.querySelector = completionToAsync("querySelectorWithCompletion");
+    PipeableElementWrapper.prototype.click = completionToAsync("clickWithCompletion");
     """)
 
     return context
