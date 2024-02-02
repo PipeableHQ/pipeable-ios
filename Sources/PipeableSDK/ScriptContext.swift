@@ -5,7 +5,7 @@ import JavaScriptCore
     func scriptEnded()
 }
 
-class ScriptContext: NSObject, ScriptContextJSExport {
+final class ScriptContext: NSObject, ScriptContextJSExport {
     let dispatchGroup: DispatchGroup
 
     init(_ dispatchGroup: DispatchGroup) {

@@ -5,7 +5,7 @@ import JavaScriptCore
     func clickWithCompletion(_ completionHandler: JSValue)
 }
 
-class ElementWrapper: BaseWrapper, ElementJSExport {
+final class ElementWrapper: BaseWrapper, ElementJSExport {
     let element: PipeableElement
 
     init(_ dispatchGroup: DispatchGroup, _ element: PipeableElement) {

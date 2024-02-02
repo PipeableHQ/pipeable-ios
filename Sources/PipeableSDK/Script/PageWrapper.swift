@@ -8,7 +8,7 @@ import JavaScriptCore
 }
 
 // Page wrapper wraps the Page Swift API so that it makes it easy/possible to implement the Page Script API.
-class PageWrapper: BaseWrapper, PageJSExport {
+final class PageWrapper: BaseWrapper, PageJSExport {
     let page: PipeablePage
 
     init(_ dispatchGroup: DispatchGroup, _ page: PipeablePage) {
