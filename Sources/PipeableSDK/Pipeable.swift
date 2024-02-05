@@ -164,6 +164,12 @@ public class PipeablePage {
         }
     }
 
+    public enum WaitUntilOption: String {
+        case load
+        case domcontentloaded
+        case networkidle
+    }
+
     public init(_ webView: WKWebView, _ frame: WKFrameInfo? = nil) {
         self.webView = webView
         self.frame = frame
@@ -206,13 +212,13 @@ public class PipeablePage {
         }
     }
 
-    public func goto(_ url: String) async throws {
+    public func goto(_ url: String, timeout: Int = 30000, waitUntil: WaitUntilOption = .domcontentloaded) async throws {
         print("page goto \(url)")
 
         loadPageSignal.isPageLoaded = false
 
         if let urlObj = URL(string: url) {
-            let request = URLRequest(url: urlObj, timeoutInterval: 3)
+            let request = URLRequest(url: urlObj, timeoutInterval: TimeInterval(timeout) / 1_000)
 
             DispatchQueue.main.async {
                 self.webView.load(request)

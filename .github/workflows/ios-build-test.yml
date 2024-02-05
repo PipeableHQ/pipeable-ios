@@ -23,6 +23,14 @@ jobs:
         run: npm ci
         working-directory: ./Sources/sophiajs
 
+      - name: Install JS deps for test server
+        run: npm ci
+        working-directory: ./TestServer
+
+      - name: Run TestServer
+        run: node server.mjs &
+        working-directory: ./TestServer
+
       - name: Set Xcode 15
         run: |
           sudo xcode-select -switch /Applications/Xcode_15.2.app
@@ -46,6 +54,9 @@ jobs:
           xcodebuild -workspace Pipeable.xcworkspace -scheme PipeableSDK \
                      -destination 'platform=iOS Simulator,name=iPhone 15,OS=17.2' \
                      test | xcpretty
+
+      - name: Kill Test Server
+      run: lsof -ti :3000 | xargs kill
 
 
   build-and-test-sample-app:
