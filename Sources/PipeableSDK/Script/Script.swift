@@ -1,172 +1,7 @@
 import Foundation
 import JavaScriptCore
 
-// This is a fake Page that will be replaced by the real page.
-class FakePage {
-    func goto(_ url: String) async throws {
-        if url.isEmpty {
-            throw PipeableError.navigationError("Empty url")
-        }
-        print("Navigating to url: \(url) ...")
-        try await Task.sleep(nanoseconds: 1_000_000_000)
-        print("Navigation completed!")
-    }
-
-    public func querySelector(_ selector: String) async throws -> FakePipeableElement? {
-        if selector.isEmpty {
-            return nil
-        }
-        if selector == "empty" {
-            return FakePipeableElement(self, "")
-        }
-        return FakePipeableElement(self, "id-123")
-    }
-}
-
-class FakePipeableElement {
-    var page: FakePage
-    let elementId: String
-
-    init(_ page: FakePage, _ elementId: String) {
-        self.page = page
-        self.elementId = elementId
-    }
-
-    public func click() async throws {
-        if elementId.isEmpty {
-            throw PipeableError.elementNotFound
-        }
-        print("Clicking on element with id: \(elementId) ...")
-        try await Task.sleep(nanoseconds: 1_000_000_000)
-        print("Click completed!")
-    }
-}
-
-@objc protocol ScriptContextJSExport: JSExport {
-    func scriptStarted()
-    func scriptEnded()
-}
-
-class ScriptContext: NSObject, ScriptContextJSExport {
-    let dispatchGroup: DispatchGroup
-
-    init(_ dispatchGroup: DispatchGroup) {
-        self.dispatchGroup = dispatchGroup
-        super.init()
-    }
-
-    func scriptStarted() {
-        dispatchGroup.enter()
-    }
-
-    func scriptEnded() {
-        Task {
-            self.dispatchGroup.leave()
-        }
-    }
-}
-
-@objc protocol PipeableElementJSExport: JSExport {
-    func clickWithCompletion(_ completionHandler: JSValue)
-}
-
-class PipeableElementWrapper: NSObject, PipeableElementJSExport {
-    let element: FakePipeableElement
-    let dispatchGroup: DispatchGroup
-    var successFullClicksClount = 0
-
-    init(_ dispatchGroup: DispatchGroup, element: FakePipeableElement) {
-        self.element = element
-        self.dispatchGroup = dispatchGroup
-        super.init()
-    }
-
-    func clickWithCompletion(_ completionHandler: JSValue) {
-        dispatchGroup.enter()
-
-        @Sendable
-        func taskRun() async {
-            defer {
-                self.dispatchGroup.leave()
-            }
-            do {
-                try await element.click()
-                successFullClicksClount += 1
-                completionHandler.call(withArguments: [[:]])
-            } catch PipeableError.elementNotFound {
-                completionHandler.call(withArguments: [["error": "Element not found."]])
-            } catch {
-                completionHandler.call(withArguments: [["error": "Unexpected error \(error)"]])
-            }
-        }
-        Task {
-            await taskRun()
-        }
-    }
-}
-
-@objc protocol PageJSExport: JSExport {
-    func gotoWithCompletion(_ url: String, _ completionHandler: JSValue)
-    func querySelectorWithCompletion(_ selector: String, _ completionHandler: JSValue)
-}
-
-// Page wrapper wraps the Page Swift API so that it makes it easy/possible to implement the Page Script API.
-class PageWrapper: NSObject, PageJSExport {
-    let page: FakePage
-    let dispatchGroup: DispatchGroup
-
-    init(_ dispatchGroup: DispatchGroup) {
-        self.page = FakePage()
-        self.dispatchGroup = dispatchGroup
-        super.init()
-    }
-
-    func gotoWithCompletion(_ url: String, _ completionHandler: JSValue) {
-        dispatchGroup.enter()
-
-        @Sendable
-        func taskRun() async {
-            defer {
-                self.dispatchGroup.leave()
-            }
-            do {
-                try await page.goto(url)
-                completionHandler.call(withArguments: [[:]])
-            } catch PipeableError.navigationError(let errorMessage) {
-                completionHandler.call(withArguments: [["error": "\(errorMessage)"]])
-            } catch {
-                completionHandler.call(withArguments: [["error": "Unexpected error \(error)"]])
-            }
-        }
-        Task {
-            await taskRun()
-        }
-    }
-
-    func querySelectorWithCompletion(_ selector: String, _ completionHandler: JSValue) {
-        dispatchGroup.enter()
-
-        @Sendable
-        func taskRun() async {
-            defer {
-                self.dispatchGroup.leave()
-            }
-            do {
-                let element = try await page.querySelector(selector)
-                // swiftlint:disable:next force_unwrapping
-                let wrapped = element != nil ? PipeableElementWrapper(dispatchGroup, element: element!) : nil
-                completionHandler.call(withArguments: [["result": wrapped]])
-            } catch {
-                completionHandler.call(withArguments: [["error": "Unexpected error \(error)"]])
-            }
-        }
-        Task {
-            await taskRun()
-        }
-    }
-}
-
-public func prepareJSContext(_ dispatchGroup: DispatchGroup) -> JSContext {
+public func prepareJSContext(_ dispatchGroup: DispatchGroup, _ page: PipeablePage? = nil) -> JSContext {
     // swiftlint:disable:next force_unwrapping
     let context = JSContext()!
     context.exceptionHandler = { _, error in print("\(String(describing: error))") }
@@ -183,54 +18,50 @@ public func prepareJSContext(_ dispatchGroup: DispatchGroup) -> JSContext {
         }
     }
 
-    let page = PageWrapper(dispatchGroup)
+    let fakePage = FakePageWrapper(dispatchGroup)
     let scriptContext = ScriptContext(dispatchGroup)
 
     context.setObject(scriptContext, forKeyedSubscript: "__context" as (NSCopying & NSObjectProtocol))
-    context.setObject(page, forKeyedSubscript: "page" as (NSCopying & NSObjectProtocol))
+    if let page = page {
+        let pageWrapper = PageWrapper(dispatchGroup, page)
+        context.setObject(pageWrapper, forKeyedSubscript: "page" as (NSCopying & NSObjectProtocol))
+    }
+
     context.setObject(PageWrapper.self, forKeyedSubscript: "PageWrapper" as (NSCopying & NSObjectProtocol))
     context.setObject(
-        PipeableElementWrapper.self,
-        forKeyedSubscript: "PipeableElementWrapper" as (NSCopying & NSObjectProtocol))
+        ElementWrapper.self,
+        forKeyedSubscript: "ElementWrapper" as (NSCopying & NSObjectProtocol))
+
+    context.setObject(fakePage, forKeyedSubscript: "fakePage" as (NSCopying & NSObjectProtocol))
+    context.setObject(FakePageWrapper.self, forKeyedSubscript: "FakePageWrapper" as (NSCopying & NSObjectProtocol))
+    context.setObject(
+        FakeElementWrapper.self,
+        forKeyedSubscript: "FakeElementWrapper" as (NSCopying & NSObjectProtocol))
 
     context.evaluateScript("""
-    PageWrapper.prototype.goto = function(url) {
-        return new Promise((resolve, reject) => {
-            this.gotoWithCompletion(url, function(result) {
-                if (result && result.error) {
-                    reject(result.error);
-                } else {
-                    resolve();
-                }
+    function completionToAsync(functionName) {
+        return function(...args) {
+            return new Promise((resolve, reject) => {
+                this[functionName](...args, function(result) {
+                    if (result && result.error) {
+                        reject(result.error);
+                    } else if (result && result.result) {
+                        resolve(result.result);
+                    } else {
+                        resolve();
+                    }
+                });
             });
-        });
+        }
     }
-    PageWrapper.prototype.querySelector = function(selector) {
-        return new Promise((resolve, reject) => {
-            this.querySelectorWithCompletion(selector, function(result) {
-                if (result && result.error) {
-                    reject(result.error);
-                } else if (result && result.result) {
-                    resolve(result.result);
-                } else {
-                    resolve();
-                }
-            });
-        });
-    }
-    PipeableElementWrapper.prototype.click = function() {
-        return new Promise((resolve, reject) => {
-            this.clickWithCompletion(function(result) {
-                if (result && result.error) {
-                    reject(result.error);
-                } else if (result && result.result) {
-                    resolve(result.result);
-                } else {
-                    resolve();
-                }
-            });
-        });
-    }
+
+    FakePageWrapper.prototype.goto = completionToAsync("gotoWithCompletion");
+    FakePageWrapper.prototype.querySelector = completionToAsync("querySelectorWithCompletion");
+    FakeElementWrapper.prototype.click = completionToAsync("clickWithCompletion");
+
+    PageWrapper.prototype.goto = completionToAsync("gotoWithCompletion");
+    PageWrapper.prototype.querySelector = completionToAsync("querySelectorWithCompletion");
+    ElementWrapper.prototype.click = completionToAsync("clickWithCompletion");
     """)
 
     return context
@@ -241,10 +72,10 @@ public enum ScriptError: Error {
     case unexpectedError
 }
 
-public func runScript(_ script: String) async throws -> JSValue {
+public func runScript(_ script: String, _ page: PipeablePage? = nil) async throws -> JSValue {
     return try await withCheckedThrowingContinuation { continuation in
         let dispatchGroup = DispatchGroup()
-        let context = prepareJSContext(dispatchGroup)
+        let context = prepareJSContext(dispatchGroup, page)
         context.evaluateScript("""
         var __error = undefined;
         var __result = undefined;
