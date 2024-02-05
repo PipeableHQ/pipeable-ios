@@ -56,7 +56,7 @@ jobs:
                      test | xcpretty
 
       - name: Kill Test Server
-      run: lsof -ti :3000 | xargs kill
+        run: lsof -ti :3000 | xargs kill
 
 
   build-and-test-sample-app:
