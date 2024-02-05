@@ -16,7 +16,7 @@ app.get('/goto/timeout/:sec', (req, res) => {
 });
 
 app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`);
+    console.log(`Test server running at http://localhost:${port}`);
 });
 
 // Function to format current timestamp
