@@ -2,7 +2,7 @@
 import XCTest
 
 final class ScriptTests: XCTestCase {
-    func test_goto() async throws {
+    func testGoto() async throws {
         let result = try await runScript("""
             print('Calling page.goto');
             await fakePage.goto("https://google.com");
@@ -12,7 +12,7 @@ final class ScriptTests: XCTestCase {
         XCTAssertTrue(result.isBoolean && result.toBool(), "Unexpected result! " + result.debugDescription)
     }
 
-    func test_goto_with_error() async throws {
+    func testGotoWithError() async throws {
         let script = """
             print('Calling page.goto');
             await fakePage.goto("");
@@ -28,7 +28,7 @@ final class ScriptTests: XCTestCase {
         }
     }
 
-    func test_querySelector_and_click() async throws {
+    func testQuerySelectorAndClick() async throws {
         let script = """
             const element = await fakePage.querySelector("asd");
             await element.click();
@@ -40,7 +40,7 @@ final class ScriptTests: XCTestCase {
         XCTAssertEqual(element.successFullClicksClount, 1)
     }
 
-    func test_querySelector_and_click_with_error() async throws {
+    func testQuerySelectorAndClickWithError() async throws {
         let script = """
             const element = await fakePage.querySelector("empty");
             await element.click();
