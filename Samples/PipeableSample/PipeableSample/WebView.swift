@@ -13,7 +13,6 @@ struct PipeableWebView: View {
     var onClose: () -> Void
     var onResult: (ResultStatus) -> Void
 
-
     @State var working = false
     @State var done = false
     @State var statusText = ""
@@ -100,16 +99,14 @@ struct WebViewWrapper: UIViewControllerRepresentable {
         }
     }
 
-    mutating func urlChanged(url: URL, webView: WKWebView) {
-    }
+    mutating func urlChanged(url: URL, webView: WKWebView) {}
 }
-
 
 class WKWebViewController: UIViewController {
     var webView: WKWebView
     var isStarted = false
-    var onClose: (() -> Void)
-    var onStatusChange: ((_ status: Status, _ orders: [AmazonOrder]) -> Void)
+    var onClose: () -> Void
+    var onStatusChange: (_ status: Status, _ orders: [AmazonOrder]) -> Void
     var orders: [AmazonOrder] = []
 
     init(onClose: @escaping () -> Void, onStatusChange: @escaping (_ status: Status, _ orders: [AmazonOrder]) -> Void) {
@@ -119,12 +116,13 @@ class WKWebViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
     }
 
+    @available(*, unavailable)
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
     override func loadView() {
-        self.view = UIView()
+        view = UIView()
 
         // Set up resizing rules.
         webView = WKWebView(frame: .zero)
@@ -145,19 +143,19 @@ class WKWebViewController: UIViewController {
         toolbar.items = [closeButtonItem]
         toolbar.translatesAutoresizingMaskIntoConstraints = false
 
-        self.view.addSubview(webView)
-        self.view.addSubview(toolbar)
+        view.addSubview(webView)
+        view.addSubview(toolbar)
         webView.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
-            webView.topAnchor.constraint(equalTo: self.view.topAnchor),
-            webView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
-            webView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            webView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            webView.topAnchor.constraint(equalTo: view.topAnchor),
+            webView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            webView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            webView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
 
-            toolbar.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
-            toolbar.leftAnchor.constraint(equalTo: self.view.leftAnchor),
-            toolbar.rightAnchor.constraint(equalTo: self.view.rightAnchor),
+            toolbar.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            toolbar.leftAnchor.constraint(equalTo: view.leftAnchor),
+            toolbar.rightAnchor.constraint(equalTo: view.rightAnchor),
         ])
     }
 
@@ -165,7 +163,7 @@ class WKWebViewController: UIViewController {
         // No re-entry.
         isStarted = true
 
-        let year = 2023
+        let year = 2018
         let page = PipeablePage(webView, nil)
 
         onStatusChange(.login, [])
@@ -178,9 +176,56 @@ class WKWebViewController: UIViewController {
             url.contains("orderFilter=year-\(year)")
         }
 
-
         onStatusChange(.working, [])
+
         do {
+            let result = try await runScript(
+                """
+                    const orderEls = await page.querySelectorAll("#ordersContainer .js-item");
+
+                    const result = [];
+
+                    for (const orderEl of orderEls) {
+                        const orderImage = await orderEl.querySelector("img");
+                        const imageAlt = await orderImage.getAttribute("alt");
+
+                        const orderDateEl = await orderEl.querySelector(".a-size-small")
+
+                        const orderDateRawText = await orderDateEl.textContent();
+                        const orderDate = orderDateRawText.replace(/Ordered on/i, "").replace(/Delivered/i, "").trim();
+
+                        const anOrder = {
+                            item: imageAlt,
+                            orderDate: orderDate
+                        };
+                        result.push(anOrder);
+                    }
+
+                    return result;
+                """, page
+            )
+
+            print(String(describing: result.toObject()))
+
+            if let array = result.toObject() as? [Any] {
+                // Iterate over each element in the array, which are now expected to be dictionaries
+                for element in array {
+                    if let dictionary = element as? [String: Any] {
+                        // Extract 'item' and 'field' values from the dictionary
+                        let item = dictionary["item"] as? String
+                        let orderDate = dictionary["orderDate"] as? String
+
+                        let anOrder = AmazonOrder(item: item ?? "", date: orderDate ?? "")
+                        orders.append(anOrder)
+                    }
+                }
+            }
+
+            onStatusChange(.done, orders)
+
+            // Equivalent Swift code.
+
+            /*
             let ordersEls = try await page.querySelectorAll("#ordersContainer .js-item")
 
             if !ordersEls.isEmpty {
@@ -207,10 +252,9 @@ class WKWebViewController: UIViewController {
                     let anOrder = AmazonOrder(item: imageAlt ?? "", date: orderDate ?? "")
                     orders.append(anOrder)
                 }
-            }
-
-            onStatusChange(.done, orders)
+            } */
         } catch {
+            print("Got error: \(error)")
             onStatusChange(.failure, orders)
             return
         }
@@ -255,9 +299,8 @@ public func deleteAllCookies() {
     let dataTypes = WKWebsiteDataStore.allWebsiteDataTypes()
     let dateFrom = Date(timeIntervalSince1970: 0)
 
-    dataStore.removeData(ofTypes: dataTypes, modifiedSince: dateFrom) { }
+    dataStore.removeData(ofTypes: dataTypes, modifiedSince: dateFrom) {}
 }
-
 
 struct Cookie: Codable {
     let name: String
@@ -294,6 +337,7 @@ public func getCookiesJSON(webView: WKWebView) async throws -> String {
         }
     }
 }
+
 public func getUserAgent(webView: WKWebView) async throws -> String {
     return try await withCheckedThrowingContinuation { continuation in
         Task {
@@ -333,7 +377,7 @@ class BlockBarButtonItem: UIBarButtonItem {
 }
 
 struct PipeableWebview_Previews: PreviewProvider {
-    @State static private var orders: [AmazonOrder] = []
+    @State private static var orders: [AmazonOrder] = []
 
     static var previews: some View {
         VStack {

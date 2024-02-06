@@ -8,7 +8,7 @@ final class PipeablePageGotoTests: PipeableXCTestCase {
 
         try? await page.goto("about:blank")
 
-        let url = page.url()
+        let url = await page.url()
         XCTAssertEqual(url?.absoluteString, "about:blank")
     }
 
