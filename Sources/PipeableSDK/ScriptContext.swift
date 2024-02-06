@@ -18,8 +18,6 @@ final class ScriptContext: NSObject, ScriptContextJSExport {
     }
 
     func scriptEnded() {
-        Task {
-            self.dispatchGroup.leave()
-        }
+        dispatchGroup.leave()
     }
 }
