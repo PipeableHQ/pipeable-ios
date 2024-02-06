@@ -483,6 +483,7 @@ enum PipeableError: Error {
     case invalidResponse
     case invalidParameter(String)
     case fatalError(String)
+    case initializationError
 }
 
 func randomString(length: Int) -> String {
