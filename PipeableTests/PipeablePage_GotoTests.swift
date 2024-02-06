@@ -30,7 +30,7 @@ final class PipeablePageGotoTests: PipeableXCTestCase {
         }
     }
 
-    func testGotoWithTimeout() async throws {
+    func testGotoWithTimeoutFail() async throws {
         let page = PipeablePage(webView)
         do {
             try await page.goto("http://localhost:3000/goto/timeout/5", timeout: 1_000)
@@ -44,5 +44,11 @@ final class PipeablePageGotoTests: PipeableXCTestCase {
                 XCTFail("Expected PipeableError.navigationError, but got a different error: \(error)")
             }
         }
+    }
+
+    func testGotoWithTimeoutSuccess() async throws {
+        let page = PipeablePage(webView)
+
+        try await page.goto("http://localhost:3000/goto/timeout/0", timeout: 2_000)
     }
 }

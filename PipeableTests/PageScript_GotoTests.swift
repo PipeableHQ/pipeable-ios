@@ -38,7 +38,7 @@ final class PageScriptGotoTests: PipeableXCTestCase {
         }
     }
 
-    func testGotoWithTimeout() async throws {
+    func testGotoWithTimeoutFail() async throws {
         let page = PipeablePage(webView)
         do {
             _ = try await runScript(
@@ -59,5 +59,14 @@ final class PageScriptGotoTests: PipeableXCTestCase {
             // If the error is not of the expected type, fail the test
             XCTFail("Expected ScriptError.error with timeout, but got a different error: \(error)")
         }
+    }
+
+    func testGotoWithTimeoutSuccess() async throws {
+        let page = PipeablePage(webView)
+        _ = try await runScript(
+            """
+            await page.goto("http://localhost:3000/goto/timeout/0", { timeout: 2_000 });
+            """,
+            page)
     }
 }
