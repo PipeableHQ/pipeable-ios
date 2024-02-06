@@ -37,4 +37,36 @@ final class PageScriptGotoTests: PipeableXCTestCase {
             }
         }
     }
+
+    func testGotoWithTimeoutFail() async throws {
+        let page = PipeablePage(webView)
+        do {
+            _ = try await runScript(
+                """
+                await page.goto("http://localhost:3000/goto/timeout/3", { timeout: 1_000 });
+                """,
+                page)
+
+            XCTFail("Expected an error, but no error was thrown.")
+        } catch {
+            // Check if the caught error is of type PipeableError.navigationError ("The request timed out.")
+            if case ScriptError.error(let reason) = error {
+                if reason.contains("timed out") {
+                    return
+                }
+            }
+
+            // If the error is not of the expected type, fail the test
+            XCTFail("Expected ScriptError.error with timeout, but got a different error: \(error)")
+        }
+    }
+
+    func testGotoWithTimeoutSuccess() async throws {
+        let page = PipeablePage(webView)
+        _ = try await runScript(
+            """
+            await page.goto("http://localhost:3000/goto/timeout/0", { timeout: 2_000 });
+            """,
+            page)
+    }
 }

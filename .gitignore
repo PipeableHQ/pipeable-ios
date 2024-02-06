@@ -92,3 +92,5 @@ iOSInjectionProject/
 # OSX Annoying files
 .DS_Store
 
+node_modules
+
