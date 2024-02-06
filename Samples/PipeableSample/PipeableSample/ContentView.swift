@@ -22,7 +22,6 @@ struct ContentView: View {
     var body: some View {
         ZStack {
             MainScreen(orders: $orders) {
-                deleteAllCookies()
                 showWeb = true
             }
             .sheet(isPresented: $showWeb) {

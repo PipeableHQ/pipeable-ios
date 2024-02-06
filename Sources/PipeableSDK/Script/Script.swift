@@ -27,7 +27,7 @@ public func prepareJSContext(_ dispatchGroup: DispatchGroup, _ page: PipeablePag
 
     context.setObject(scriptContext, forKeyedSubscript: "__context" as (NSCopying & NSObjectProtocol))
     if let page = page {
-        let pageWrapper = PageWrapper(dispatchGroup, page)
+        let pageWrapper = PageWrapper(dispatchGroup, page, context)
         context.setObject(pageWrapper, forKeyedSubscript: "page" as (NSCopying & NSObjectProtocol))
     }
 
@@ -88,7 +88,13 @@ public func prepareJSContext(_ dispatchGroup: DispatchGroup, _ page: PipeablePag
     };
 
     PageWrapper.prototype.querySelector = completionToAsync("querySelectorWithCompletion");
+    PageWrapper.prototype.querySelectorAll = completionToAsync("querySelectorAllWithCompletion");
+
     ElementWrapper.prototype.click = completionToAsync("clickWithCompletion");
+    ElementWrapper.prototype.textContent = completionToAsync("textContentWithCompletion");
+    ElementWrapper.prototype.getAttribute = completionToAsync("getAttributeWithCompletion");
+    ElementWrapper.prototype.querySelector = completionToAsync("querySelectorWithCompletion");
+    ElementWrapper.prototype.querySelectorAll = completionToAsync("querySelectorAllWithCompletion");
     """)
 
     return context
