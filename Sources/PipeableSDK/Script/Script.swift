@@ -1,10 +1,11 @@
 import Foundation
 import JavaScriptCore
 
+// Temporarily silencing swiftlint until we refactor this into building blocks
+// swiftlint:disable:next function_body_length
 public func prepareJSContext(_ dispatchGroup: DispatchGroup, _ page: PipeablePage? = nil) -> JSContext {
     // swiftlint:disable:next force_unwrapping
     let context = JSContext()!
-    context.exceptionHandler = { _, error in print("\(String(describing: error))") }
 
     let printFunc: @convention(block) (String) -> Void = { text in print(text) }
     context.setObject(
@@ -59,7 +60,30 @@ public func prepareJSContext(_ dispatchGroup: DispatchGroup, _ page: PipeablePag
     FakePageWrapper.prototype.querySelector = completionToAsync("querySelectorWithCompletion");
     FakeElementWrapper.prototype.click = completionToAsync("clickWithCompletion");
 
-    PageWrapper.prototype.goto = completionToAsync("gotoWithCompletion");
+    PageWrapper.prototype.goto = function (url, opts) {
+        var timeout = 30_000;
+        var waitUntil = 'load';
+
+        if (opts !== undefined) {
+            if (opts.timeout !== undefined && opts.timeout !== null) {
+                timeout = Number(opts.timeout);
+                if (isNaN(timeout)) {
+                    return Promise.reject("Invalid timeout: " + opts.timeout);
+                }
+            }
+
+            if (opts.waitUntil !== undefined && opts.waitUntil !== null) {
+                waitUntil = opts.waitUntil;
+                if (waitUntil !== 'load' && waitUntil !== 'domcontentloaded' && waitUntil !== 'networkidle') {
+                    return Promise.reject("Invalid waitUntil: " + opts.waitUntil);
+                }
+            }
+        }
+
+        var rawFunc = completionToAsync("gotoWithCompletion").bind(this);
+        return rawFunc(url, timeout, waitUntil);
+    };
+
     PageWrapper.prototype.querySelector = completionToAsync("querySelectorWithCompletion");
     ElementWrapper.prototype.click = completionToAsync("clickWithCompletion");
     """)
@@ -76,6 +100,7 @@ public func runScript(_ script: String, _ page: PipeablePage? = nil) async throw
     return try await withCheckedThrowingContinuation { continuation in
         let dispatchGroup = DispatchGroup()
         let context = prepareJSContext(dispatchGroup, page)
+
         context.evaluateScript("""
         var __error = undefined;
         var __result = undefined;
@@ -98,6 +123,7 @@ public func runScript(_ script: String, _ page: PipeablePage? = nil) async throw
         dispatchGroup.notify(queue: .main) {
             if let error = context.objectForKeyedSubscript("__error") {
                 if !error.isUndefined {
+                    // TODO: Figure out how to convert back to PipeableErrors the PipeableError's, so that ScriptError is just a JS error.
                     continuation.resume(throwing: ScriptError.error(reason: error.toString()))
                     return
                 }

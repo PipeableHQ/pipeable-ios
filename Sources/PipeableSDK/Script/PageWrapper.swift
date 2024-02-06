@@ -2,7 +2,7 @@ import Foundation
 import JavaScriptCore
 
 @objc protocol PageJSExport: JSExport {
-    func gotoWithCompletion(_ url: String, _ completionHandler: JSValue)
+    func gotoWithCompletion(_ url: String, _ timeout: Int, _ waitUntilRaw: String, _ completionHandler: JSValue)
     func querySelectorWithCompletion(_ selector: String, _ completionHandler: JSValue)
     func url() -> URL?
 }
@@ -16,9 +16,14 @@ final class PageWrapper: BaseWrapper, PageJSExport {
         super.init(dispatchGroup)
     }
 
-    func gotoWithCompletion(_ url: String, _ completionHandler: JSValue) {
+    func gotoWithCompletion(_ url: String, _ timeout: Int, _ waitUntilRaw: String, _ completionHandler: JSValue) {
         doWithCompletion(completionHandler) {
-            try await self.page.goto(url)
+            let waitUntil = PipeablePage.WaitUntilOption(rawValue: waitUntilRaw)
+            guard let waitUntil = waitUntil else {
+                throw PipeableError.invalidParameter("Invalid waitUntil option passed: \(waitUntilRaw)")
+            }
+
+            try await self.page.goto(url, timeout: timeout, waitUntil: waitUntil)
             return CompletionResult.success(nil)
         }
     }
