@@ -55,4 +55,34 @@ final class ScriptTests: XCTestCase {
             XCTFail("An empty url error is expected")
         }
     }
+
+    func testScriptWithUnhandledExceptions() async throws {
+        let script = "random statement that should not compile"
+        do {
+            _ = try await runScript(script)
+            XCTFail("Should fail with unhandled exception.")
+        } catch let ScriptError.error(reason) {
+            XCTAssert(reason.contains("JS Error"), "Script failed with unhandled exception")
+        }
+    }
+
+    func testScriptWithNonExistentFunctions() async throws {
+        let script = "nonexistentFunctionCall()"
+        do {
+            _ = try await runScript(script)
+            XCTFail("Should fail with unhandled exception.")
+        } catch let ScriptError.error(reason) {
+            XCTAssert(reason.contains("ReferenceError"), "Script failed with unhandled exception \(reason)")
+        }
+    }
+
+    func testScriptWithSyntaxError() async throws {
+        let script = "1 + - = 3"
+        do {
+            _ = try await runScript(script)
+            XCTFail("Should fail with unhandled exception.")
+        } catch let ScriptError.error(reason) {
+            XCTAssert(reason.contains("SyntaxError"), "Script failed with unhandled exception \(reason)")
+        }
+    }
 }

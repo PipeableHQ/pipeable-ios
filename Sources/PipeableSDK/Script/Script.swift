@@ -4,8 +4,9 @@ import JavaScriptCore
 // Temporarily silencing swiftlint until we refactor this into building blocks
 // swiftlint:disable:next function_body_length
 public func prepareJSContext(_ dispatchGroup: DispatchGroup, _ page: PipeablePage? = nil) -> JSContext {
-    // swiftlint:disable:next force_unwrapping
-    let context = JSContext()!
+    guard let context = JSContext() else {
+        fatalError("Failed to initialize JSContext")
+    }
 
     let printFunc: @convention(block) (String) -> Void = { text in print(text) }
     context.setObject(
@@ -15,7 +16,9 @@ public func prepareJSContext(_ dispatchGroup: DispatchGroup, _ page: PipeablePag
     // Set exception handler
     context.exceptionHandler = { _, exception in
         if let exception = exception {
+            // Print the exception, set it as the error of the script, so it's passed to "runScript".
             print("JS Error: \(exception)")
+            context.evaluateScript("__error = \"JS Error: " + exception.description + "\"")
         }
     }
 
