@@ -16,7 +16,7 @@ Pod::Spec.new do |spec|
   #
 
   spec.name         = "PipeableSDK"
-  spec.version      = "0.0.9"
+  spec.version      = "0.0.10"
   spec.summary      = "WebView automation framework for iOS"
 
   # This description is used to generate tags and improve search results.
