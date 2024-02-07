@@ -117,7 +117,6 @@
 			isa = PBXGroup;
 			children = (
 				A4E25B402B6698E400F3DFDE /* PipeableSDK */,
-				A4A4FE252B62A3280094C7D0 /* Resources */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -138,6 +137,7 @@
 		A4E25B402B6698E400F3DFDE /* PipeableSDK */ = {
 			isa = PBXGroup;
 			children = (
+				A4A4FE252B62A3280094C7D0 /* Resources */,
 				A43DC5892B7277C100D0670B /* PipeableElement.swift */,
 				A4A7A9252B56BD7500982E63 /* Pipeable.docc */,
 				A434C6152B5964B300B8011C /* Pipeable.swift */,
