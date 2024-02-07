@@ -21,7 +21,7 @@ let package = Package(
             dependencies: [],
             path: "Sources/PipeableSDK",
             resources: [
-                .process("../Resources")
+                .process("Resources")
             ]
         ),
 

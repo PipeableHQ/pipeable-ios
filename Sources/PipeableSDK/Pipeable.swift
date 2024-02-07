@@ -178,8 +178,13 @@ public class PipeablePage {
 
         var contents: String?
 
-        let frameworkBundle = Bundle(for: PipeablePage.self)
-        let pathInFramework = frameworkBundle.path(forResource: "sophia", ofType: "js")
+        #if SWIFT_PACKAGE
+        let bundle = Bundle.module
+        #else
+        let bundle = Bundle(for: PipeablePage.self)
+        #endif
+
+        let pathInFramework = bundle.path(forResource: "sophia", ofType: "js")
 
         if let filepath = pathInFramework {
             contents = try? String(contentsOfFile: filepath, encoding: .utf8)
