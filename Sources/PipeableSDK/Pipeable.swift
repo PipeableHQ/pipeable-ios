@@ -170,7 +170,7 @@ public class PipeablePage {
         case networkidle
     }
 
-    public init(_ webView: WKWebView, _ frame: WKFrameInfo? = nil) {
+    public init(_ webView: WKWebView, _ frame: WKFrameInfo? = nil, debugPrintConsoleLogs: Bool? = nil) {
         self.webView = webView
         self.frame = frame
 
@@ -201,6 +201,27 @@ public class PipeablePage {
             fatalError("Could not find bundled JS")
         }
 
+        // Logging override.
+        if debugPrintConsoleLogs ?? false {
+            let loggingOverrideScript = WKUserScript(
+                source:
+                """
+                origConsoleLog = window.console.log;
+                window.console.log = function(message) {
+                    window.webkit.messageHandlers.handler.postMessage({
+                        ctx: 'sophia',
+                        name: 'log',
+                        payload: { message }
+                    });
+
+                    origConsoleLog.apply(null, arguments);
+                };
+                """,
+                injectionTime: .atDocumentStart,
+                forMainFrameOnly: true
+            )
+            config.userContentController.addUserScript(loggingOverrideScript)
+        }
         loadPageSignal = LoadPageSignal()
 
         // This is the main frame / page.
@@ -414,20 +435,14 @@ public class PipeablePage {
         return xhrResult
     }
 
-    public func evaluate(_ javascript: String) async throws -> String {
-        let result = try await webView.callAsyncJavaScript(
+    public func evaluate(_ javascript: String) async throws -> Any? {
+        let result = try await webView.evaluateJavaScript(
             javascript,
-            arguments: [:],
             in: frame,
             contentWorld: WKContentWorld.page
         )
 
-        // FIX THIS BIG TIME :)
-        if let strResult = result as? String {
-            return strResult
-        } else {
-            return ""
-        }
+        return result
     }
 
     // TODO: Figure out error handling here.

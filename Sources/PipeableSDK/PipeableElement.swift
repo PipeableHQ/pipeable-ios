@@ -9,12 +9,14 @@ public class PipeableElement {
         self.elementId = elementId
     }
 
-    public func click() async throws {
+    public func click(timeout: Int? = nil) async throws {
+        let timeout = timeout ?? 30000
+
         let result = try await page.webView.callAsyncJavaScript(
             """
-                return window.SophiaJS.click(elementHash);
+                return window.SophiaJS.click(elementHash, { timeout: timeout });
             """,
-            arguments: ["elementHash": elementId],
+            arguments: ["elementHash": elementId, "timeout": timeout],
             in: page.frame,
             contentWorld: WKContentWorld.page
         )

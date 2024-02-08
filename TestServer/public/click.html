@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Click Test Cases</title>
+  </head>
+  <body>
+    <div id="container">
+      <div class="item" id="item1" data-testid="TestID Attribute 1">Item 1</div>
+      <div class="item" id="item2">Item 2</div>
+      <div class="special" id="specialItem">Special Item</div>
+      <p class="text">Some text here</p>
+      <ul>
+        <li class="list-item">List Item 1</li>
+        <li class="list-item">List Item 2</li>
+      </ul>
+
+      <a id="invisible_link" style="display: none">Invisible link</a>
+
+      <a id="normal_link" href="#">Normal link</a>
+
+      <br />
+
+      <a
+        id="normal_inlinejs_link"
+        onclick="window.clicks++; return false"
+        href="#"
+        >Inline link</a
+      >
+
+      <div id="outer_container">
+        <a
+          onclick="window.clicks++; return false"
+          href="#"
+          style="display: block; width: 100%"
+          >Link inside container</a
+        >
+      </div>
+
+      <div id="eventually_visible_container" style="display: none">
+        <div id="eventually_visible" onclick="window.clicks++">
+          Eventually visible
+        </div>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      window.clicks = 0;
+
+      document
+        .getElementById("normal_link")
+        .addEventListener("click", function () {
+          window.clicks++;
+          return false;
+        });
+
+      setTimeout(function () {
+        document.getElementById("eventually_visible_container").style.display =
+          "block";
+      }, 1000);
+    </script>
+  </body>
+</html>
