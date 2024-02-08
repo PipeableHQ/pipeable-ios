@@ -3,7 +3,10 @@
         private elementRegistry = new WeakDomRegistry();
 
         private xhrHandles: {
-            [key: string]: { resolve: (res: XHRResult) => void; reject: (error: string) => void }[];
+            [key: string]: {
+                resolve: (res: XHRResult) => void;
+                reject: (error: string) => void;
+            }[];
         } = {};
 
         constructor() {
@@ -194,19 +197,69 @@
             });
         }
 
-        click(elementHash: string) {
+        async click(elementHash: string, opts: { timeout: number }) {
             const el = this.elementRegistry.get(elementHash);
+
             if (el) {
-                const event = new MouseEvent('click', {
-                    view: window,
+                // Wait until the element becomes visible.
+                const start = Date.now();
+                while (!qualifyElement(el!, true)) {
+                    if (Date.now() - start > opts.timeout) {
+                        throw new Error(`Timed out waiting for element to become visible to click: ${elementHash}`);
+                    }
+
+                    await new Promise((resolve) => setTimeout(resolve, 100));
+                }
+
+                if ('scrollIntoViewIfNeeded' in el) {
+                    // this seems to be available in Safari, but for some of the other browser we may need to polyfill.
+                    // https://github.com/nuxodin/lazyfill/blob/main/polyfills/Element/prototype/scrollIntoViewIfNeeded.js
+                    (el as any).scrollIntoViewIfNeeded();
+                } else {
+                    el.scrollIntoView();
+                }
+
+                // Get the bounding rectangle of the visible area of the element
+                const rect = el.getBoundingClientRect();
+
+                // Calculate the coordinates of the center of the visible area of the element
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+
+                // Get the innermost element covering the center of the visible area
+                const innermostElement = document.elementFromPoint(centerX, centerY);
+
+                // Dispatch a click event on the innermost element
+                const clickEvent = new MouseEvent('click', {
                     bubbles: true,
                     cancelable: true,
+                    view: window,
+                    screenX: window.screenX + centerX,
+                    screenY: window.screenY + centerY,
+                    clientX: window.screenX + centerX,
+                    clientY: window.screenY + centerY,
+                    ctrlKey: false,
+                    altKey: false,
+                    shiftKey: false,
+                    metaKey: false,
+                    button: 0,
+                    relatedTarget: null,
                 });
 
-                el.dispatchEvent(event);
+                if (!innermostElement) {
+                    throw new Error(
+                        'No innermost element found at the center of the original element -- should not happen',
+                    );
+                }
 
-                // TODO: Do we need to issue the browser click here or is dispatching the click event enough?
-                // (el as HTMLElement).click();
+                // console.log(
+                //     'Dispatching click event on innermost element: ' +
+                //         innermostElement.tagName +
+                //         '#' +
+                //         innermostElement.id,
+                // );
+
+                innermostElement.dispatchEvent(clickEvent);
 
                 return true;
             }
@@ -687,6 +740,12 @@
 
         // Check element style and its ancestors
         while (currentElement) {
+            // Check if the element is within the viewport
+            const rect = currentElement.getBoundingClientRect();
+            if (rect.width <= 0 || rect.height <= 0) {
+                return false;
+            }
+
             const style = getComputedStyle(currentElement);
             if (
                 style.display === 'none' ||
@@ -697,6 +756,7 @@
             ) {
                 return false;
             }
+
             currentElement = currentElement.parentElement;
         }
 
