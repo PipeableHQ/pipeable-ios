@@ -33,7 +33,7 @@ final class PipeableElementClickTests: PipeableXCTestCase {
             try await invisibleLinkEl?.click(timeout: 500)
             XCTFail("Should fail on invisible links with timeout")
         } catch {
-            print(error)
+            XCTAssert(String(describing: error).contains("Timed out waiting for element to become visible"))
         }
     }
 
