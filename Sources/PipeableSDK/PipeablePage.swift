@@ -20,10 +20,10 @@ public class PipeablePage {
     }
 
     class Delegate: NSObject, WKNavigationDelegate {
-        private var loadPageSignal: PageLoadState
+        private var loadPageState: PageLoadState
 
         init(_ loadPageSignal: PageLoadState) {
-            self.loadPageSignal = loadPageSignal
+            self.loadPageState = loadPageSignal
         }
 
         func webView(_: WKWebView, didFinish _: WKNavigation) {
@@ -33,18 +33,18 @@ public class PipeablePage {
         }
 
         func webView(_ webView: WKWebView, didStartProvisionalNavigation _: WKNavigation) {
-            loadPageSignal.changeState(state: .notloaded, url: webView.url?.absoluteString)
+            loadPageState.changeState(state: .notloaded, url: webView.url?.absoluteString)
         }
 
         func webView(_ webView: WKWebView, didFail _: WKNavigation, withError error: Error) {
-            loadPageSignal.error(
+            loadPageState.error(
                 error: PipeableError.navigationError(error.localizedDescription),
                 url: webView.url?.absoluteString
             )
         }
 
         func webView(_ webView: WKWebView, didFailProvisionalNavigation _: WKNavigation, withError error: Error) {
-            loadPageSignal.error(
+            loadPageState.error(
                 error: PipeableError.navigationError(error.localizedDescription),
                 url: webView.url?.absoluteString
             )
@@ -55,7 +55,7 @@ public class PipeablePage {
         }
 
         func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
-            loadPageSignal.error(error: PipeableError.navigationError("Terminated"), url: webView.url?.absoluteString)
+            loadPageState.error(error: PipeableError.navigationError("Terminated"), url: webView.url?.absoluteString)
         }
 
         func webView(_: WKWebView, decidePolicyFor _: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
