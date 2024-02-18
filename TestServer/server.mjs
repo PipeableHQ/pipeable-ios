@@ -1,3 +1,4 @@
+import fs from 'fs';
 import path from 'path';
 import express from 'express';
 import { timestampLoggingMiddleware } from './timestamp_logging.mjs';
@@ -19,7 +20,6 @@ app.get('/goto/timeout/:sec', (req, res) => {
 
 // Simulate latency not on the html, but on the assets.
 // This way domcontentloaded is fast, but the load event is slowed down.
-let assetsLatency = 0;
 
 // Dynamic route to set latency and serve the requested file
 app.get('/load_latency/:sec/*', (req, res, next) => {
@@ -30,25 +30,30 @@ app.get('/load_latency/:sec/*', (req, res, next) => {
         return;
     }
 
-    assetsLatency = sec * 1000; // Convert seconds to milliseconds
+    const delay = sec * 1000; // Convert seconds to milliseconds
 
     // Extract the file path from the URL
     const filePath = req.params[0]; // This captures everything after the latency parameter
 
     // Serve the file from the public directory
     const fullPath = path.resolve(path.join('public', 'load_latency', filePath));
-    res.sendFile(fullPath);
+    const fileContents = fs.readFileSync(fullPath, 'utf8');
+    const modifiedContents = fileContents.replace('{{delay}}', delay.toString());
+    res.contentType('text/html').send(modifiedContents);
 });
 
 // Middleware to apply latency to specific script requests
-app.use('/load_latency/assets/', (_, __, next) => {
-    if (assetsLatency > 0) {
-        setTimeout(() => {
-            next();
-        }, assetsLatency);
-    } else {
+app.use('/load_latency/assets/', (req, __, next) => {
+    // parse ?delay= from req
+    const delay = parseInt(req.query.delay, 10);
+    if (isNaN(delay)) {
         next();
+        return;
     }
+
+    setTimeout(() => {
+        next();
+    }, delay);
 });
 
 // Serve static files from the "public" directory
