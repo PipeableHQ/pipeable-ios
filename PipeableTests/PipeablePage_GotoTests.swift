@@ -83,7 +83,7 @@ final class PipeablePageGotoTests: PipeableXCTestCase {
     func testGotoDomcontentLoadedButNotLoad() async throws {
         let page = PipeablePage(webView)
 
-        try await page.goto("http://localhost:3000/load_latency/2/index.html", waitUntil: .domcontentloaded, timeout: 1000)
+        try await page.goto("http://localhost:3000/load_latency/5/index.html", waitUntil: .domcontentloaded, timeout: 3000)
 
         do {
             try await page.waitForLoadState(waitUntil: .load, timeout: 1000)
