@@ -22,21 +22,18 @@ app.get('/goto/timeout/:sec', (req, res) => {
 // This way domcontentloaded is fast, but the load event is slowed down.
 
 // Dynamic route to set latency and serve the requested file
-app.get('/load_latency/:sec/*', (req, res, next) => {
+app.get('/load_latency/:sec/index.html', (req, res) => {
     // Set script latency based on URL parameter
     const sec = parseInt(req.params.sec, 10);
     if (isNaN(sec)) {
-        next();
+        res.status(400).send('Invalid latency parameter');
         return;
     }
 
     const delay = sec * 1000; // Convert seconds to milliseconds
 
-    // Extract the file path from the URL
-    const filePath = req.params[0]; // This captures everything after the latency parameter
-
     // Serve the file from the public directory
-    const fullPath = path.resolve(path.join('public', 'load_latency', filePath));
+    const fullPath = path.resolve(path.join('public', 'load_latency', 'index.html'));
     const fileContents = fs.readFileSync(fullPath, 'utf8');
     const modifiedContents = fileContents.replace('{{delay}}', delay.toString());
     res.contentType('text/html').send(modifiedContents);
