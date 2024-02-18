@@ -18,6 +18,8 @@
 
             this.attachOnErrorListener();
             this.attachMessageBus();
+
+            this.attachOnLoadListeners();
         }
 
         $(selector: string, parentElementHash?: string): string | null {
@@ -673,6 +675,35 @@
                     throw error;
                 }
             };
+        }
+
+        private attachOnLoadListeners() {
+            window.addEventListener('DOMContentLoaded', () => {
+                console.log('SophiaJS load event for frame with url ' + window.location.href);
+                const message = {
+                    ctx: 'sophia',
+                    name: 'pageLoadStateChange',
+                    payload: {
+                        state: 'domcontentloaded',
+                        url: window.location.href,
+                    },
+                };
+                window.webkit?.messageHandlers?.handler?.postMessage(message);
+            });
+
+            // On load.
+            window.addEventListener('load', () => {
+                console.log('SophiaJS load event for frame with url ' + window.location.href);
+                const message = {
+                    ctx: 'sophia',
+                    name: 'pageLoadStateChange',
+                    payload: {
+                        state: 'load',
+                        url: window.location.href,
+                    },
+                };
+                window.webkit?.messageHandlers?.handler?.postMessage(message);
+            });
         }
     }
 

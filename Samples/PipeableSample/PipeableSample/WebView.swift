@@ -222,37 +222,6 @@ class WKWebViewController: UIViewController {
             }
 
             onStatusChange(.done, orders)
-
-            // Equivalent Swift code.
-
-            /*
-            let ordersEls = try await page.querySelectorAll("#ordersContainer .js-item")
-
-            if !ordersEls.isEmpty {
-                for orderEl in ordersEls {
-                    let orderImage = try await orderEl.querySelector("img")
-                    let imageAlt = try await orderImage?.getAttribute("alt")
-
-                    let orderDateEl = try await orderEl.querySelector(".a-size-small")
-
-                    let orderDateRawText = try await orderDateEl?.textContent()
-                    let orderDate = orderDateRawText?
-                        .replacingOccurrences(
-                            of: "Ordered on",
-                            with: "",
-                            options: .caseInsensitive
-                        )
-                        .replacingOccurrences(
-                            of: "Delivered",
-                            with: "",
-                            options: .caseInsensitive
-                        )
-                        .trimmingCharacters(in: .whitespacesAndNewlines)
-
-                    let anOrder = AmazonOrder(item: imageAlt ?? "", date: orderDate ?? "")
-                    orders.append(anOrder)
-                }
-            } */
         } catch {
             print("Got error: \(error)")
             onStatusChange(.failure, orders)

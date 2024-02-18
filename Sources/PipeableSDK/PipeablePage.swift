@@ -27,27 +27,35 @@ public class PipeablePage {
         }
 
         func webView(_: WKWebView, didFinish _: WKNavigation) {
-            loadPageSignal.changeState(state: .domcontentloaded)
+            // Used to fire the DOMContentloaded here, but it actually is not really domcontentloaded, more like .load
+            // Right now everything is fired from JS, but we might want to fire load here as well, just in case
+            // some script deregisters all listeners on boot.
         }
 
-        func webView(_: WKWebView, didStartProvisionalNavigation _: WKNavigation) {
-            loadPageSignal.changeState(state: .notloaded)
+        func webView(_ webView: WKWebView, didStartProvisionalNavigation _: WKNavigation) {
+            loadPageSignal.changeState(state: .notloaded, url: webView.url?.absoluteString)
         }
 
-        func webView(_: WKWebView, didFail _: WKNavigation, withError error: Error) {
-            loadPageSignal.error(error: PipeableError.navigationError(error.localizedDescription))
+        func webView(_ webView: WKWebView, didFail _: WKNavigation, withError error: Error) {
+            loadPageSignal.error(
+                error: PipeableError.navigationError(error.localizedDescription),
+                url: webView.url?.absoluteString
+            )
         }
 
-        func webView(_: WKWebView, didFailProvisionalNavigation _: WKNavigation, withError error: Error) {
-            loadPageSignal.error(error: PipeableError.navigationError(error.localizedDescription))
+        func webView(_ webView: WKWebView, didFailProvisionalNavigation _: WKNavigation, withError error: Error) {
+            loadPageSignal.error(
+                error: PipeableError.navigationError(error.localizedDescription),
+                url: webView.url?.absoluteString
+            )
         }
 
         func webView(_: WKWebView, didReceive _: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
             completionHandler(.performDefaultHandling, nil)
         }
 
-        func webViewWebContentProcessDidTerminate(_: WKWebView) {
-            loadPageSignal.error(error: PipeableError.navigationError("Terminated"))
+        func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
+            loadPageSignal.error(error: PipeableError.navigationError("Terminated"), url: webView.url?.absoluteString)
         }
 
         func webView(_: WKWebView, decidePolicyFor _: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
@@ -61,11 +69,14 @@ public class PipeablePage {
 
     class ContentController: NSObject, WKScriptMessageHandler {
         private var frameInfoResolver: FrameInfoResolver
+        private var pageLoadState: PageLoadState
 
-        init(_ frameInfoResolver: FrameInfoResolver) {
+        init(_ frameInfoResolver: FrameInfoResolver, _ pageLoadState: PageLoadState) {
             self.frameInfoResolver = frameInfoResolver
+            self.pageLoadState = pageLoadState
         }
 
+        // swiftlint:disable:next cyclomatic_complexity
         func userContentController(_: WKUserContentController, didReceive message: WKScriptMessage) {
             guard let dict = message.body as? [String: AnyObject] else {
                 return
@@ -94,6 +105,21 @@ public class PipeablePage {
                                 self.frameInfoResolver.frameInfos[requestId] = message.frameInfo
                             }
                         }
+                    } else if name == "pageLoadStateChange" {
+                        guard let rawState = payload["state"] as? String else {
+                            return
+                        }
+
+                        guard let url = payload["url"] as? String else {
+                            return
+                        }
+
+                        guard let state = LoadState.fromString(rawState) else {
+                            // LOG ERROR once we decide on error logging. This is a problem between the JS and Swift code.
+                            return
+                        }
+
+                        pageLoadState.changeState(state: state, url: url)
                     }
                 }
             }
@@ -164,7 +190,10 @@ public class PipeablePage {
         if frame == nil {
             delegate = Delegate(pageLoadState)
             self.webView.navigationDelegate = delegate
-            self.webView.configuration.userContentController.add(ContentController(frameInfoResolver), name: "handler")
+            self.webView.configuration.userContentController.add(
+                ContentController(frameInfoResolver, pageLoadState),
+                name: "handler"
+            )
         }
     }
 
@@ -174,10 +203,10 @@ public class PipeablePage {
         }
     }
 
-    public func goto(_ url: String, timeout: Int = 30000, waitUntil: WaitUntilOption = .load) async throws {
+    public func goto(_ url: String, waitUntil: WaitUntilOption = .load, timeout: Int = 30000) async throws {
         print("page goto \(url) timeout \(timeout) waitUntil \(waitUntil)")
 
-        pageLoadState.changeState(state: .notloaded)
+        pageLoadState.changeState(state: .notloaded, url: nil)
 
         if let urlObj = URL(string: url) {
             let request = URLRequest(url: urlObj, timeoutInterval: TimeInterval(timeout) / 1000)
@@ -189,51 +218,107 @@ public class PipeablePage {
             throw PipeableError.navigationError("Incorrect URL \(url)")
         }
 
-        try await waitForLoadStatus(waitUntil)
+        try await waitForLoadState(waitUntil: waitUntil, timeout: timeout)
     }
 
-    public func reload(waitUntil: WaitUntilOption = .load) async throws {
-        pageLoadState.changeState(state: .notloaded)
+    public func reload(waitUntil: WaitUntilOption = .load, timeout: Int = 30000) async throws {
+        pageLoadState.changeState(state: .notloaded, url: nil)
         await webView.reload()
-        return try await waitForLoadStatus(waitUntil)
+        return try await waitForLoadState(waitUntil: waitUntil, timeout: timeout)
     }
 
-    public func waitForLoadStatus(_: WaitUntilOption) async throws {
+    public func waitForLoadState(waitUntil: WaitUntilOption = .load, timeout: Int = 30000) async throws {
         if frame != nil {
             // Iframes are already loaded, if we can address them.
             // TODO: This is only correct for domcontentloaded, load and networkidle still need handling for iframes.
             return
         }
 
+        // If we're in a higher state than what we're waiting for already, return immediately.
+        if pageLoadState.state.rawValue >= LoadState.fromWaitUntil(waitUntil).rawValue {
+            return
+        }
+
+        // Otherwise, wait until we get there or we time out.
+
+        // Since there is a potential race condition that can lead to double
+        // "resume" calls on the continuation, we need to ensure that the
+        // continuation is only resumed once. We guard this by running resumes
+        // in a queue and using a helper.
+        class ResumeOnce {
+            let queueForResuming = DispatchQueue(label: "waitForLoadState")
+            var isResumed = false
+
+            func resume(action: () -> Void) {
+                queueForResuming.sync {
+                    if !isResumed {
+                        isResumed = true
+                        action()
+                    }
+                }
+            }
+        }
+
+        let resumeOnce = ResumeOnce()
+
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-            self.pageLoadState.subscribeToLoadStateChange { state, error in
+            var timeoutTask: Task<Void, Never>?
+
+            let removeListener = self.pageLoadState.subscribeToLoadStateChange { state, _, error in
                 if let error = error {
-                    continuation.resume(throwing: error)
+                    resumeOnce.resume {
+                        continuation.resume(throwing: error)
+                    }
+
+                    // Clean up timer.
+                    timeoutTask?.cancel()
+
                     return true
-                } else if state != .notloaded {
-                    continuation.resume(returning: ())
+                } else if state.rawValue >= LoadState.fromWaitUntil(waitUntil).rawValue {
+                    resumeOnce.resume {
+                        continuation.resume(returning: ())
+                    }
+
+                    // Clean up timer.
+                    timeoutTask?.cancel()
                     return true
                 }
 
                 return false
             }
+
+            timeoutTask = Task {
+                do {
+                    try await Task.sleep(nanoseconds: UInt64(timeout) * 1_000_000)
+                } catch {
+                    // If the sleep is cancelled, then we move to
+                }
+                removeListener()
+
+                resumeOnce.resume {
+                    continuation.resume(throwing: PipeableError.navigationError("The request timed out."))
+                }
+            }
         }
     }
 
-    public func waitForURL(_ predicate: @escaping (String) -> Bool) async throws {
+    // TODO: Implement timeout
+    // TODO: Implement shorthards for predicates -- string matching, regex matching
+    public func waitForURL(_ predicate: @escaping (String) -> Bool, waitUntil: WaitUntilOption = .load) async throws {
         if let currentUrl = await url()?.absoluteString {
             if predicate(currentUrl) {
                 return
             }
         }
 
-        // TODO: We need to get the actual URL here.
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-            self.pageLoadState.subscribeToLoadStateChange { state, error in
+            _ = self.pageLoadState.subscribeToLoadStateChange { state, url, error in
                 if let error = error {
                     continuation.resume(throwing: error)
                     return true
-                } else if state != .notloaded {
+                } else if let url = url,
+                          state.rawValue >= LoadState.fromWaitUntil(waitUntil).rawValue, predicate(url)
+                {
                     continuation.resume(returning: ())
                     return true
                 }
@@ -453,30 +538,60 @@ enum LoadState: Int {
             return .networkidle
         }
     }
+
+    static func fromString(_ stringvalue: String) -> LoadState? {
+        switch stringvalue {
+        case "domcontentloaded":
+            return .domcontentloaded
+        case "load":
+            return .load
+        case "networkidle":
+            return .networkidle
+        default:
+            return nil
+        }
+    }
 }
 
 class PageLoadState {
     // We start in a not loaded state and then go through the different stages.
     // They are determined through the delegate for domcontentloaded and then
     // from javascript on the page itself for the other types.
-    private var state: LoadState = .notloaded
+    private(set) var state: LoadState = .notloaded
     private var loadError: Error?
-    private var callbacks: [LoadStateChangeCallback] = []
+    private var currentURL: String?
+    private var callbacks: [CallbackWrapper] = []
 
     private let synchronizationQueue = DispatchQueue(label: "waitForURL")
 
-    typealias LoadStateChangeCallback = (_ state: LoadState, _ error: Error?) -> Bool
+    // Define a struct to wrap the callback and its unique identifier
+    private class CallbackWrapper: Equatable {
+        let id: UUID = .init()
+        let callback: LoadStateChangeCallback
 
-    func changeState(state: LoadState) {
+        init(callback: @escaping LoadStateChangeCallback) {
+            self.callback = callback
+        }
+
+        static func == (lhs: PageLoadState.CallbackWrapper, rhs: PageLoadState.CallbackWrapper) -> Bool {
+            return lhs.id == rhs.id
+        }
+    }
+
+    typealias LoadStateChangeCallback = (_ state: LoadState, _ url: String?, _ error: Error?) -> Bool
+
+    func changeState(state: LoadState, url: String?) {
         self.state = state
+        currentURL = url
         loadError = nil
 
         signalLoadStateChange()
     }
 
-    func error(error: Error) {
+    func error(error: Error, url: String?) {
         state = .notloaded
         loadError = error
+        currentURL = url
 
         signalLoadStateChange()
     }
@@ -485,17 +600,29 @@ class PageLoadState {
     /// - Parameter callback: The callback to be called when the load state
     /// changes. The callback should return true if it wants to be removed from
     /// the list of subscribers.
-    func subscribeToLoadStateChange(_ callback: @escaping LoadStateChangeCallback) {
+    /// - Returns: A function that can be called to unsubscribe from the load
+    func subscribeToLoadStateChange(_ callback: @escaping LoadStateChangeCallback) -> () -> Void {
+        let wrapper = CallbackWrapper(callback: callback)
+
         synchronizationQueue.sync {
             // Add the callback to the list of subscribers.
-            callbacks.append(callback)
+            callbacks.append(wrapper)
+        }
+
+        return { [weak self] in
+            self?.synchronizationQueue.sync {
+                // Remove the callback from the list of subscribers.
+                if let index = self?.callbacks.firstIndex(where: { $0 === wrapper }) {
+                    self?.callbacks.remove(at: index)
+                }
+            }
         }
     }
 
     private func signalLoadStateChange() {
         synchronizationQueue.sync {
             // Signal all the subscribers that the load state has changed.
-            for (index, callback) in callbacks.enumerated() where callback(state, loadError) {
+            for (index, callback) in callbacks.enumerated() where callback.callback(state, currentURL, loadError) {
                 callbacks.remove(at: index)
             }
         }
