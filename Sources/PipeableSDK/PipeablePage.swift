@@ -289,7 +289,7 @@ public class PipeablePage {
 
             timeoutTask = Task {
                 do {
-                    try await Task.sleep(nanoseconds: UInt64(timeout) * 1_000_000)
+                    try await Task.sleep(nanoseconds: UInt64(timeout) * 1000000)
                 } catch {
                     // If the sleep is cancelled, then we move to
                 }
@@ -316,8 +316,10 @@ public class PipeablePage {
                 if let error = error {
                     continuation.resume(throwing: error)
                     return true
-                } else if let url = url,
-                          state.rawValue >= LoadState.fromWaitUntil(waitUntil).rawValue, predicate(url)
+                } else if
+                    let url = url,
+                    state.rawValue >= LoadState.fromWaitUntil(waitUntil).rawValue,
+                    predicate(url)
                 {
                     continuation.resume(returning: ())
                     return true
