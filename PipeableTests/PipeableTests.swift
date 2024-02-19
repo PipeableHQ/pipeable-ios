@@ -7,3 +7,5 @@ final class PipeableTests: XCTestCase {
         //
     }
 }
+
+let testServerURL = "http://localhost:3000"

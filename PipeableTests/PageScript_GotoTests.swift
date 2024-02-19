@@ -43,7 +43,7 @@ final class PageScriptGotoTests: PipeableXCTestCase {
         do {
             _ = try await runScript(
                 """
-                await page.goto("http://localhost:3000/goto/timeout/3", { timeout: 1_000 });
+                await page.goto("\(testServerURL)/goto/timeout/3", { timeout: 1_000 });
                 """,
                 page)
 
@@ -65,7 +65,7 @@ final class PageScriptGotoTests: PipeableXCTestCase {
         let page = PipeablePage(webView)
         _ = try await runScript(
             """
-            await page.goto("http://localhost:3000/goto/timeout/0", { timeout: 2_000 });
+            await page.goto("\(testServerURL)/goto/timeout/0", { timeout: 2_000 });
             """,
             page)
     }
