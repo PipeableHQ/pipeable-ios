@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A40BE0962B8393A800906441 /* PageLoadState.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40BE0952B8393A800906441 /* PageLoadState.swift */; };
+		A40BE0992B83946800906441 /* PageLoadStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40BE0972B8393F500906441 /* PageLoadStateTests.swift */; };
 		A40EAC692B6BC88B00A6B6B3 /* PipeableXCTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40EAC682B6BC88B00A6B6B3 /* PipeableXCTestCase.swift */; };
 		A40EAC6C2B6BD0A100A6B6B3 /* PipeablePage_GotoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40EAC6B2B6BD0A100A6B6B3 /* PipeablePage_GotoTests.swift */; };
 		A41D866F2B73D47400F24064 /* PipeableElement_ClickTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A41D866E2B73D47400F24064 /* PipeableElement_ClickTests.swift */; };
@@ -38,6 +40,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		A40BE0952B8393A800906441 /* PageLoadState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageLoadState.swift; sourceTree = "<group>"; };
+		A40BE0972B8393F500906441 /* PageLoadStateTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageLoadStateTests.swift; sourceTree = "<group>"; };
 		A40EAC682B6BC88B00A6B6B3 /* PipeableXCTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PipeableXCTestCase.swift; sourceTree = "<group>"; };
 		A40EAC6B2B6BD0A100A6B6B3 /* PipeablePage_GotoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PipeablePage_GotoTests.swift; sourceTree = "<group>"; };
 		A41D866E2B73D47400F24064 /* PipeableElement_ClickTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PipeableElement_ClickTests.swift; sourceTree = "<group>"; };
@@ -127,6 +131,7 @@
 			isa = PBXGroup;
 			children = (
 				A4A7A9302B56BD7500982E63 /* PipeableTests.swift */,
+				A40BE0972B8393F500906441 /* PageLoadStateTests.swift */,
 				E8F7B28C2B639E160040B77B /* ScriptTests.swift */,
 				A40EAC682B6BC88B00A6B6B3 /* PipeableXCTestCase.swift */,
 				A40EAC6B2B6BD0A100A6B6B3 /* PipeablePage_GotoTests.swift */,
@@ -145,6 +150,7 @@
 				A4A7A9252B56BD7500982E63 /* Pipeable.docc */,
 				A434C6152B5964B300B8011C /* PipeablePage.swift */,
 				E8AC39A12B615BC900D413BF /* Script */,
+				A40BE0952B8393A800906441 /* PageLoadState.swift */,
 			);
 			path = PipeableSDK;
 			sourceTree = "<group>";
@@ -322,6 +328,7 @@
 				E832B5CC2B6D411900791C57 /* ScriptContext.swift in Sources */,
 				A4A7A9262B56BD7500982E63 /* Pipeable.docc in Sources */,
 				E8AC39A52B615C1D00D413BF /* Script.swift in Sources */,
+				A40BE0962B8393A800906441 /* PageLoadState.swift in Sources */,
 				E81BD5AE2B6D430A007DFC02 /* PageWrapper.swift in Sources */,
 				E81BD5B02B6D45B6007DFC02 /* ElementWrapper.swift in Sources */,
 				A434C6162B5964B300B8011C /* PipeablePage.swift in Sources */,
@@ -336,6 +343,7 @@
 				A49B0A812B725F86005C1105 /* PageScript_QuerySelectorTests.swift in Sources */,
 				A41D866F2B73D47400F24064 /* PipeableElement_ClickTests.swift in Sources */,
 				A40EAC6C2B6BD0A100A6B6B3 /* PipeablePage_GotoTests.swift in Sources */,
+				A40BE0992B83946800906441 /* PageLoadStateTests.swift in Sources */,
 				E8F7B28E2B639E160040B77B /* ScriptTests.swift in Sources */,
 				E81BD5B42B6D4963007DFC02 /* PageScript_GotoTests.swift in Sources */,
 				A4A7A9312B56BD7500982E63 /* PipeableTests.swift in Sources */,
