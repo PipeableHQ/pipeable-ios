@@ -691,7 +691,6 @@
                 window.webkit?.messageHandlers?.handler?.postMessage(message);
             });
 
-            // On load.
             window.addEventListener('load', () => {
                 console.log('SophiaJS load event for frame with url ' + window.location.href);
                 const message = {
