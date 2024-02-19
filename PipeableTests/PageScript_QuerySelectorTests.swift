@@ -7,7 +7,7 @@ final class PageScriptQuerySelectorTests: PipeableXCTestCase {
         let page = PipeablePage(webView)
         let result = try await runScript(
             """
-            await page.goto("http://localhost:3000/querySelector/simple.html");
+            await page.goto("\(testServerURL)/querySelector/simple.html");
 
             const selectById = await page.querySelector('#specialItem');
             const textContent = await selectById.textContent();
@@ -24,7 +24,7 @@ final class PageScriptQuerySelectorTests: PipeableXCTestCase {
         do {
             _ = try await runScript(
                 """
-                await page.goto("http://localhost:3000/querySelector/simple.html");
+                await page.goto("\(testServerURL)/querySelector/simple.html");
 
                 const selectById = await page.querySelector('this[1]isnt[v]valid');
                 const textContent = await selectById.textContent();
@@ -45,7 +45,7 @@ final class PageScriptQuerySelectorTests: PipeableXCTestCase {
         let page = PipeablePage(webView)
         let result = try await runScript(
             """
-            await page.goto("http://localhost:3000/querySelector/simple.html");
+            await page.goto("\(testServerURL)/querySelector/simple.html");
 
             const selectById = await page.querySelector('div.crazyClass');
             return !!selectById;
@@ -58,7 +58,7 @@ final class PageScriptQuerySelectorTests: PipeableXCTestCase {
         let page = PipeablePage(webView)
         let result = try await runScript(
             """
-            await page.goto("http://localhost:3000/querySelector/simple.html");
+            await page.goto("\(testServerURL)/querySelector/simple.html");
 
             const items = await page.querySelectorAll('div.item');
             return items.length
@@ -71,7 +71,7 @@ final class PageScriptQuerySelectorTests: PipeableXCTestCase {
         let page = PipeablePage(webView)
         let result = try await runScript(
             """
-            await page.goto("http://localhost:3000/querySelector/simple.html");
+            await page.goto("\(testServerURL)/querySelector/simple.html");
 
             const listEl = await page.querySelector('ul');
             const items = await listEl.querySelectorAll('li');
@@ -86,7 +86,7 @@ final class PageScriptQuerySelectorTests: PipeableXCTestCase {
         let page = PipeablePage(webView)
         let result = try await runScript(
             """
-            await page.goto("http://localhost:3000/querySelector/simple.html");
+            await page.goto("\(testServerURL)/querySelector/simple.html");
 
             const selectCompound = await page.querySelector('div.item');
             const attribute = await selectCompound?.getAttribute("data-testid");

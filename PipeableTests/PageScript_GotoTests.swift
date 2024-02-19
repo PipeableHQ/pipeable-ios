@@ -10,7 +10,8 @@ final class PageScriptGotoTests: PipeableXCTestCase {
             await page.goto("about:blank");
             return page.url();
             """,
-            page)
+            page
+        )
 
         // TODO: How do we handle return values from scripts?!?
         // swiftlint:disable:next force_cast
@@ -26,7 +27,8 @@ final class PageScriptGotoTests: PipeableXCTestCase {
                 """
                 await page.goto("blank");
                 """,
-                page)
+                page
+            )
             XCTFail("Expected an error, but no error was thrown.")
         } catch {
             // TODO: Should we map back to PipeableError in the scripts?!?
@@ -43,14 +45,15 @@ final class PageScriptGotoTests: PipeableXCTestCase {
         do {
             _ = try await runScript(
                 """
-                await page.goto("http://localhost:3000/goto/timeout/3", { timeout: 1_000 });
+                await page.goto("\(testServerURL)/goto/timeout/3000", { timeout: 1_000 });
                 """,
-                page)
+                page
+            )
 
             XCTFail("Expected an error, but no error was thrown.")
         } catch {
             // Check if the caught error is of type PipeableError.navigationError ("The request timed out.")
-            if case ScriptError.error(let reason) = error {
+            if case let ScriptError.error(reason) = error {
                 if reason.contains("timed out") {
                     return
                 }
@@ -65,8 +68,9 @@ final class PageScriptGotoTests: PipeableXCTestCase {
         let page = PipeablePage(webView)
         _ = try await runScript(
             """
-            await page.goto("http://localhost:3000/goto/timeout/0", { timeout: 2_000 });
+            await page.goto("\(testServerURL)/goto/timeout/0", { timeout: 2_000 });
             """,
-            page)
+            page
+        )
     }
 }

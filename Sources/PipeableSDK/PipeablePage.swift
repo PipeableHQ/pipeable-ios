@@ -10,7 +10,7 @@ public class PipeablePage {
     private var delegate: Delegate?
 
     var frameInfoResolver: FrameInfoResolver = .init()
-    var loadPageSignal: LoadPageSignal
+    private var pageLoadState: PageLoadState
 
     class FrameInfoResolver {
         var continuations: [String: CheckedContinuation<PipeablePage?, Error>] = [:]
@@ -19,87 +19,34 @@ public class PipeablePage {
         var synchronizationQueue = DispatchQueue(label: "wkframeResolver")
     }
 
-    class LoadPageSignal {
-        var isPageLoaded = false
-        var loadCompletion: CheckedContinuation<Void, Error>?
-
-        // TODO: Make the predicate actually not just be a function, but string | regex | function
-        var waitForURLContinuations: [String: CheckedContinuation<Void, Error>] = [:]
-        var waitForURLPredicates: [String: (String) -> Bool] = [:]
-        let synchronizationQueue = DispatchQueue(label: "waitForURL")
-
-        func addWaitForURL(_ predicate: @escaping (String) -> Bool, continuation: CheckedContinuation<Void, Error>) {
-            synchronizationQueue.sync {
-                var uniqueKey: String
-
-                repeat {
-                    uniqueKey = randomString(length: 10)
-                } while self.waitForURLPredicates.keys.contains(uniqueKey)
-
-                let hash = uniqueKey
-
-                self.waitForURLContinuations[hash] = continuation
-                self.waitForURLPredicates[hash] = predicate
-            }
-        }
-
-        func signalURLLoadedResult(_ url: String?, withError error: Error? = nil) {
-            if error == nil {
-                isPageLoaded = true
-                loadCompletion?.resume(returning: ())
-                loadCompletion = nil
-            } else {
-                isPageLoaded = false
-                // swiftlint:disable:next force_unwrapping
-                loadCompletion?.resume(throwing: error!)
-                loadCompletion = nil
-            }
-
-            if let url = url {
-                synchronizationQueue.sync {
-                    for (key, predicate) in self.waitForURLPredicates where predicate(url) {
-                        // invoke and finish.
-                        if let unwrappedError = error {
-                            self.waitForURLContinuations[key]?.resume(throwing: unwrappedError)
-                        } else {
-                            self.waitForURLContinuations[key]?.resume()
-                        }
-
-                        self.waitForURLPredicates.removeValue(forKey: key)
-                        self.waitForURLContinuations.removeValue(forKey: key)
-                        return
-                    }
-                }
-            }
-        }
-    }
-
     class Delegate: NSObject, WKNavigationDelegate {
-        private var loadPageSignal: LoadPageSignal
+        private var loadPageState: PageLoadState
 
-        init(_ loadPageSignal: LoadPageSignal) {
-            self.loadPageSignal = loadPageSignal
+        init(_ loadPageSignal: PageLoadState) {
+            self.loadPageState = loadPageSignal
         }
 
-        func webView(_ webView: WKWebView, didFinish _: WKNavigation) {
-            loadPageSignal.signalURLLoadedResult(webView.url?.absoluteString)
+        func webView(_: WKWebView, didFinish _: WKNavigation) {
+            // Used to fire the DOMContentloaded here, but it actually is not really domcontentloaded, more like .load
+            // Right now everything is fired from JS, but we might want to fire load here as well, just in case
+            // some script deregisters all listeners on boot.
         }
 
-        func webView(_: WKWebView, didStartProvisionalNavigation _: WKNavigation) {
-            loadPageSignal.isPageLoaded = false
+        func webView(_ webView: WKWebView, didStartProvisionalNavigation _: WKNavigation) {
+            loadPageState.changeState(state: .notloaded, url: webView.url?.absoluteString)
         }
 
         func webView(_ webView: WKWebView, didFail _: WKNavigation, withError error: Error) {
-            loadPageSignal.signalURLLoadedResult(
-                webView.url?.absoluteString,
-                withError: PipeableError.navigationError(error.localizedDescription)
+            loadPageState.error(
+                error: PipeableError.navigationError(error.localizedDescription),
+                url: webView.url?.absoluteString
             )
         }
 
         func webView(_ webView: WKWebView, didFailProvisionalNavigation _: WKNavigation, withError error: Error) {
-            loadPageSignal.signalURLLoadedResult(
-                webView.url?.absoluteString,
-                withError: PipeableError.navigationError(error.localizedDescription)
+            loadPageState.error(
+                error: PipeableError.navigationError(error.localizedDescription),
+                url: webView.url?.absoluteString
             )
         }
 
@@ -108,10 +55,7 @@ public class PipeablePage {
         }
 
         func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
-            loadPageSignal.signalURLLoadedResult(
-                webView.url?.absoluteString,
-                withError: PipeableError.navigationError("Terminated")
-            )
+            loadPageState.error(error: PipeableError.navigationError("Terminated"), url: webView.url?.absoluteString)
         }
 
         func webView(_: WKWebView, decidePolicyFor _: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
@@ -125,11 +69,14 @@ public class PipeablePage {
 
     class ContentController: NSObject, WKScriptMessageHandler {
         private var frameInfoResolver: FrameInfoResolver
+        private var pageLoadState: PageLoadState
 
-        init(_ frameInfoResolver: FrameInfoResolver) {
+        init(_ frameInfoResolver: FrameInfoResolver, _ pageLoadState: PageLoadState) {
             self.frameInfoResolver = frameInfoResolver
+            self.pageLoadState = pageLoadState
         }
 
+        // swiftlint:disable:next cyclomatic_complexity
         func userContentController(_: WKUserContentController, didReceive message: WKScriptMessage) {
             guard let dict = message.body as? [String: AnyObject] else {
                 return
@@ -158,6 +105,21 @@ public class PipeablePage {
                                 self.frameInfoResolver.frameInfos[requestId] = message.frameInfo
                             }
                         }
+                    } else if name == "pageLoadStateChange" {
+                        guard let rawState = payload["state"] as? String else {
+                            return
+                        }
+
+                        guard let url = payload["url"] as? String else {
+                            return
+                        }
+
+                        guard let state = LoadState.fromString(rawState) else {
+                            // LOG ERROR once we decide on error logging. This is a problem between the JS and Swift code.
+                            return
+                        }
+
+                        pageLoadState.changeState(state: state, url: url)
                     }
                 }
             }
@@ -179,9 +141,9 @@ public class PipeablePage {
         var contents: String?
 
         #if SWIFT_PACKAGE
-        let bundle = Bundle.module
+            let bundle = Bundle.module
         #else
-        let bundle = Bundle(for: PipeablePage.self)
+            let bundle = Bundle(for: PipeablePage.self)
         #endif
 
         let pathInFramework = bundle.path(forResource: "sophia", ofType: "js")
@@ -222,13 +184,16 @@ public class PipeablePage {
             )
             config.userContentController.addUserScript(loggingOverrideScript)
         }
-        loadPageSignal = LoadPageSignal()
+        pageLoadState = PageLoadState()
 
         // This is the main frame / page.
         if frame == nil {
-            delegate = Delegate(loadPageSignal)
+            delegate = Delegate(pageLoadState)
             self.webView.navigationDelegate = delegate
-            self.webView.configuration.userContentController.add(ContentController(frameInfoResolver), name: "handler")
+            self.webView.configuration.userContentController.add(
+                ContentController(frameInfoResolver, pageLoadState),
+                name: "handler"
+            )
         }
     }
 
@@ -238,10 +203,10 @@ public class PipeablePage {
         }
     }
 
-    public func goto(_ url: String, timeout: Int = 30000, waitUntil: WaitUntilOption = .load) async throws {
+    public func goto(_ url: String, waitUntil: WaitUntilOption = .load, timeout: Int = 30000) async throws {
         print("page goto \(url) timeout \(timeout) waitUntil \(waitUntil)")
 
-        loadPageSignal.isPageLoaded = false
+        pageLoadState.changeState(state: .notloaded, url: nil)
 
         if let urlObj = URL(string: url) {
             let request = URLRequest(url: urlObj, timeoutInterval: TimeInterval(timeout) / 1000)
@@ -253,46 +218,119 @@ public class PipeablePage {
             throw PipeableError.navigationError("Incorrect URL \(url)")
         }
 
-        try await waitForPageLoad()
+        try await waitForLoadState(waitUntil: waitUntil, timeout: timeout)
     }
 
-    public func reload() async throws {
-        loadPageSignal.isPageLoaded = false
+    public func reload(waitUntil: WaitUntilOption = .load, timeout: Int = 30000) async throws {
+        pageLoadState.changeState(state: .notloaded, url: nil)
         await webView.reload()
-        return try await waitForPageLoad()
+        return try await waitForLoadState(waitUntil: waitUntil, timeout: timeout)
     }
 
-    // The async function you'll await
-    public func waitForPageLoad() async throws {
+    public func waitForLoadState(waitUntil: WaitUntilOption = .load, timeout: Int = 30000) async throws {
         if frame != nil {
             // Iframes are already loaded, if we can address them.
+            // TODO: This is only correct for domcontentloaded, load and networkidle still need handling for iframes.
             return
         }
 
-        if loadPageSignal.isPageLoaded {
+        // If we're in a higher state than what we're waiting for already, return immediately.
+        if pageLoadState.state.rawValue >= LoadState.fromWaitUntil(waitUntil).rawValue {
             return
         }
 
-        try await withCheckedThrowingContinuation { continuation in
-            self.loadPageSignal.loadCompletion = continuation
+        // Otherwise, wait until we get there or we time out.
+
+        // Since there is a potential race condition that can lead to double
+        // "resume" calls on the continuation, we need to ensure that the
+        // continuation is only resumed once. We guard this by running resumes
+        // in a queue and using a helper.
+        class ResumeOnce {
+            let queueForResuming = DispatchQueue(label: "waitForLoadState")
+            var isResumed = false
+
+            func resume(action: () -> Void) {
+                queueForResuming.sync {
+                    if !isResumed {
+                        isResumed = true
+                        action()
+                    }
+                }
+            }
+        }
+
+        let resumeOnce = ResumeOnce()
+
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            var timeoutTask: Task<Void, Never>?
+
+            let removeListener = self.pageLoadState.subscribeToLoadStateChange { state, _, error in
+                if let error = error {
+                    resumeOnce.resume {
+                        continuation.resume(throwing: error)
+                    }
+
+                    // Clean up timer.
+                    timeoutTask?.cancel()
+
+                    return true
+                } else if state.rawValue >= LoadState.fromWaitUntil(waitUntil).rawValue {
+                    resumeOnce.resume {
+                        continuation.resume(returning: ())
+                    }
+
+                    // Clean up timer.
+                    timeoutTask?.cancel()
+                    return true
+                }
+
+                return false
+            }
+
+            timeoutTask = Task {
+                do {
+                    try await Task.sleep(nanoseconds: UInt64(timeout) * 1000000)
+                } catch {
+                    // If the sleep is cancelled, then we move to
+                }
+                removeListener()
+
+                resumeOnce.resume {
+                    continuation.resume(throwing: PipeableError.navigationError("The request timed out."))
+                }
+            }
         }
     }
 
-    public func waitForURL(_ predicate: @escaping (String) -> Bool) async throws {
+    // TODO: Implement timeout
+    // TODO: Implement shorthards for predicates -- string matching, regex matching
+    public func waitForURL(_ predicate: @escaping (String) -> Bool, waitUntil: WaitUntilOption = .load) async throws {
         if let currentUrl = await url()?.absoluteString {
             if predicate(currentUrl) {
                 return
             }
         }
 
-        try await withCheckedThrowingContinuation { continuation in
-            self.loadPageSignal.addWaitForURL(predicate, continuation: continuation)
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            _ = self.pageLoadState.subscribeToLoadStateChange { state, url, error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                    return true
+                } else if
+                    let url = url,
+                    state.rawValue >= LoadState.fromWaitUntil(waitUntil).rawValue,
+                    predicate(url)
+                {
+                    continuation.resume(returning: ())
+                    return true
+                }
+
+                return false
+            }
         }
     }
 
     public func querySelector(_ selector: String) async throws -> PipeableElement? {
-        try await waitForPageLoad()
-
         let result = try await webView.callAsyncJavaScript(
             """
                 return window.SophiaJS.$(selector);
@@ -311,8 +349,6 @@ public class PipeablePage {
     }
 
     public func querySelectorAll(_ selector: String) async throws -> [PipeableElement] {
-        try await waitForPageLoad()
-
         let result = try await webView.callAsyncJavaScript(
             """
                 return window.SophiaJS.$$(selector);
@@ -334,8 +370,6 @@ public class PipeablePage {
     }
 
     public func xpathSelector(_ xpath: String) async throws -> [PipeableElement] {
-        try await waitForPageLoad()
-
         let result = try await webView.callAsyncJavaScript(
             """
                 return window.SophiaJS.$x(xpath);
@@ -357,8 +391,6 @@ public class PipeablePage {
     }
 
     public func waitForXPath(_ xpath: String, timeout: Int = 30000, visible _: Bool = false) async throws -> PipeableElement? {
-        try await waitForPageLoad()
-
         print("Wait for XPath \(xpath) got past waitForPageLoad")
 
         let result = try await webView.callAsyncJavaScript(
@@ -369,8 +401,8 @@ public class PipeablePage {
                 "xpath": xpath,
                 "opts": [
                     "timeout": String(timeout),
-                    "visible": true
-                ] as [String: Any]
+                    "visible": true,
+                ] as [String: Any],
             ],
             in: frame,
             contentWorld: WKContentWorld.page
@@ -386,8 +418,6 @@ public class PipeablePage {
     }
 
     public func waitForSelector(_ selector: String, timeout: Int = 30000, visible: Bool = false) async throws -> PipeableElement? {
-        try await waitForPageLoad()
-
         let result = try await webView.callAsyncJavaScript(
             """
                 return window.SophiaJS.waitForSelector(selector, opts);
@@ -396,8 +426,8 @@ public class PipeablePage {
                 "selector": selector,
                 "opts": [
                     "timeout": String(timeout),
-                    "visible": visible
-                ] as [String: Any]
+                    "visible": visible,
+                ] as [String: Any],
             ],
             in: frame,
             contentWorld: WKContentWorld.page
@@ -412,8 +442,6 @@ public class PipeablePage {
     }
 
     public func waitForXHR(_ url: String, timeout: Int = 30000) async throws -> XHRResult? {
-        try await waitForPageLoad()
-
         let result = try await webView.callAsyncJavaScript(
             """
                 return window.SophiaJS.waitForXHR(url, timeout);
