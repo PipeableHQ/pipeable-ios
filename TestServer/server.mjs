@@ -10,8 +10,8 @@ app.use(timestampLoggingMiddleware);
 
 // Wait the response for :sec seconds to test timeout handling for
 // domcontentloaded. A test for the domcontentloaded event.
-app.get('/goto/timeout/:sec', (req, res) => {
-    const ms = parseInt(req.params.sec) * 1_000;
+app.get('/goto/timeout/:ms', (req, res) => {
+    const ms = parseInt(req.params.ms);
 
     setTimeout(() => {
         res.send(`Waited for ${ms}ms`);
@@ -22,15 +22,13 @@ app.get('/goto/timeout/:sec', (req, res) => {
 // This way domcontentloaded is fast, but the load event is slowed down.
 
 // Dynamic route to set latency and serve the requested file
-app.get('/load_latency/:sec/index.html', (req, res) => {
+app.get('/load_latency/:ms/index.html', (req, res) => {
     // Set script latency based on URL parameter
-    const sec = parseInt(req.params.sec, 10);
-    if (isNaN(sec)) {
+    const delay = parseInt(req.params.ms, 10);
+    if (isNaN(delay)) {
         res.status(400).send('Invalid latency parameter');
         return;
     }
-
-    const delay = sec * 1000; // Convert seconds to milliseconds
 
     // Serve the file from the public directory
     const fullPath = path.resolve(path.join('public', 'load_latency', 'index.html'));

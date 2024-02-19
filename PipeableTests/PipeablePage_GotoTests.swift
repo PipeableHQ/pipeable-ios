@@ -33,7 +33,7 @@ final class PipeablePageGotoTests: PipeableXCTestCase {
     func testGotoWithTimeoutFail() async throws {
         let page = PipeablePage(webView)
         do {
-            try await page.goto("\(testServerURL)/goto/timeout/5", waitUntil: .domcontentloaded, timeout: 1000)
+            try await page.goto("\(testServerURL)/goto/timeout/5000", waitUntil: .domcontentloaded, timeout: 1000)
             XCTFail("Expected an error, but no error was thrown.")
         } catch {
             // Check if the caught error is of type PipeableError.navigationError ("The request timed out.")
@@ -62,7 +62,7 @@ final class PipeablePageGotoTests: PipeableXCTestCase {
         let page = PipeablePage(webView)
 
         do {
-            try await page.goto("\(testServerURL)/load_latency/2/index.html", waitUntil: .load, timeout: 1000)
+            try await page.goto("\(testServerURL)/load_latency/2000/index.html", waitUntil: .load, timeout: 1000)
             XCTFail("Expected to timeout while waiting for load")
         } catch {
             // Check if the caught error is of type PipeableError.navigationError
@@ -77,13 +77,17 @@ final class PipeablePageGotoTests: PipeableXCTestCase {
 
         // Wait 1 second to make sure the load event fires, so we can validate
         // that Pipeable doesn't crash with 2 resume continuations.
-        try await Task.sleep(nanoseconds: 1_000_000_000) // 1 sec.
+        try await Task.sleep(nanoseconds: 1000000000) // 1 sec.
     }
 
     func testGotoDomcontentLoadedButNotLoad() async throws {
         let page = PipeablePage(webView)
 
-        try await page.goto("\(testServerURL)/load_latency/5/index.html", waitUntil: .domcontentloaded, timeout: 3000)
+        try await page.goto(
+            "\(testServerURL)/load_latency/5000/index.html",
+            waitUntil: .domcontentloaded,
+            timeout: 3000
+        )
 
         do {
             try await page.waitForLoadState(waitUntil: .load, timeout: 1000)
