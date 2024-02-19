@@ -40,8 +40,6 @@ class PageLoadState {
     }
 
     func waitForLoadStateChange(predicate: @escaping (_ state: LoadState, _ url: String?) -> Bool, timeout: Int) async throws {
-        // Otherwise, wait until we get there or we time out.
-
         // Since there is a potential race condition that can lead to double
         // "resume" calls on the continuation, we need to ensure that the
         // continuation is only resumed once. We guard this by running resumes
