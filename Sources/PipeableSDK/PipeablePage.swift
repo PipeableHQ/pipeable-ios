@@ -23,7 +23,7 @@ public class PipeablePage {
         private var loadPageState: PageLoadState
 
         init(_ loadPageSignal: PageLoadState) {
-            self.loadPageState = loadPageSignal
+            loadPageState = loadPageSignal
         }
 
         func webView(_: WKWebView, didFinish _: WKNavigation) {
@@ -390,9 +390,7 @@ public class PipeablePage {
         return []
     }
 
-    public func waitForXPath(_ xpath: String, timeout: Int = 30000, visible _: Bool = false) async throws -> PipeableElement? {
-        print("Wait for XPath \(xpath) got past waitForPageLoad")
-
+    public func waitForXPath(_ xpath: String, timeout: Int = 30000, visible: Bool = false) async throws -> PipeableElement? {
         let result = try await webView.callAsyncJavaScript(
             """
                 return window.SophiaJS.waitForXPath(xpath, opts);
@@ -401,7 +399,7 @@ public class PipeablePage {
                 "xpath": xpath,
                 "opts": [
                     "timeout": String(timeout),
-                    "visible": true,
+                    "visible": visible,
                 ] as [String: Any],
             ],
             in: frame,
@@ -464,8 +462,15 @@ public class PipeablePage {
     }
 
     public func evaluate(_ javascript: String) async throws -> Any? {
+        let evaluationScript = """
+            (function () {
+                var result = (() => \(javascript))();
+                return result !== undefined ? result : null;
+            })();
+        """
+
         let result = try await webView.evaluateJavaScript(
-            javascript,
+            evaluationScript,
             in: frame,
             contentWorld: WKContentWorld.page
         )

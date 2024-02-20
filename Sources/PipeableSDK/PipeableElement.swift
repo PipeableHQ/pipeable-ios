@@ -1,7 +1,7 @@
 import WebKit
 
 public class PipeableElement {
-    var page: PipeablePage
+    private var page: PipeablePage
     let elementId: String
 
     init(_ page: PipeablePage, _ elementId: String) {
@@ -193,7 +193,7 @@ public class PipeableElement {
         return []
     }
 
-    public func waitForXPath(_ xpath: String, timeout: Int = 30000, visible _: Bool = false) async throws -> PipeableElement? {
+    public func waitForXPath(_ xpath: String, timeout: Int = 30000, visible: Bool = false) async throws -> PipeableElement? {
         let result = try await page.webView.callAsyncJavaScript(
             """
                 return window.SophiaJS.waitForXPath(xpath, opts);
@@ -202,7 +202,7 @@ public class PipeableElement {
                 "xpath": xpath,
                 "opts": [
                     "timeout": String(timeout),
-                    "visible": true,
+                    "visible": visible,
                     "parentElementHash": elementId
                 ] as [String: Any]
             ],
