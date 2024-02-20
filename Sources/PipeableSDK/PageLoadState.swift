@@ -6,7 +6,7 @@ class PageLoadState {
     // from javascript on the page itself for the other types.
     private(set) var state: LoadState = .notloaded
     private var loadError: Error?
-    private var currentURL: String?
+    private(set) var currentURL: String?
     private var callbacks: [CallbackWrapper] = []
 
     private let synchronizationQueue = DispatchQueue(label: "waitForURL")
@@ -40,11 +40,15 @@ class PageLoadState {
     }
 
     func waitForLoadStateChange(predicate: @escaping (_ state: LoadState, _ url: String?) -> Bool, timeout: Int) async throws {
+        // Test if we're not already in the sought state.
+        if predicate(state, currentURL) {
+            return
+        }
+
         // Since there is a potential race condition that can lead to double
         // "resume" calls on the continuation, we need to ensure that the
         // continuation is only resumed once. We guard this by running resumes
         // in a queue and using a helper.
-
         let resumeOnce = ResumeOnce()
 
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
@@ -52,21 +56,21 @@ class PageLoadState {
 
             let removeListener = self.subscribeToLoadStateChange { state, url, error in
                 if let error = error {
-                    resumeOnce.resume {
-                        continuation.resume(throwing: error)
-                    }
-
                     // Clean up timer.
                     timeoutTask?.cancel()
 
+                    resumeOnce.resume {
+                        continuation.resume(throwing: error)
+                    }
                     return true
                 } else if predicate(state, url) {
+                    // Clean up timer.
+                    timeoutTask?.cancel()
+
                     resumeOnce.resume {
                         continuation.resume(returning: ())
                     }
 
-                    // Clean up timer.
-                    timeoutTask?.cancel()
                     return true
                 }
 
@@ -75,9 +79,11 @@ class PageLoadState {
 
             timeoutTask = Task {
                 do {
-                    try await Task.sleep(nanoseconds: UInt64(timeout) * 1000000)
+                    try await Task.sleep(nanoseconds: UInt64(timeout) * 1_000_000)
                 } catch {
-                    // If the sleep is cancelled, then we move to
+                    if Task.isCancelled {
+                        return
+                    }
                 }
                 removeListener()
 

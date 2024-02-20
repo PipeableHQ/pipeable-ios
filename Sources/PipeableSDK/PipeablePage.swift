@@ -33,7 +33,7 @@ public class PipeablePage {
         }
 
         func webView(_ webView: WKWebView, didStartProvisionalNavigation _: WKNavigation) {
-            loadPageState.changeState(state: .notloaded, url: webView.url?.absoluteString)
+            loadPageState.changeState(state: .notloaded, url: nil)
         }
 
         func webView(_ webView: WKWebView, didFail _: WKNavigation, withError error: Error) {
@@ -254,12 +254,6 @@ public class PipeablePage {
         waitUntil: WaitUntilOption = .load,
         timeout: Int = 30000
     ) async throws {
-        if let currentUrl = await url()?.absoluteString {
-            if predicate(currentUrl), pageLoadState.state.rawValue >= LoadState.fromWaitUntil(waitUntil).rawValue {
-                return
-            }
-        }
-
         try await pageLoadState.waitForLoadStateChange(
             predicate: { state, url in
                 if let url = url {

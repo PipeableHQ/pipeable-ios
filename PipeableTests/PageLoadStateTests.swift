@@ -73,7 +73,7 @@ final class PageLoadStateTests: XCTestCase {
             XCTAssertEqual(url, "error_url")
             XCTAssertNotNil(error)
             if let error = error as? PipeableError {
-                if case PipeableError.navigationError(let reason) = error {
+                if case let PipeableError.navigationError(reason) = error {
                     XCTAssertEqual(reason, "Terminated.")
                     expectation.fulfill()
                 } else {
@@ -135,5 +135,103 @@ final class PageLoadStateTests: XCTestCase {
             0,
             "Should still have no active listeners after attempting duplicate removal"
         )
+    }
+
+    func testWaitingForSpecificLoadState() async throws {
+        let pageLoadState = PageLoadState()
+
+        let expectation = XCTestExpectation(description: "Load state change is signaled")
+        expectation.expectedFulfillmentCount = 1
+
+        let loadState = LoadState.load
+        let url = "random_url"
+
+        Task {
+            do {
+                try await pageLoadState.waitForLoadStateChange(
+                    predicate: { state, _ in state == loadState },
+                    timeout: 30000
+                )
+
+                XCTAssertEqual(pageLoadState.state, loadState)
+                XCTAssertEqual(pageLoadState.currentURL, url)
+                expectation.fulfill()
+            } catch {
+                XCTFail("waitForLoadStateChange threw an error: \(error)")
+            }
+        }
+
+        pageLoadState.changeState(state: loadState, url: url)
+
+        await fulfillment(of: [expectation], timeout: 2)
+    }
+
+    func testWaitingForSpecificLoadStateWithTimeout() async throws {
+        let pageLoadState = PageLoadState()
+
+        let expectation = XCTestExpectation(description: "Load state change is signaled")
+        expectation.expectedFulfillmentCount = 1
+
+        let loadState = LoadState.load
+        let url = "random_url"
+
+        Task {
+            do {
+                _ = try await pageLoadState.waitForLoadStateChange(
+                    predicate: { state, _ in state == loadState },
+                    timeout: 100
+                )
+            } catch {
+                XCTAssertTrue(error is PipeableError)
+                if let error = error as? PipeableError {
+                    if case let PipeableError.navigationError(reason) = error {
+                        XCTAssertEqual(reason, "The request timed out.")
+                        expectation.fulfill()
+                    } else {
+                        XCTFail("Expected PipeableError.navigationError, but got a different error: \(error)")
+                    }
+                } else {
+                    XCTFail("Error not PipeableError")
+                }
+            }
+        }
+
+        // Wait for a short period of time before changing the load state
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            pageLoadState.changeState(state: loadState, url: url)
+        }
+
+        await fulfillment(of: [expectation], timeout: 2)
+    }
+
+    func testWaitingForAlreadyReachedState() async throws {
+        let pageLoadState = PageLoadState()
+
+        // Set the initial load state and URL before waiting
+        let expectedState = LoadState.domcontentloaded
+        let expectedURL = "expected_url"
+        pageLoadState.changeState(state: expectedState, url: expectedURL)
+
+        let expectation = XCTestExpectation(
+            description: "Load state change is recognized immediately for already reached state"
+        )
+        expectation.expectedFulfillmentCount = 1
+
+        Task {
+            do {
+                try await pageLoadState.waitForLoadStateChange(
+                    predicate: { state, url in
+                        state == expectedState && url == expectedURL
+                    },
+                    timeout: 5000
+                )
+                // If waitForLoadStateChange completes without throwing, the expected state was recognized immediately
+                expectation.fulfill()
+            } catch {
+                XCTFail("waitForLoadStateChange threw an error: \(error)")
+            }
+        }
+
+        await fulfillment(of: [expectation], timeout: 1)
     }
 }
