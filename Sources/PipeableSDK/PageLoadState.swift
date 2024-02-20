@@ -6,7 +6,7 @@ class PageLoadState {
     // from javascript on the page itself for the other types.
     private(set) var state: LoadState = .notloaded
     private var loadError: Error?
-    private var currentURL: String?
+    private(set) var currentURL: String?
     private var callbacks: [CallbackWrapper] = []
 
     private let synchronizationQueue = DispatchQueue(label: "waitForURL")
@@ -39,11 +39,63 @@ class PageLoadState {
         signalLoadStateChange()
     }
 
-    /// Subscribe to the load state change.
-    /// - Parameter callback: The callback to be called when the load state
-    /// changes. The callback should return true if it wants to be removed from
-    /// the list of subscribers.
-    /// - Returns: A function that can be called to unsubscribe from the load
+    func waitForLoadStateChange(predicate: @escaping (_ state: LoadState, _ url: String?) -> Bool, timeout: Int) async throws {
+        // Test if we're not already in the sought state.
+        if predicate(state, currentURL) {
+            return
+        }
+
+        // Since there is a potential race condition that can lead to double
+        // "resume" calls on the continuation, we need to ensure that the
+        // continuation is only resumed once. We guard this by running resumes
+        // in a queue and using a helper.
+        let resumeOnce = ResumeOnce()
+
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            var timeoutTask: Task<Void, Never>?
+
+            let removeListener = self.subscribeToLoadStateChange { state, url, error in
+                if let error = error {
+                    // Clean up timer.
+                    timeoutTask?.cancel()
+
+                    resumeOnce.resume {
+                        continuation.resume(throwing: error)
+                    }
+                    return true
+                } else if predicate(state, url) {
+                    // Clean up timer.
+                    timeoutTask?.cancel()
+
+                    resumeOnce.resume {
+                        continuation.resume(returning: ())
+                    }
+
+                    return true
+                }
+
+                return false
+            }
+
+            timeoutTask = Task {
+                do {
+                    try await Task.sleep(nanoseconds: UInt64(timeout) * 1_000_000)
+                } catch {
+                    if Task.isCancelled {
+                        return
+                    }
+                }
+                removeListener()
+
+                resumeOnce.resume {
+                    continuation.resume(throwing: PipeableError.navigationError("The request timed out."))
+                }
+            }
+        }
+    }
+
+    //
+
     func subscribeToLoadStateChange(_ callback: @escaping LoadStateChangeCallback) -> () -> Void {
         let wrapper = CallbackWrapper(callback: callback)
 
@@ -71,6 +123,20 @@ class PageLoadState {
             // Signal all the subscribers that the load state has changed.
             for (index, callback) in callbacks.enumerated() where callback.callback(state, currentURL, loadError) {
                 callbacks.remove(at: index)
+            }
+        }
+    }
+
+    private class ResumeOnce {
+        let queueForResuming = DispatchQueue(label: "waitForLoadState")
+        var isResumed = false
+
+        func resume(action: () -> Void) {
+            queueForResuming.sync {
+                if !isResumed {
+                    isResumed = true
+                    action()
+                }
             }
         }
     }

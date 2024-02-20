@@ -103,4 +103,25 @@ final class PipeablePageGotoTests: PipeableXCTestCase {
             }
         }
     }
+
+    func testWaitForURLBadServer() async throws {
+        let page = PipeablePage(webView)
+
+        do {
+            try await page.goto(
+                "http://localhost:3001/load_latency/0/index.html",
+                waitUntil: .load
+            )
+        } catch {
+            if let error = error as? PipeableError {
+                if case PipeableError.navigationError(_) = error {
+                    return
+                } else {
+                    XCTFail("Unexpected error \(error)")
+                }
+            }
+        }
+
+        XCTFail("Should have thrown a PipeableError")
+    }
 }

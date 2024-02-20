@@ -23,7 +23,7 @@ public class PipeablePage {
         private var loadPageState: PageLoadState
 
         init(_ loadPageSignal: PageLoadState) {
-            self.loadPageState = loadPageSignal
+            loadPageState = loadPageSignal
         }
 
         func webView(_: WKWebView, didFinish _: WKNavigation) {
@@ -33,7 +33,7 @@ public class PipeablePage {
         }
 
         func webView(_ webView: WKWebView, didStartProvisionalNavigation _: WKNavigation) {
-            loadPageState.changeState(state: .notloaded, url: webView.url?.absoluteString)
+            loadPageState.changeState(state: .notloaded, url: nil)
         }
 
         func webView(_ webView: WKWebView, didFail _: WKNavigation, withError error: Error) {
@@ -239,95 +239,31 @@ public class PipeablePage {
             return
         }
 
-        // Otherwise, wait until we get there or we time out.
-
-        // Since there is a potential race condition that can lead to double
-        // "resume" calls on the continuation, we need to ensure that the
-        // continuation is only resumed once. We guard this by running resumes
-        // in a queue and using a helper.
-        class ResumeOnce {
-            let queueForResuming = DispatchQueue(label: "waitForLoadState")
-            var isResumed = false
-
-            func resume(action: () -> Void) {
-                queueForResuming.sync {
-                    if !isResumed {
-                        isResumed = true
-                        action()
-                    }
-                }
-            }
-        }
-
-        let resumeOnce = ResumeOnce()
-
-        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-            var timeoutTask: Task<Void, Never>?
-
-            let removeListener = self.pageLoadState.subscribeToLoadStateChange { state, _, error in
-                if let error = error {
-                    resumeOnce.resume {
-                        continuation.resume(throwing: error)
-                    }
-
-                    // Clean up timer.
-                    timeoutTask?.cancel()
-
-                    return true
-                } else if state.rawValue >= LoadState.fromWaitUntil(waitUntil).rawValue {
-                    resumeOnce.resume {
-                        continuation.resume(returning: ())
-                    }
-
-                    // Clean up timer.
-                    timeoutTask?.cancel()
-                    return true
-                }
-
-                return false
-            }
-
-            timeoutTask = Task {
-                do {
-                    try await Task.sleep(nanoseconds: UInt64(timeout) * 1000000)
-                } catch {
-                    // If the sleep is cancelled, then we move to
-                }
-                removeListener()
-
-                resumeOnce.resume {
-                    continuation.resume(throwing: PipeableError.navigationError("The request timed out."))
-                }
-            }
-        }
+        try await pageLoadState.waitForLoadStateChange(
+            predicate: { state, _ in
+                state.rawValue >= LoadState.fromWaitUntil(waitUntil).rawValue
+            },
+            timeout: timeout
+        )
     }
 
     // TODO: Implement timeout
     // TODO: Implement shorthards for predicates -- string matching, regex matching
-    public func waitForURL(_ predicate: @escaping (String) -> Bool, waitUntil: WaitUntilOption = .load) async throws {
-        if let currentUrl = await url()?.absoluteString {
-            if predicate(currentUrl) {
-                return
-            }
-        }
-
-        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-            _ = self.pageLoadState.subscribeToLoadStateChange { state, url, error in
-                if let error = error {
-                    continuation.resume(throwing: error)
-                    return true
-                } else if
-                    let url = url,
-                    state.rawValue >= LoadState.fromWaitUntil(waitUntil).rawValue,
-                    predicate(url)
-                {
-                    continuation.resume(returning: ())
-                    return true
+    public func waitForURL(
+        _ predicate: @escaping (String) -> Bool,
+        waitUntil: WaitUntilOption = .load,
+        timeout: Int = 30000
+    ) async throws {
+        try await pageLoadState.waitForLoadStateChange(
+            predicate: { state, url in
+                if let url = url {
+                    return state.rawValue >= LoadState.fromWaitUntil(waitUntil).rawValue && predicate(url)
+                } else {
+                    return false
                 }
-
-                return false
-            }
-        }
+            },
+            timeout: timeout
+        )
     }
 
     public func querySelector(_ selector: String) async throws -> PipeableElement? {

@@ -22,7 +22,7 @@ app.get('/goto/timeout/:ms', (req, res) => {
 // This way domcontentloaded is fast, but the load event is slowed down.
 
 // Dynamic route to set latency and serve the requested file
-app.get('/load_latency/:ms/index.html', (req, res) => {
+app.get('/load_latency/:ms/*.html', (req, res) => {
     // Set script latency based on URL parameter
     const delay = parseInt(req.params.ms, 10);
     if (isNaN(delay)) {
@@ -30,8 +30,9 @@ app.get('/load_latency/:ms/index.html', (req, res) => {
         return;
     }
 
+    const fileName = req.params[0];
     // Serve the file from the public directory
-    const fullPath = path.resolve(path.join('public', 'load_latency', 'index.html'));
+    const fullPath = path.resolve(path.join('public', 'load_latency', fileName + '.html'));
     const fileContents = fs.readFileSync(fullPath, 'utf8');
     const modifiedContents = fileContents.replace('{{delay}}', delay.toString());
     res.contentType('text/html').send(modifiedContents);
