@@ -36,8 +36,6 @@ for story in stories {
 }
 
 print(storyTitles)
-
-// ["Web automation: Don\'t use Selenium, use Playwright(https://new.pythonforengineers.com/blog/web-automation-dont-use-selenium-use-playwright/)", "Show HN: Crawlee – Web scraping and browser automation library for Node.js(https://crawlee.dev/)", ...]
 ```
 
 ## Installation
