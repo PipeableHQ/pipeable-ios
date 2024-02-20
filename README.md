@@ -25,6 +25,8 @@ _ = try await page.evaluate("document.querySelector('form').submit()")
 
 try await page.waitForURL { url in url.contains("hn.algolia") }
 
+try await page.waitForSelector(".Story_title", visible: true)
+
 let stories = try await page.querySelectorAll(".Story_title")
 
 var storyTitles: [String] = []
