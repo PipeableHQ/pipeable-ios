@@ -17,8 +17,13 @@ public func prepareJSContext(_ dispatchGroup: DispatchGroup, _ page: PipeablePag
     context.exceptionHandler = { _, exception in
         if let exception = exception {
             // Print the exception, set it as the error of the script, so it's passed to "runScript".
-            print("JS Error: \(exception)")
-            context.evaluateScript("__error = \"JS Error: " + exception.description + "\"")
+            var errorMessage = exception.description
+            if let exceptionObject = exception.toObject() {
+                errorMessage = "\(errorMessage)\n\(exceptionObject)"
+            }
+
+            let script = "__error = `" + errorMessage + "`"
+            context.evaluateScript(script)
         }
     }
 
