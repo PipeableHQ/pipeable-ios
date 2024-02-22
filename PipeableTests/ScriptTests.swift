@@ -62,7 +62,12 @@ final class ScriptTests: XCTestCase {
             _ = try await runScript(script)
             XCTFail("Should fail with unhandled exception.")
         } catch let ScriptError.error(reason) {
-            XCTAssert(reason.contains("JS Error"), "Script failed with unhandled exception")
+            XCTAssertEqual(reason, """
+            SyntaxError: Unexpected identifier 'statement'
+            {
+                line = 5;
+            }
+            """)
         }
     }
 
@@ -82,7 +87,12 @@ final class ScriptTests: XCTestCase {
             _ = try await runScript(script)
             XCTFail("Should fail with unhandled exception.")
         } catch let ScriptError.error(reason) {
-            XCTAssert(reason.contains("SyntaxError"), "Script failed with unhandled exception \(reason)")
+            XCTAssertEqual(reason, """
+            SyntaxError: Unexpected token '='
+            {
+                line = 5;
+            }
+            """)
         }
     }
 }
