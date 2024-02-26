@@ -6,7 +6,7 @@ final class PipeablePageWaitForURLTests: PipeableXCTestCase {
     func testGotoWithAboutBlankAndWaitForURL() async throws {
         let page = PipeablePage(webView)
 
-        try? await page.goto("about:blank")
+        _ = try? await page.goto("about:blank")
 
         try await page.waitForURL { url in url == "about:blank" }
 
@@ -17,7 +17,7 @@ final class PipeablePageWaitForURLTests: PipeableXCTestCase {
     func testWaitForURLSuccess() async throws {
         let page = PipeablePage(webView)
 
-        try await page.goto(
+        _ = try await page.goto(
             "\(testServerURL)/load_latency/3000/index.html",
             waitUntil: .domcontentloaded
         )
@@ -43,7 +43,7 @@ final class PipeablePageWaitForURLTests: PipeableXCTestCase {
     func testWaitForURLWithTimeout() async throws {
         let page = PipeablePage(webView)
 
-        try await page.goto(
+        _ = try await page.goto(
             "\(testServerURL)/load_latency/2000/index.html",
             waitUntil: .domcontentloaded
         )

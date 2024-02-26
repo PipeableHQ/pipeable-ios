@@ -52,6 +52,13 @@ app.use('/load_latency/assets/', (req, __, next) => {
     }, delay);
 });
 
+// Test that we can read special headers set on responses.
+app.get('/header_test', (_, res) => {
+    res.set('X-Test-Header', 'Test');
+
+    res.send('<html><body>Test</body></html>');
+});
+
 // Serve static files from the "public" directory
 app.use(express.static('public'));
 

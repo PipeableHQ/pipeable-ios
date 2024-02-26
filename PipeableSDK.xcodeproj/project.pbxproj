@@ -14,13 +14,14 @@
 		A40EAC6C2B6BD0A100A6B6B3 /* PipeablePage_GotoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40EAC6B2B6BD0A100A6B6B3 /* PipeablePage_GotoTests.swift */; };
 		A41D866F2B73D47400F24064 /* PipeableElement_ClickTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A41D866E2B73D47400F24064 /* PipeableElement_ClickTests.swift */; };
 		A434C6162B5964B300B8011C /* PipeablePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A434C6152B5964B300B8011C /* PipeablePage.swift */; };
+		A43DC2952B8CD780005E416D /* ScriptContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = A43DC2942B8CD780005E416D /* ScriptContext.swift */; };
 		A43DC58A2B7277C100D0670B /* PipeableElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = A43DC5892B7277C100D0670B /* PipeableElement.swift */; };
 		A49B0A812B725F86005C1105 /* PageScript_QuerySelectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A49B0A802B725F86005C1105 /* PageScript_QuerySelectorTests.swift */; };
 		A4A7A9262B56BD7500982E63 /* Pipeable.docc in Sources */ = {isa = PBXBuildFile; fileRef = A4A7A9252B56BD7500982E63 /* Pipeable.docc */; };
 		A4A7A9312B56BD7500982E63 /* PipeableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4A7A9302B56BD7500982E63 /* PipeableTests.swift */; };
 		A4A7A9322B56BD7500982E63 /* Pipeable.h in Headers */ = {isa = PBXBuildFile; fileRef = A4A7A9242B56BD7500982E63 /* Pipeable.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A4C365FC2B62A3C5000D3F50 /* sophia.js in Resources */ = {isa = PBXBuildFile; fileRef = A4C365FB2B62A3C5000D3F50 /* sophia.js */; };
-		E80933752B83B0FA0024965E /* ScriptContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = E80933742B83B0FA0024965E /* ScriptContext.swift */; };
+		A4DF83B52B8CD0B3000EFCEA /* PipeablePageDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4DF83B42B8CD0B3000EFCEA /* PipeablePageDelegate.swift */; };
 		E81BD5AA2B6D4233007DFC02 /* BaseWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E81BD5A92B6D4233007DFC02 /* BaseWrapper.swift */; };
 		E81BD5AE2B6D430A007DFC02 /* PageWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E81BD5AD2B6D430A007DFC02 /* PageWrapper.swift */; };
 		E81BD5B02B6D45B6007DFC02 /* ElementWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E81BD5AF2B6D45B6007DFC02 /* ElementWrapper.swift */; };
@@ -48,6 +49,7 @@
 		A40EAC6B2B6BD0A100A6B6B3 /* PipeablePage_GotoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PipeablePage_GotoTests.swift; sourceTree = "<group>"; };
 		A41D866E2B73D47400F24064 /* PipeableElement_ClickTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PipeableElement_ClickTests.swift; sourceTree = "<group>"; };
 		A434C6152B5964B300B8011C /* PipeablePage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PipeablePage.swift; sourceTree = "<group>"; };
+		A43DC2942B8CD780005E416D /* ScriptContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScriptContext.swift; sourceTree = "<group>"; };
 		A43DC5892B7277C100D0670B /* PipeableElement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PipeableElement.swift; sourceTree = "<group>"; };
 		A450D1BB2B59750800079EAF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A49B0A802B725F86005C1105 /* PageScript_QuerySelectorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageScript_QuerySelectorTests.swift; sourceTree = "<group>"; };
@@ -57,7 +59,7 @@
 		A4A7A92B2B56BD7500982E63 /* PipeableSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PipeableSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4A7A9302B56BD7500982E63 /* PipeableTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PipeableTests.swift; sourceTree = "<group>"; };
 		A4C365FB2B62A3C5000D3F50 /* sophia.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = sophia.js; sourceTree = "<group>"; };
-		E80933742B83B0FA0024965E /* ScriptContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScriptContext.swift; sourceTree = "<group>"; };
+		A4DF83B42B8CD0B3000EFCEA /* PipeablePageDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PipeablePageDelegate.swift; sourceTree = "<group>"; };
 		E81BD5A92B6D4233007DFC02 /* BaseWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseWrapper.swift; sourceTree = "<group>"; };
 		E81BD5AD2B6D430A007DFC02 /* PageWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageWrapper.swift; sourceTree = "<group>"; };
 		E81BD5AF2B6D45B6007DFC02 /* ElementWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElementWrapper.swift; sourceTree = "<group>"; };
@@ -154,6 +156,7 @@
 				A434C6152B5964B300B8011C /* PipeablePage.swift */,
 				E8AC39A12B615BC900D413BF /* Script */,
 				A40BE0952B8393A800906441 /* PageLoadState.swift */,
+				A4DF83B42B8CD0B3000EFCEA /* PipeablePageDelegate.swift */,
 			);
 			path = PipeableSDK;
 			sourceTree = "<group>";
@@ -161,8 +164,8 @@
 		E8AC39A12B615BC900D413BF /* Script */ = {
 			isa = PBXGroup;
 			children = (
-				E80933742B83B0FA0024965E /* ScriptContext.swift */,
 				E8AC39A42B615C1D00D413BF /* Script.swift */,
+				A43DC2942B8CD780005E416D /* ScriptContext.swift */,
 				E81BD5A92B6D4233007DFC02 /* BaseWrapper.swift */,
 				E81BD5AD2B6D430A007DFC02 /* PageWrapper.swift */,
 				E81BD5AF2B6D45B6007DFC02 /* ElementWrapper.swift */,
@@ -327,13 +330,14 @@
 			files = (
 				A43DC58A2B7277C100D0670B /* PipeableElement.swift in Sources */,
 				E81BD5B62B6D5092007DFC02 /* Fakes.swift in Sources */,
+				A4DF83B52B8CD0B3000EFCEA /* PipeablePageDelegate.swift in Sources */,
 				E81BD5AA2B6D4233007DFC02 /* BaseWrapper.swift in Sources */,
+				A43DC2952B8CD780005E416D /* ScriptContext.swift in Sources */,
 				A4A7A9262B56BD7500982E63 /* Pipeable.docc in Sources */,
 				E8AC39A52B615C1D00D413BF /* Script.swift in Sources */,
 				A40BE0962B8393A800906441 /* PageLoadState.swift in Sources */,
 				E81BD5AE2B6D430A007DFC02 /* PageWrapper.swift in Sources */,
 				E81BD5B02B6D45B6007DFC02 /* ElementWrapper.swift in Sources */,
-				E80933752B83B0FA0024965E /* ScriptContext.swift in Sources */,
 				A434C6162B5964B300B8011C /* PipeablePage.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

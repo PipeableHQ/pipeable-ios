@@ -7,8 +7,8 @@ import WebKit
 public class PipeablePage {
     var webView: WKWebView
     var frame: WKFrameInfo?
-    private var delegate: Delegate?
 
+    private var delegate: PipeablePageDelegate?
     var frameInfoResolver: FrameInfoResolver = .init()
     private var pageLoadState: PageLoadState
 
@@ -19,53 +19,15 @@ public class PipeablePage {
         var synchronizationQueue = DispatchQueue(label: "wkframeResolver")
     }
 
-    class Delegate: NSObject, WKNavigationDelegate {
-        private var loadPageState: PageLoadState
+    actor LastHTTPResponse {
+        var lastHTTPResponse: PipeableHTTPResponse?
 
-        init(_ loadPageSignal: PageLoadState) {
-            loadPageState = loadPageSignal
-        }
-
-        func webView(_: WKWebView, didFinish _: WKNavigation) {
-            // Used to fire the DOMContentloaded here, but it actually is not really domcontentloaded, more like .load
-            // Right now everything is fired from JS, but we might want to fire load here as well, just in case
-            // some script deregisters all listeners on boot.
-        }
-
-        func webView(_ webView: WKWebView, didStartProvisionalNavigation _: WKNavigation) {
-            loadPageState.changeState(state: .notloaded, url: nil)
-        }
-
-        func webView(_ webView: WKWebView, didFail _: WKNavigation, withError error: Error) {
-            loadPageState.error(
-                error: PipeableError.navigationError(error.localizedDescription),
-                url: webView.url?.absoluteString
-            )
-        }
-
-        func webView(_ webView: WKWebView, didFailProvisionalNavigation _: WKNavigation, withError error: Error) {
-            loadPageState.error(
-                error: PipeableError.navigationError(error.localizedDescription),
-                url: webView.url?.absoluteString
-            )
-        }
-
-        func webView(_: WKWebView, didReceive _: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
-            completionHandler(.performDefaultHandling, nil)
-        }
-
-        func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
-            loadPageState.error(error: PipeableError.navigationError("Terminated"), url: webView.url?.absoluteString)
-        }
-
-        func webView(_: WKWebView, decidePolicyFor _: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-            decisionHandler(.allow)
-        }
-
-        func webView(_: WKWebView, decidePolicyFor _: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
-            decisionHandler(.allow)
+        func setLastHTTPResponse(_ response: PipeableHTTPResponse?) {
+            lastHTTPResponse = response
         }
     }
+
+    private var lastHTTPResponse: LastHTTPResponse = .init()
 
     class ContentController: NSObject, WKScriptMessageHandler {
         private var frameInfoResolver: FrameInfoResolver
@@ -188,7 +150,7 @@ public class PipeablePage {
 
         // This is the main frame / page.
         if frame == nil {
-            delegate = Delegate(pageLoadState)
+            delegate = PipeablePageDelegate(pageLoadState, lastHTTPResponse)
             self.webView.navigationDelegate = delegate
             self.webView.configuration.userContentController.add(
                 ContentController(frameInfoResolver, pageLoadState),
@@ -203,7 +165,17 @@ public class PipeablePage {
         }
     }
 
-    public func goto(_ url: String, waitUntil: WaitUntilOption = .load, timeout: Int = 30000) async throws {
+    /// Navigates to the given URL.
+    /// - Parameters:
+    ///  - url: The URL to navigate to.
+    ///  - waitUntil: When to consider navigation as finished, defaults to `.load`.
+    ///  - timeout: Maximum time to wait for the navigation to finish, defaults to 30000ms.
+    ///  - Returns: The response of the navigation - HTTP status code and
+    ///  headers. Can return nil if the response is not available. For example,
+    ///  if the navigation is to a non-HTTP URL: about:blank, data:, etc.
+    ///  - Throws: PipeableError.navigationError if the navigation fails.
+
+    public func goto(_ url: String, waitUntil: WaitUntilOption = .load, timeout: Int = 30000) async throws -> PipeableHTTPResponse? {
         print("page goto \(url) timeout \(timeout) waitUntil \(waitUntil)")
 
         pageLoadState.changeState(state: .notloaded, url: nil)
@@ -219,6 +191,9 @@ public class PipeablePage {
         }
 
         try await waitForLoadState(waitUntil: waitUntil, timeout: timeout)
+
+        let response = await lastHTTPResponse.lastHTTPResponse
+        return response
     }
 
     public func reload(waitUntil: WaitUntilOption = .load, timeout: Int = 30000) async throws {
@@ -446,6 +421,11 @@ public class PipeablePage {
     public func url() -> URL? {
         return webView.url
     }
+}
+
+public struct PipeableHTTPResponse: Decodable {
+    public var status: Int
+    public var headers: [String: String]
 }
 
 public struct XHRResult: Decodable {
