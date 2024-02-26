@@ -21,8 +21,11 @@ final class ScriptTests: XCTestCase {
         do {
             _ = try await runScript(script)
             XCTFail("An empty url error is expected")
-        } catch let ScriptError.error(reason) {
-            XCTAssertEqual(reason, "Navigation error: Empty url")
+        } catch let ScriptError.error(reason, info) {
+            XCTAssertEqual(reason, "NavigationError: Empty url")
+            XCTAssertNil(info.line)
+            XCTAssertNil(info.column)
+            XCTAssertNil(info.stack)
         } catch {
             XCTFail("An empty url error is expected")
         }
@@ -49,25 +52,13 @@ final class ScriptTests: XCTestCase {
         do {
             _ = try await runScript(script)
             XCTFail("Element not found error is expected")
-        } catch let ScriptError.error(reason) {
-            XCTAssertEqual(reason, "Element not found.")
+        } catch let ScriptError.error(reason, info) {
+            XCTAssertEqual(reason, "PipeableError: Element not found.")
+            XCTAssertNil(info.line)
+            XCTAssertNil(info.column)
+            XCTAssertNil(info.stack)
         } catch {
             XCTFail("An empty url error is expected")
-        }
-    }
-
-    func testScriptWithUnhandledExceptions() async throws {
-        let script = "random statement that should not compile"
-        do {
-            _ = try await runScript(script)
-            XCTFail("Should fail with unhandled exception.")
-        } catch let ScriptError.error(reason) {
-            XCTAssertEqual(reason, """
-            SyntaxError: Unexpected identifier 'statement'
-            {
-                line = 5;
-            }
-            """)
         }
     }
 
@@ -76,8 +67,35 @@ final class ScriptTests: XCTestCase {
         do {
             _ = try await runScript(script)
             XCTFail("Should fail with unhandled exception.")
-        } catch let ScriptError.error(reason) {
-            XCTAssert(reason.contains("ReferenceError"), "Script failed with unhandled exception \(reason)")
+        } catch let ScriptError.error(reason, info) {
+            XCTAssertEqual(reason, "ReferenceError: Can't find variable: nonexistentFunctionCall")
+            XCTAssertEqual(info.line, 1)
+            XCTAssertEqual(info.column, 28)
+            XCTAssertEqual(info.stack, """
+            @
+            asyncCallWithError@
+            global code@
+            """)
+        }
+    }
+
+    func testScriptErrorWithUndefinedIsNotAnObject() async throws {
+        let script = """
+        var test = undefined;
+        test.toStr();
+        """
+        do {
+            _ = try await runScript(script)
+            XCTFail("Should fail with unhandled exception.")
+        } catch let ScriptError.error(reason, info) {
+            XCTAssertEqual(reason, "TypeError: undefined is not an object (evaluating 'test.toStr')")
+            XCTAssertEqual(info.line, 2)
+            XCTAssertEqual(info.column, 5)
+            XCTAssertEqual(info.stack, """
+            @
+            asyncCallWithError@
+            global code@
+            """)
         }
     }
 
@@ -86,9 +104,35 @@ final class ScriptTests: XCTestCase {
         do {
             _ = try await runScript(script)
             XCTFail("Should fail with unhandled exception.")
-        } catch let ScriptError.error(reason) {
-            XCTAssertEqual(reason, """
-            SyntaxError: Unexpected token '='
+        } catch let ScriptError.error(reason, info) {
+            XCTAssertEqual(reason, "SyntaxError: Unexpected token '='")
+            XCTAssertEqual(info.line, 1)
+            XCTAssertNil(info.column)
+            XCTAssertNil(info.stack)
+            XCTAssertEqual(info.rawObject, """
+            {
+                line = 3;
+            }
+            """)
+        }
+    }
+
+    func testScriptWithSyntaxErrorOn3rdLine() async throws {
+        let script = """
+        var a = 5;
+        var b = 7;
+        1 + - = 3
+        """
+
+        do {
+            _ = try await runScript(script)
+            XCTFail("Should fail with unhandled exception.")
+        } catch let ScriptError.error(reason, info) {
+            XCTAssertEqual(reason, "SyntaxError: Unexpected token '='")
+            XCTAssertEqual(info.line, 3)
+            XCTAssertNil(info.stack)
+            XCTAssertNil(info.column)
+            XCTAssertEqual(info.rawObject, """
             {
                 line = 5;
             }

@@ -34,7 +34,7 @@ final class PageScriptQuerySelectorTests: PipeableXCTestCase {
                 """, page)
 
             XCTFail("Should fail with SyntaxError")
-        } catch let ScriptError.error(reason) {
+        } catch let ScriptError.error(reason, _) {
             XCTAssert(reason.contains("SyntaxError"), "Did not receive SyntaxError: \(reason)")
         } catch {
             XCTFail("Unexpected error \(error)")

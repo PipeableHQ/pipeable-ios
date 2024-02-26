@@ -53,7 +53,7 @@ final class PageScriptGotoTests: PipeableXCTestCase {
             XCTFail("Expected an error, but no error was thrown.")
         } catch {
             // Check if the caught error is of type PipeableError.navigationError ("The request timed out.")
-            if case let ScriptError.error(reason) = error {
+            if case let ScriptError.error(reason, _) = error {
                 if reason.contains("timed out") {
                     return
                 }

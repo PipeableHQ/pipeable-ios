@@ -34,9 +34,9 @@ class BaseWrapper: NSObject {
                     }
                 }
             } catch let PipeableError.navigationError(errorMessage) {
-                completionHandler.call(withArguments: [["error": "Navigation error: \(errorMessage)"]])
+                completionHandler.call(withArguments: [["error": "NavigationError: \(errorMessage)"]])
             } catch PipeableError.elementNotFound {
-                completionHandler.call(withArguments: [["error": "Element not found."]])
+                completionHandler.call(withArguments: [["error": "PipeableError: Element not found."]])
             } catch {
                 completionHandler.call(withArguments: [["error": "Unexpected error \(error)"]])
             }
