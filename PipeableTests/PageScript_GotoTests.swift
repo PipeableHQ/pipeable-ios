@@ -73,4 +73,26 @@ final class PageScriptGotoTests: PipeableXCTestCase {
             page
         )
     }
+
+    func testGotoTestResponseHeaders() async throws {
+        let page = PipeablePage(webView)
+
+        let response = try await runScript(
+            """
+            return await page.goto("\(testServerURL)/header_test", { timeout: 2_000, waitUntil: "domcontentloaded" });
+            """,
+            page
+        )
+
+        // swiftlint:disable force_cast
+
+        let resultDict = response.toDictionary()
+        XCTAssertEqual(resultDict?["status"] as! Int, 200)
+
+        let headers = resultDict?["headers"] as! [AnyHashable: Any] as [AnyHashable: Any]
+        XCTAssertEqual(headers["Content-Type"] as! NSString, "text/html; charset=utf-8")
+        XCTAssertEqual(headers["X-Test-Header"] as! NSString, "Test")
+
+        // swiftlint:enable force_cast
+    }
 }

@@ -28,6 +28,7 @@
 		E81BD5B42B6D4963007DFC02 /* PageScript_GotoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E81BD5B32B6D4963007DFC02 /* PageScript_GotoTests.swift */; };
 		E81BD5B62B6D5092007DFC02 /* Fakes.swift in Sources */ = {isa = PBXBuildFile; fileRef = E81BD5B52B6D5092007DFC02 /* Fakes.swift */; };
 		E8AC39A52B615C1D00D413BF /* Script.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8AC39A42B615C1D00D413BF /* Script.swift */; };
+		E8C2784F2B8E0D9100B8B176 /* SerializeToDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C2784E2B8E0D9100B8B176 /* SerializeToDictionary.swift */; };
 		E8F7B28E2B639E160040B77B /* ScriptTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8F7B28C2B639E160040B77B /* ScriptTests.swift */; };
 /* End PBXBuildFile section */
 
@@ -66,6 +67,7 @@
 		E81BD5B32B6D4963007DFC02 /* PageScript_GotoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageScript_GotoTests.swift; sourceTree = "<group>"; };
 		E81BD5B52B6D5092007DFC02 /* Fakes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fakes.swift; sourceTree = "<group>"; };
 		E8AC39A42B615C1D00D413BF /* Script.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Script.swift; sourceTree = "<group>"; };
+		E8C2784E2B8E0D9100B8B176 /* SerializeToDictionary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SerializeToDictionary.swift; sourceTree = "<group>"; };
 		E8F7B28C2B639E160040B77B /* ScriptTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -170,6 +172,7 @@
 				E81BD5AD2B6D430A007DFC02 /* PageWrapper.swift */,
 				E81BD5AF2B6D45B6007DFC02 /* ElementWrapper.swift */,
 				E81BD5B52B6D5092007DFC02 /* Fakes.swift */,
+				E8C2784E2B8E0D9100B8B176 /* SerializeToDictionary.swift */,
 			);
 			path = Script;
 			sourceTree = "<group>";
@@ -339,6 +342,7 @@
 				E81BD5AE2B6D430A007DFC02 /* PageWrapper.swift in Sources */,
 				E81BD5B02B6D45B6007DFC02 /* ElementWrapper.swift in Sources */,
 				A434C6162B5964B300B8011C /* PipeablePage.swift in Sources */,
+				E8C2784F2B8E0D9100B8B176 /* SerializeToDictionary.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

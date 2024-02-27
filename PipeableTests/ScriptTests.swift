@@ -1,15 +1,23 @@
+import JavaScriptCore
 @testable import PipeableSDK
 import XCTest
+
+// swiftlint:disable force_cast
 
 final class ScriptTests: XCTestCase {
     func testGoto() async throws {
         let result = try await runScript("""
             print('Calling page.goto');
-            await fakePage.goto("https://google.com");
-            return true;
+            let response = await fakePage.goto("https://google.com");
+            return response;
         """)
 
-        XCTAssertTrue(result.isBoolean && result.toBool(), "Unexpected result! " + result.debugDescription)
+        XCTAssertTrue(result.isObject, "Unexpected result! " + result.debugDescription)
+        let resultDict = result.toDictionary()
+        XCTAssertEqual(resultDict?["status"] as! Int, 200)
+        let headers = resultDict?["headers"] as! [AnyHashable: Any] as [AnyHashable: Any]
+        XCTAssertEqual(headers["Connection"] as! NSString, "Keep-Alive")
+        XCTAssertEqual(headers["Content-Encoding"] as! NSString, "gzip")
     }
 
     func testGotoWithError() async throws {
