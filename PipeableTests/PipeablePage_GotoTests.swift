@@ -156,4 +156,60 @@ final class PipeablePageGotoTests: PipeableXCTestCase {
 
         XCTFail("Should have thrown a PipeableError")
     }
+
+    func testGotoNetworkIdleInAStaticPage() async throws {
+        let page = PipeablePage(webView)
+
+        let response = try await page.goto(
+            "\(testServerURL)/load_latency/0/index.html",
+            waitUntil: .networkidle
+        )
+
+        XCTAssertEqual(response?.status, 200)
+    }
+
+    func testGotoNetworkIdleInADynamicPage() async throws {
+        let page = PipeablePage(webView)
+
+        let response = try await page.goto(
+            "\(testServerURL)/xhr_latency/500/index.html",
+            waitUntil: .networkidle
+        )
+
+        let containerEl = try await page.waitForSelector("#container")
+        let text = try await containerEl?.textContent()
+
+        XCTAssertEqual(response?.status, 200)
+        XCTAssertEqual(text, "Fixed string")
+    }
+
+    func testGotoNetworkIdleInADynamicPageWithFetch() async throws {
+        let page = PipeablePage(webView, debugPrintConsoleLogs: true)
+
+        let response = try await page.goto(
+            "\(testServerURL)/xhr_latency/500/fetch.html",
+            waitUntil: .networkidle
+        )
+        XCTAssertEqual(response?.status, 200)
+
+        let containerEl = try await page.waitForSelector("#container")
+        let text = try await containerEl?.textContent()
+
+        XCTAssertEqual(text, "Fixed string")
+    }
+
+    func testGotoWaitForNetworkIdleSeriesFetch() async throws {
+        let page = PipeablePage(webView, debugPrintConsoleLogs: true)
+
+        let response = try await page.goto(
+            "\(testServerURL)/xhr_latency/100/series_fetch.html",
+            waitUntil: .networkidle
+        )
+        XCTAssertEqual(response?.status, 200)
+
+        let containerEl = try await page.waitForSelector("#container")
+        let text = try await containerEl?.textContent()
+
+        XCTAssertEqual(text, "Fixed stringFixed stringFixed stringFixed string")
+    }
 }

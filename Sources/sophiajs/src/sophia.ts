@@ -9,6 +9,8 @@
             }[];
         } = {};
 
+        private neworkIdleMonitor = new NetworkActivityMonitor();
+
         constructor() {
             console.log('SophiaJS constructor for frame with url ' + window.location.href);
 
@@ -562,6 +564,7 @@
 
                 req.addEventListener('loadstart', function () {
                     console.log('[REQUEST START] ' + req.responseURL);
+                    self.neworkIdleMonitor.onRequestStart();
                     return true;
                 });
 
@@ -601,6 +604,7 @@
                         headers: headers,
                     };
 
+                    self.neworkIdleMonitor.onRequestEnd();
                     console.log('[REQUEST END] ' + req.responseURL, xhrResult);
 
                     // Dispatch to queue.
@@ -611,13 +615,18 @@
                     return true;
                 });
 
-                // TODO: Add error handling here.
-                // req.addEventListener('error', function (event) {
-                //     var message = { payload: { url: (event?.currentTarget as any).responseURL } };
-                //     window.webkit.messageHandlers.handler.postMessage(message);
-                // });
+                req.addEventListener('error', function (_) {
+                    self.neworkIdleMonitor.onRequestEnd();
+                    // TODO: Add error handling here.
+                    // var message = { payload: { url: (event?.currentTarget as any).responseURL } };
+                    // window.webkit.messageHandlers.handler.postMessage(message);
+                });
 
-                // req.addEventListener('abort', function (event) {});
+                req.addEventListener('abort', function (_) {
+                    self.neworkIdleMonitor.onRequestEnd();
+                    // var message = { payload: { url: (event?.currentTarget as any).responseURL } };
+                    // window.webkit.messageHandlers.handler.postMessage(message);
+                });
 
                 return req;
             } as unknown as typeof XMLHttpRequest;
@@ -643,6 +652,7 @@
 
             window.fetch = async function (...args) {
                 console.log('Fetching:', args); // or any other custom event/logic
+                self.neworkIdleMonitor.onRequestStart();
 
                 try {
                     const response = await originalFetch(...args);
@@ -673,6 +683,8 @@
                 } catch (error) {
                     console.error('Fetch error:', error);
                     throw error;
+                } finally {
+                    self.neworkIdleMonitor.onRequestEnd();
                 }
             };
         }
@@ -702,7 +714,62 @@
                     },
                 };
                 window.webkit?.messageHandlers?.handler?.postMessage(message);
+
+                // Once we're loaded, we start monitoring network activity and wait until it's idle.
+                this.neworkIdleMonitor.start();
             });
+
+            this.neworkIdleMonitor.setOnIdle(() => {
+                console.log('SophiaJS networkidle event for frame with url ' + window.location.href);
+                const message = {
+                    ctx: 'sophia',
+                    name: 'pageLoadStateChange',
+                    payload: {
+                        state: 'networkidle',
+                        url: window.location.href,
+                    },
+                };
+                window.webkit?.messageHandlers?.handler?.postMessage(message);
+            });
+        }
+    }
+
+    class NetworkActivityMonitor {
+        private requestsInFlight: number = 0;
+        private idleTimeout: number = 500;
+        private timeoutId: number | undefined;
+        private onIdle: () => void = () => {};
+
+        constructor() {}
+
+        setOnIdle(onIdle: () => void) {
+            this.onIdle = onIdle;
+        }
+
+        onRequestStart() {
+            this.requestsInFlight++;
+            this.resetIdleTimeout();
+        }
+
+        onRequestEnd() {
+            this.requestsInFlight--;
+            this.resetIdleTimeout();
+        }
+
+        start() {
+            this.resetIdleTimeout();
+        }
+
+        private resetIdleTimeout() {
+            if (this.timeoutId) {
+                clearTimeout(this.timeoutId);
+            }
+
+            if (this.requestsInFlight === 0) {
+                this.timeoutId = setTimeout(() => {
+                    this.onIdle();
+                }, this.idleTimeout);
+            }
         }
     }
 

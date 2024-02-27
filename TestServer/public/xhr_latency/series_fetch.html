@@ -1,0 +1,27 @@
+<html>
+  <head>
+    <title>test network idle</title>
+  </head>
+  <body>
+    <div id="container"></div>
+
+    <script type="text/javascript">
+      var container = document.getElementById("container");
+
+      async function getLine() {
+        const response = await fetch(
+          "http://localhost:3000/xhr/fixed_string?delay={{delay}}"
+        );
+        const text = await response.text();
+        return text;
+      }
+
+      (async () => {
+        for (let i = 0; i < 4; i++) {
+          const line = await getLine();
+          container.innerHTML += line;
+        }
+      })();
+    </script>
+  </body>
+</html>
