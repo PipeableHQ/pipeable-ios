@@ -26,7 +26,7 @@ final class PipeableElementClickTests: PipeableXCTestCase {
 
     func testClickOnInvisibleElementsShouldFail() async throws {
         let page = PipeablePage(webView)
-        try? await page.goto("\(testServerURL)/click.html")
+        _ = try? await page.goto("\(testServerURL)/click.html")
         let invisibleLinkEl = try await page.querySelector("#invisible_link")
 
         do {
@@ -47,7 +47,7 @@ final class PipeableElementClickTests: PipeableXCTestCase {
     private func registerClick(action: @escaping (_ page: PipeablePage) async throws -> Void) async throws {
         let page = PipeablePage(webView)
 
-        try? await page.goto("\(testServerURL)/click.html")
+        _ = try? await page.goto("\(testServerURL)/click.html")
 
         let clicksBefore = try await page.evaluate("window.clicks")
         guard let numClicksBefore = clicksBefore as? Int else {
