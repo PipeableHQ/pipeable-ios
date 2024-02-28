@@ -618,14 +618,11 @@
                 req.addEventListener('error', function (_) {
                     self.neworkIdleMonitor.onRequestEnd();
                     // TODO: Add error handling here.
-                    // var message = { payload: { url: (event?.currentTarget as any).responseURL } };
-                    // window.webkit.messageHandlers.handler.postMessage(message);
                 });
 
                 req.addEventListener('abort', function (_) {
                     self.neworkIdleMonitor.onRequestEnd();
-                    // var message = { payload: { url: (event?.currentTarget as any).responseURL } };
-                    // window.webkit.messageHandlers.handler.postMessage(message);
+                    // TODO: Add error handling here.
                 });
 
                 return req;

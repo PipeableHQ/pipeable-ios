@@ -82,8 +82,6 @@ app.use('/xhr/', (req, __, next) => {
     }, delay);
 });
 
-//
-
 app.get('/xhr/fixed_string', (_, res) => {
     res.send('Fixed string');
 });
