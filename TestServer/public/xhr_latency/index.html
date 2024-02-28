@@ -1,0 +1,25 @@
+<html>
+  <head>
+    <title>test network idle</title>
+  </head>
+  <body>
+    <div id="container"></div>
+
+    <script type="text/javascript">
+      var container = document.getElementById("container");
+
+      var xhr = new XMLHttpRequest();
+      xhr.open(
+        "GET",
+        "http://localhost:3000/xhr/fixed_string?delay={{delay}}",
+        true
+      );
+      xhr.send();
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+          container.innerHTML = xhr.responseText;
+        }
+      };
+    </script>
+  </body>
+</html>

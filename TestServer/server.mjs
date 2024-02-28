@@ -18,10 +18,9 @@ app.get('/goto/timeout/:ms', (req, res) => {
     }, ms);
 });
 
-// Simulate latency not on the html, but on the assets.
-// This way domcontentloaded is fast, but the load event is slowed down.
-
-// Dynamic route to set latency and serve the requested file
+//
+// Asset loading latency simulation for "load" event tests
+//
 app.get('/load_latency/:ms/*.html', (req, res) => {
     // Set script latency based on URL parameter
     const delay = parseInt(req.params.ms, 10);
@@ -50,6 +49,41 @@ app.use('/load_latency/assets/', (req, __, next) => {
     setTimeout(() => {
         next();
     }, delay);
+});
+
+//
+// XHR latency simulation for networkidle tests
+//
+app.get('/xhr_latency/:ms/*.html', (req, res) => {
+    const delay = parseInt(req.params.ms, 10);
+    if (isNaN(delay)) {
+        res.status(400).send('Invalid latency parameter');
+        return;
+    }
+
+    const fileName = req.params[0];
+    const fullPath = path.resolve(path.join('public', 'xhr_latency', fileName + '.html'));
+    const fileContents = fs.readFileSync(fullPath, 'utf8');
+    const modifiedContents = fileContents.replace('{{delay}}', delay.toString());
+    res.contentType('text/html').send(modifiedContents);
+});
+
+// Middleware to apply latency to specific XHR requests
+app.use('/xhr/', (req, __, next) => {
+    // parse ?delay= from req
+    const delay = parseInt(req.query.delay, 10);
+    if (isNaN(delay)) {
+        next();
+        return;
+    }
+
+    setTimeout(() => {
+        next();
+    }, delay);
+});
+
+app.get('/xhr/fixed_string', (_, res) => {
+    res.send('Fixed string');
 });
 
 // Test that we can read special headers set on responses.
