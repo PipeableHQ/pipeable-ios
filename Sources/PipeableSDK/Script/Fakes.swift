@@ -4,13 +4,15 @@ import JavaScriptCore
 // Fakes are temporary used for testing. Will be removed soon.
 
 class FakePage {
-    func goto(_ url: String) async throws {
+    func goto(_ url: String) async throws -> PipeableHTTPResponse {
         if url.isEmpty {
             throw PipeableError.navigationError("Empty url")
         }
         print("Navigating to url: \(url) ...")
         try await Task.sleep(nanoseconds: 1_000_000_000)
         print("Navigation completed!")
+
+        return PipeableHTTPResponse(status: 200, headers: ["Connection": "Keep-Alive", "Content-Encoding": "gzip"])
     }
 
     public func querySelector(_ selector: String) async throws -> FakePipeableElement? {
@@ -73,16 +75,19 @@ class FakeElementWrapper: BaseWrapper, FakeElementJSExport {
 // Page wrapper wraps the Page Swift API so that it makes it easy/possible to implement the Page Script API.
 class FakePageWrapper: BaseWrapper, FakePageJSExport {
     let page: FakePage
+    let context: JSContext
 
-    override init(_ dispatchGroup: DispatchGroup) {
+    init(_ dispatchGroup: DispatchGroup, _ context: JSContext) {
         self.page = FakePage()
+        self.context = context
         super.init(dispatchGroup)
     }
 
     func gotoWithCompletion(_ url: String, _ completionHandler: JSValue) {
         doWithCompletion(completionHandler) {
-            try await self.page.goto(url)
-            return CompletionResult.success(nil)
+            let response = try await self.page.goto(url)
+            let result = try serializeToJSValue(response, self.context)
+            return CompletionResult.success(result)
         }
     }
 

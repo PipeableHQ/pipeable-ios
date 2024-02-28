@@ -26,8 +26,8 @@ final class PageWrapper: BaseWrapper, PageJSExport {
                 throw PipeableError.invalidParameter("Invalid waitUntil option passed: \(waitUntilRaw)")
             }
 
-            _ = try await self.page.goto(url, waitUntil: waitUntil, timeout: timeout)
-            return CompletionResult.success(nil)
+            let response = try await self.page.goto(url, waitUntil: waitUntil, timeout: timeout)
+            return CompletionResult.success(try serializeToJSValue(response, self.context))
         }
     }
 

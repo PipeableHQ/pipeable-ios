@@ -31,7 +31,7 @@ public func prepareJSContext(_ dispatchGroup: DispatchGroup, _ page: PipeablePag
         }
     }
 
-    let fakePage = FakePageWrapper(dispatchGroup)
+    let fakePage = FakePageWrapper(dispatchGroup, context)
     let scriptContext = ScriptContext(dispatchGroup)
 
     context.setObject(scriptContext, forKeyedSubscript: "__context" as (NSCopying & NSObjectProtocol))
