@@ -1,7 +1,7 @@
 import Foundation
 import JavaScriptCore
 
-private func objectToDictionary<T>(_ object: T) -> [String: Any] {
+private func objectToDictionary(_ object: Any) -> [String: Any] {
     let mirror = Mirror(reflecting: object)
     var dictionary: [String: Any] = [:]
 
@@ -48,11 +48,11 @@ private func convertValue(_ value: Any) -> Any {
     }
 }
 
-// Serializes a struct or class to JSValue object.
-func serializeToJSValue(_ object: Any?, _ context: JSContext) throws -> JSValue {
-    if let object = object {
-        let dictionary = objectToDictionary(object)
-        return JSValue(object: dictionary, in: context)
+// Serializes a struct, class, array or dictionary to JSValue.
+func serializeToJSValue(_ value: Any?, _ context: JSContext) throws -> JSValue {
+    if let value = value {
+        let converted = convertValue(value)
+        return JSValue(object: converted, in: context)
     }
     return JSValue(nullIn: context)
 }
