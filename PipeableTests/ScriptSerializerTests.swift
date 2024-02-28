@@ -58,6 +58,26 @@ final class ScriptSerializerTests: XCTestCase {
         XCTAssertEqual(array?[2] as! Int, 3)
     }
 
+    func testSerializeInt() throws {
+        let value = 5
+        let jsValue = try serializeToJSValue(value, self.context)
+
+        XCTAssertTrue(jsValue.isNumber)
+
+        let number = jsValue.toNumber()
+        XCTAssertEqual(number, 5)
+    }
+
+    func testSerializeString() throws {
+        let value = "test"
+        let jsValue = try serializeToJSValue(value, self.context)
+
+        XCTAssertTrue(jsValue.isString)
+
+        let number = jsValue.toString()
+        XCTAssertEqual(number, "test")
+    }
+
     func testSerializeAClassWithComplexProperties() throws {
         class SimpleStruct {
             public var string = "test"
