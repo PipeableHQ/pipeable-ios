@@ -17,6 +17,7 @@
 		A43DC2952B8CD780005E416D /* ScriptContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = A43DC2942B8CD780005E416D /* ScriptContext.swift */; };
 		A43DC58A2B7277C100D0670B /* PipeableElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = A43DC5892B7277C100D0670B /* PipeableElement.swift */; };
 		A48D577B2B9759D6005C895F /* PipeablePage_EvaluateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A48D577A2B9759D6005C895F /* PipeablePage_EvaluateTests.swift */; };
+		A48D577D2B977430005C895F /* PipeablePage_AdduserScriptTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A48D577C2B977430005C895F /* PipeablePage_AdduserScriptTests.swift */; };
 		A49B0A812B725F86005C1105 /* PageScript_QuerySelectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A49B0A802B725F86005C1105 /* PageScript_QuerySelectorTests.swift */; };
 		A4A7A9262B56BD7500982E63 /* Pipeable.docc in Sources */ = {isa = PBXBuildFile; fileRef = A4A7A9252B56BD7500982E63 /* Pipeable.docc */; };
 		A4A7A9312B56BD7500982E63 /* PipeableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4A7A9302B56BD7500982E63 /* PipeableTests.swift */; };
@@ -56,6 +57,7 @@
 		A43DC5892B7277C100D0670B /* PipeableElement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PipeableElement.swift; sourceTree = "<group>"; };
 		A450D1BB2B59750800079EAF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A48D577A2B9759D6005C895F /* PipeablePage_EvaluateTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PipeablePage_EvaluateTests.swift; sourceTree = "<group>"; };
+		A48D577C2B977430005C895F /* PipeablePage_AdduserScriptTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PipeablePage_AdduserScriptTests.swift; sourceTree = "<group>"; };
 		A49B0A802B725F86005C1105 /* PageScript_QuerySelectorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageScript_QuerySelectorTests.swift; sourceTree = "<group>"; };
 		A4A7A9212B56BD7500982E63 /* PipeableSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PipeableSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4A7A9242B56BD7500982E63 /* Pipeable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Pipeable.h; sourceTree = "<group>"; };
@@ -145,6 +147,7 @@
 				E8F7B28C2B639E160040B77B /* ScriptTests.swift */,
 				A40EAC682B6BC88B00A6B6B3 /* PipeableXCTestCase.swift */,
 				A40EAC6B2B6BD0A100A6B6B3 /* PipeablePage_GotoTests.swift */,
+				A48D577C2B977430005C895F /* PipeablePage_AdduserScriptTests.swift */,
 				A40BE09A2B84B59F00906441 /* PipeablePage_WaitForURLTests.swift */,
 				A48D577A2B9759D6005C895F /* PipeablePage_EvaluateTests.swift */,
 				A41D866E2B73D47400F24064 /* PipeableElement_ClickTests.swift */,
@@ -364,6 +367,7 @@
 				A40BE09B2B84B59F00906441 /* PipeablePage_WaitForURLTests.swift in Sources */,
 				A40BE0992B83946800906441 /* PageLoadStateTests.swift in Sources */,
 				E8F7B28E2B639E160040B77B /* ScriptTests.swift in Sources */,
+				A48D577D2B977430005C895F /* PipeablePage_AdduserScriptTests.swift in Sources */,
 				E81BD5B42B6D4963007DFC02 /* PageScript_GotoTests.swift in Sources */,
 				A48D577B2B9759D6005C895F /* PipeablePage_EvaluateTests.swift in Sources */,
 				A4A7A9312B56BD7500982E63 /* PipeableTests.swift in Sources */,
