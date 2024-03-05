@@ -389,6 +389,17 @@ public class PipeablePage {
         return result
     }
 
+    public func evaluateAsyncFunction(_ javascript: String, arguments: [String: Any] = [:]) async throws -> Any? {
+        let result = try await webView.callAsyncJavaScript(
+            javascript,
+            arguments: arguments,
+            in: frame,
+            contentWorld: WKContentWorld.page
+        )
+
+        return result
+    }
+
     // TODO: Figure out error handling here.
     public func loadCookies(fromJSONString jsonString: String) {
         guard let data = jsonString.data(using: .utf8) else {
