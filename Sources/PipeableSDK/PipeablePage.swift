@@ -196,6 +196,16 @@ public class PipeablePage {
         return response
     }
 
+    public func addUserScript(_ contents: String, injectionTime: WKUserScriptInjectionTime = .atDocumentEnd, forMainFrameOnly: Bool = false) {
+        let userScript = WKUserScript(
+            source: contents,
+            injectionTime: injectionTime,
+            forMainFrameOnly: forMainFrameOnly
+        )
+
+        webView.configuration.userContentController.addUserScript(userScript)
+    }
+
     public func reload(waitUntil: WaitUntilOption = .load, timeout: Int = 30000) async throws {
         pageLoadState.changeState(state: .notloaded, url: nil)
         await webView.reload()
