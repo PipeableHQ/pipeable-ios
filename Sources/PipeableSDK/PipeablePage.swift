@@ -232,7 +232,6 @@ public class PipeablePage {
         )
     }
 
-    // TODO: Implement timeout
     // TODO: Implement shorthards for predicates -- string matching, regex matching
     public func waitForURL(
         _ predicate: @escaping (String) -> Bool,
@@ -380,34 +379,6 @@ public class PipeablePage {
 
         let xhrResult = try JSONDecoder().decode(XHRResult.self, from: data)
         return xhrResult
-    }
-
-    public func evaluate(_ javascript: String) async throws -> Any? {
-        let evaluationScript = """
-            (function () {
-                var result = (() => \(javascript))();
-                return result !== undefined ? result : null;
-            })();
-        """
-
-        let result = try await webView.evaluateJavaScript(
-            evaluationScript,
-            in: frame,
-            contentWorld: WKContentWorld.page
-        )
-
-        return result
-    }
-
-    public func evaluateAsyncFunction(_ javascript: String, arguments: [String: Any] = [:]) async throws -> Any? {
-        let result = try await webView.callAsyncJavaScript(
-            javascript,
-            arguments: arguments,
-            in: frame,
-            contentWorld: WKContentWorld.page
-        )
-
-        return result
     }
 
     // TODO: Figure out error handling here.

@@ -331,6 +331,10 @@
             return null;
         }
 
+        getElement(elementHash: string): HTMLElement | undefined {
+            return this.elementRegistry.get(elementHash);
+        }
+
         async type(elementHash: string, text: string, opts?: { delay?: number }) {
             const el = this.elementRegistry.get(elementHash);
             if (el) {
