@@ -142,31 +142,34 @@ final class PipeablePageEvaluateTests: PipeableXCTestCase {
                 }
 
                 const linkText = obj.link.textContent;
-            
+
                 return linkText + ' ' + sum;
-            """, arguments: ["obj": [
-                "elements": elements,
-                "link": linkEl
-            ]]
+            """, arguments: [
+                "obj":
+                    [
+                        "elements": elements,
+                        "link": linkEl
+                    ]
+            ]
         )
 
         XCTAssertEqual(sumOfValuesAndText as? String, "Another Page 10")
     }
-    
+
     func testEvaluateWithClickOnElement() async throws {
         let page = PipeablePage(webView)
-        
+
         _ = try await page.goto(
             "\(testServerURL)/load_latency/0/index.html",
             waitUntil: .networkidle
         )
-        
+
         guard let linkEl = try await page.querySelector("#container a") else {
             XCTFail("Link el not found")
             return
         }
-        
+
         _ = try await page.evaluateAsyncFunction("el.click()", arguments: ["el": linkEl])
-        try await page.waitForURL({ url in url.contains("another.html")}, timeout: 5_000)
+        try await page.waitForURL({ url in url.contains("another.html") }, timeout: 5_000)
     }
 }

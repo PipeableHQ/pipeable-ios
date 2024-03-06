@@ -115,5 +115,8 @@ private func replacePipeableElementsInFunctionArguments(in arguments: [String: A
     }
 
     let (modifiedArguments, didSubstite) = replacePipeableElements(in: arguments)
+
+    // We know it's assignable to [String: Any], since we started with one.
+    // swiftlint:disable:next force_cast
     return (modifiedArguments as! [String: Any], didSubstite)
 }

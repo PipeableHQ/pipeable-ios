@@ -16,6 +16,7 @@
 		A434C6162B5964B300B8011C /* PipeablePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A434C6152B5964B300B8011C /* PipeablePage.swift */; };
 		A43DC2952B8CD780005E416D /* ScriptContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = A43DC2942B8CD780005E416D /* ScriptContext.swift */; };
 		A43DC58A2B7277C100D0670B /* PipeableElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = A43DC5892B7277C100D0670B /* PipeableElement.swift */; };
+		A478D6C42B98B594000B11CC /* PipeablePage+Evaluate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A478D6C32B98B594000B11CC /* PipeablePage+Evaluate.swift */; };
 		A48D577B2B9759D6005C895F /* PipeablePage_EvaluateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A48D577A2B9759D6005C895F /* PipeablePage_EvaluateTests.swift */; };
 		A48D577D2B977430005C895F /* PipeablePage_AdduserScriptTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A48D577C2B977430005C895F /* PipeablePage_AdduserScriptTests.swift */; };
 		A49B0A812B725F86005C1105 /* PageScript_QuerySelectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A49B0A802B725F86005C1105 /* PageScript_QuerySelectorTests.swift */; };
@@ -56,6 +57,7 @@
 		A43DC2942B8CD780005E416D /* ScriptContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScriptContext.swift; sourceTree = "<group>"; };
 		A43DC5892B7277C100D0670B /* PipeableElement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PipeableElement.swift; sourceTree = "<group>"; };
 		A450D1BB2B59750800079EAF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A478D6C32B98B594000B11CC /* PipeablePage+Evaluate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PipeablePage+Evaluate.swift"; sourceTree = "<group>"; };
 		A48D577A2B9759D6005C895F /* PipeablePage_EvaluateTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PipeablePage_EvaluateTests.swift; sourceTree = "<group>"; };
 		A48D577C2B977430005C895F /* PipeablePage_AdduserScriptTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PipeablePage_AdduserScriptTests.swift; sourceTree = "<group>"; };
 		A49B0A802B725F86005C1105 /* PageScript_QuerySelectorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageScript_QuerySelectorTests.swift; sourceTree = "<group>"; };
@@ -165,9 +167,10 @@
 				A43DC5892B7277C100D0670B /* PipeableElement.swift */,
 				A4A7A9252B56BD7500982E63 /* Pipeable.docc */,
 				A434C6152B5964B300B8011C /* PipeablePage.swift */,
+				A478D6C32B98B594000B11CC /* PipeablePage+Evaluate.swift */,
+				A4DF83B42B8CD0B3000EFCEA /* PipeablePageDelegate.swift */,
 				E8AC39A12B615BC900D413BF /* Script */,
 				A40BE0952B8393A800906441 /* PageLoadState.swift */,
-				A4DF83B42B8CD0B3000EFCEA /* PipeablePageDelegate.swift */,
 			);
 			path = PipeableSDK;
 			sourceTree = "<group>";
@@ -246,7 +249,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1520;
-				LastUpgradeCheck = 1520;
+				LastUpgradeCheck = 1530;
 				TargetAttributes = {
 					A4A7A9202B56BD7500982E63 = {
 						CreatedOnToolsVersion = 15.2;
@@ -348,6 +351,7 @@
 				A4A7A9262B56BD7500982E63 /* Pipeable.docc in Sources */,
 				E8AC39A52B615C1D00D413BF /* Script.swift in Sources */,
 				A40BE0962B8393A800906441 /* PageLoadState.swift in Sources */,
+				A478D6C42B98B594000B11CC /* PipeablePage+Evaluate.swift in Sources */,
 				E81BD5AE2B6D430A007DFC02 /* PageWrapper.swift in Sources */,
 				E81BD5B02B6D45B6007DFC02 /* ElementWrapper.swift in Sources */,
 				A434C6162B5964B300B8011C /* PipeablePage.swift in Sources */,
@@ -513,7 +517,7 @@
 		A4A7A9362B56BD7500982E63 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -551,7 +555,7 @@
 		A4A7A9372B56BD7500982E63 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
