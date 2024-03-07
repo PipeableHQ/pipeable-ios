@@ -21,7 +21,7 @@ let searchForm = try await page.waitForXPath(
 let textAreaEl = try await searchForm?.querySelector("input[type='text']")
 try await textAreaEl?.type("web automation")
 
-_ = try await page.evaluate("document.querySelector('form').submit()")
+_ = try await page.submitActiveForm()
 
 try await page.waitForURL { url in url.contains("hn.algolia") }
 
