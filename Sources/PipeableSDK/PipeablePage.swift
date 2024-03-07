@@ -381,6 +381,19 @@ public class PipeablePage {
         return xhrResult
     }
 
+    public func submitActiveForm() async throws -> Bool {
+        let result = try await webView.callAsyncJavaScript(
+            """
+                return window.SophiaJS.submitActiveForm();
+            """,
+            arguments: [:],
+            in: frame,
+            contentWorld: WKContentWorld.page
+        )
+
+        return result as? Bool ?? false
+    }
+
     // TODO: Figure out error handling here.
     public func loadCookies(fromJSONString jsonString: String) {
         guard let data = jsonString.data(using: .utf8) else {

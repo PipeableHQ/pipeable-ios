@@ -335,6 +335,34 @@
             return this.elementRegistry.get(elementHash);
         }
 
+        submitActiveForm() {
+            // Find the currently active element, then the closest form and submit it.
+            // If there is no such form or no active element, return false.
+
+            const activeElement = document.activeElement;
+            if (!activeElement) {
+                return false;
+            }
+
+            const form = activeElement.closest('form');
+            if (!form) {
+                return false;
+            }
+
+            const event = new Event('submit', {
+                bubbles: true,
+                cancelable: true,
+            });
+
+            // Dispatch the event
+            if (form.dispatchEvent(event)) {
+                // If the event was not cancelled, submit the form
+                form.submit();
+            }
+
+            return true;
+        }
+
         async type(elementHash: string, text: string, opts?: { delay?: number }) {
             const el = this.elementRegistry.get(elementHash);
             if (el) {
@@ -390,8 +418,6 @@
                     document.execCommand('insertText', false, text[i]);
                     // (el as HTMLInputElement).value = text.slice(0, i + 1);
                 }
-
-                this.blur(elementHash);
             }
         }
 
