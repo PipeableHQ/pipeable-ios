@@ -72,4 +72,104 @@ final class PipeablePageEvaluateTests: PipeableXCTestCase {
             XCTFail("complexAsyncReturnValue is nil")
         }
     }
+
+    func testEvaluateWithPipeableElement() async throws {
+        let page = PipeablePage(webView)
+
+        _ = try await page.goto(
+            "\(testServerURL)/load_latency/0/index.html",
+            waitUntil: .networkidle
+        )
+
+        guard let element = try await page.querySelector("#container a") else {
+            XCTFail("Element not found")
+            return
+        }
+
+        let textContentOfElement = try await page.evaluateAsyncFunction(
+            """
+                return el.textContent
+            """, arguments: ["el": element]
+        )
+
+        XCTAssertEqual(textContentOfElement as? String, "Another Page")
+    }
+
+    func testEvaluateWithPipeableElementsArray() async throws {
+        let page = PipeablePage(webView)
+
+        _ = try await page.goto(
+            "\(testServerURL)/load_latency/0/index.html",
+            waitUntil: .networkidle
+        )
+
+        let elements = try await page.querySelectorAll("ul li")
+
+        let sumOfValues = try await page.evaluateAsyncFunction(
+            """
+                let sum = 0;
+                for (const el of elements) {
+                    sum += parseInt(el.getAttribute('data-val'), 10);
+                }
+
+                return sum;
+            """, arguments: ["elements": elements]
+        )
+
+        XCTAssertEqual(sumOfValues as? Int, 10)
+    }
+
+    func testEvaluateWithPipeableElementsDictionary() async throws {
+        let page = PipeablePage(webView)
+
+        _ = try await page.goto(
+            "\(testServerURL)/load_latency/0/index.html",
+            waitUntil: .networkidle
+        )
+
+        guard let linkEl = try await page.querySelector("#container a") else {
+            XCTFail("Link el not found")
+            return
+        }
+
+        let elements = try await page.querySelectorAll("ul li")
+
+        let sumOfValuesAndText = try await page.evaluateAsyncFunction(
+            """
+                let sum = 0;
+                for (const el of obj.elements) {
+                    sum += parseInt(el.getAttribute('data-val'), 10);
+                }
+
+                const linkText = obj.link.textContent;
+
+                return linkText + ' ' + sum;
+            """, arguments: [
+                "obj":
+                    [
+                        "elements": elements,
+                        "link": linkEl
+                    ]
+            ]
+        )
+
+        XCTAssertEqual(sumOfValuesAndText as? String, "Another Page 10")
+    }
+
+    func testEvaluateWithClickOnElement() async throws {
+        let page = PipeablePage(webView)
+
+        _ = try await page.goto(
+            "\(testServerURL)/load_latency/0/index.html",
+            waitUntil: .networkidle
+        )
+
+        guard let linkEl = try await page.querySelector("#container a") else {
+            XCTFail("Link el not found")
+            return
+        }
+
+        _ = try await page.evaluateAsyncFunction("el.click()", arguments: ["el": linkEl])
+        try await page.waitForURL({ url in url.contains("another.html") }, timeout: 5_000)
+    }
 }
