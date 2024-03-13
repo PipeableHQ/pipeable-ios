@@ -67,7 +67,7 @@
             return sophiaEls;
         }
         async waitForSelector(selector, opts) {
-            console.log('got wait for selector ' + selector + ' for frame with url ' + window.location.href);
+            // console.log('got wait for selector ' + selector + ' for frame with url ' + window.location.href);
             let parentNode;
             if (opts === null || opts === void 0 ? void 0 : opts.parentElementHash) {
                 const parentEl = this.elementRegistry.get(opts.parentElementHash);
