@@ -88,7 +88,7 @@
             selector: string,
             opts?: { timeout?: number; visible?: boolean; parentElementHash?: string },
         ): Promise<string> {
-            // console.log('got wait for selector ' + selector + ' for frame with url ' + window.location.href);
+            console.log('got wait for selector ' + selector + ' for frame with url ' + window.location.href);
 
             let parentNode: ParentNode;
 
@@ -862,26 +862,48 @@
     function isElementVisible(el: Element) {
         let currentElement: Element | null = el;
 
+        let level = 0;
         // Check element style and its ancestors
         while (currentElement) {
             // Check if the element is within the viewport
-            const rect = currentElement.getBoundingClientRect();
-            if (rect.width <= 0 || rect.height <= 0) {
-                return false;
+            if (level === 0) {
+                const rect = currentElement.getBoundingClientRect();
+                // Check if the element is within the viewport
+                if (rect.width <= 0 || rect.height <= 0) {
+                    // DEBUG:
+                    // console.log('level[' + level + '] -> size is 0');
+                    return false;
+                }
             }
 
             const style = getComputedStyle(currentElement);
-            if (
-                style.display === 'none' ||
-                style.visibility === 'hidden' ||
-                parseFloat(style.opacity) === 0 ||
-                style.width === '0' ||
-                style.height === '0'
-            ) {
+
+            if (style.display === 'contents') {
+                // If the element is a "contents" element, it doesn't enforce style, skip.
+                currentElement = currentElement.parentElement;
+                level++;
+                continue;
+            }
+
+            if (style.display === 'none' || style.visibility === 'hidden' || parseFloat(style.opacity) === 0) {
+                // If we need to debug why something is not visible.
+                // DEBUG:
+                // let reason = {
+                //     display: style.display,
+                //     visibility: style.visibility,
+                //     opacity: style.opacity,
+                //     width: style.width,
+                //     height: style.height,
+                // };
+                // console.log(
+                //     '[level ' + level + '] -> class: ' + classes + ', hidden ' + JSON.stringify(reason, null, 4),
+                // );
                 return false;
             }
 
+            // Continue checking the parents to see if any of those impose visibility restrictions.
             currentElement = currentElement.parentElement;
+            level++;
         }
 
         return true;
