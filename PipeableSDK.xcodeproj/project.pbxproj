@@ -24,8 +24,8 @@
 		A4A7A9262B56BD7500982E63 /* Pipeable.docc in Sources */ = {isa = PBXBuildFile; fileRef = A4A7A9252B56BD7500982E63 /* Pipeable.docc */; };
 		A4A7A9312B56BD7500982E63 /* PipeableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4A7A9302B56BD7500982E63 /* PipeableTests.swift */; };
 		A4A7A9322B56BD7500982E63 /* Pipeable.h in Headers */ = {isa = PBXBuildFile; fileRef = A4A7A9242B56BD7500982E63 /* Pipeable.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		A4C365FC2B62A3C5000D3F50 /* sophia.js in Resources */ = {isa = PBXBuildFile; fileRef = A4C365FB2B62A3C5000D3F50 /* sophia.js */; };
 		A4DF83B52B8CD0B3000EFCEA /* PipeablePageDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4DF83B42B8CD0B3000EFCEA /* PipeablePageDelegate.swift */; };
+		A4FF74BE2BA352E90046936C /* pipeable.js in Resources */ = {isa = PBXBuildFile; fileRef = A4FF74BD2BA352E90046936C /* pipeable.js */; };
 		E81BD5AA2B6D4233007DFC02 /* BaseWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E81BD5A92B6D4233007DFC02 /* BaseWrapper.swift */; };
 		E81BD5AE2B6D430A007DFC02 /* PageWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E81BD5AD2B6D430A007DFC02 /* PageWrapper.swift */; };
 		E81BD5B02B6D45B6007DFC02 /* ElementWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E81BD5AF2B6D45B6007DFC02 /* ElementWrapper.swift */; };
@@ -68,8 +68,8 @@
 		A4A7A9252B56BD7500982E63 /* Pipeable.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Pipeable.docc; sourceTree = "<group>"; };
 		A4A7A92B2B56BD7500982E63 /* PipeableSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PipeableSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4A7A9302B56BD7500982E63 /* PipeableTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PipeableTests.swift; sourceTree = "<group>"; };
-		A4C365FB2B62A3C5000D3F50 /* sophia.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = sophia.js; sourceTree = "<group>"; };
 		A4DF83B42B8CD0B3000EFCEA /* PipeablePageDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PipeablePageDelegate.swift; sourceTree = "<group>"; };
+		A4FF74BD2BA352E90046936C /* pipeable.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = pipeable.js; sourceTree = "<group>"; };
 		E81BD5A92B6D4233007DFC02 /* BaseWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseWrapper.swift; sourceTree = "<group>"; };
 		E81BD5AD2B6D430A007DFC02 /* PageWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageWrapper.swift; sourceTree = "<group>"; };
 		E81BD5AF2B6D45B6007DFC02 /* ElementWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElementWrapper.swift; sourceTree = "<group>"; };
@@ -111,7 +111,7 @@
 		A4A4FE252B62A3280094C7D0 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				A4C365FB2B62A3C5000D3F50 /* sophia.js */,
+				A4FF74BD2BA352E90046936C /* pipeable.js */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -286,7 +286,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A4C365FC2B62A3C5000D3F50 /* sophia.js in Resources */,
+				A4FF74BE2BA352E90046936C /* pipeable.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -317,7 +317,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "[ -e ~/.profile ] && source ~/.profile\n\ncd Sources/sophiajs\nnpm run build\n";
+			shellScript = "[ -e ~/.profile ] && source ~/.profile\n\ncd Sources/pipeablejs\nnpm run build\n";
 			showEnvVarsInLog = 0;
 		};
 		A45D76742B596CE20046DACF /* Linter */ = {

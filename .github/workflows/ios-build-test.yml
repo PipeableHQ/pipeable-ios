@@ -17,11 +17,11 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version-file: '.nvmrc'
+          node-version-file: ".nvmrc"
 
       - name: Install JS deps
         run: npm ci
-        working-directory: ./Sources/sophiajs
+        working-directory: ./Sources/pipeablejs
 
       - name: Install JS deps for test server
         run: npm ci
@@ -58,7 +58,6 @@ jobs:
       - name: Kill Test Server
         run: lsof -ti :3000 | xargs kill
 
-
   build-and-test-sample-app:
     runs-on: macos-14
 
@@ -68,11 +67,11 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version-file: '.nvmrc'
-      
+          node-version-file: ".nvmrc"
+
       - name: Install JS deps
         run: npm ci
-        working-directory: ./Sources/sophiajs
+        working-directory: ./Sources/pipeablejs
 
       - name: Set Xcode 15
         run: |
@@ -97,4 +96,3 @@ jobs:
           xcodebuild -workspace Pipeable.xcworkspace -scheme PipeableSample \
                      -destination 'platform=iOS Simulator,name=iPhone 15,OS=17.2' \
                      clean build | xcpretty
-

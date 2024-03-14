@@ -14,7 +14,7 @@ public class PipeableElement {
 
         let result = try await page.webView.callAsyncJavaScript(
             """
-                return window.SophiaJS.click(elementHash, { timeout: timeout });
+                return window.PipeableJS.click(elementHash, { timeout: timeout });
             """,
             arguments: ["elementHash": elementId, "timeout": timeout],
             in: page.frame,
@@ -27,7 +27,7 @@ public class PipeableElement {
     public func type(_ text: String, _ delay: Int = 10) async throws {
         _ = try await page.webView.callAsyncJavaScript(
             """
-                return window.SophiaJS.type(elementHash, text, opts);
+                return window.PipeableJS.type(elementHash, text, opts);
             """,
             arguments: [
                 "elementHash": elementId,
@@ -44,7 +44,7 @@ public class PipeableElement {
     public func focus() async throws {
         _ = try await page.webView.callAsyncJavaScript(
             """
-                return window.SophiaJS.focus(elementHash);
+                return window.PipeableJS.focus(elementHash);
             """,
             arguments: ["elementHash": elementId],
             in: page.frame,
@@ -57,7 +57,7 @@ public class PipeableElement {
         let requestId = randomString(length: 10)
         let result = try await page.webView.callAsyncJavaScript(
             """
-                return window.SophiaJS.sendFrameIDMessage(elementHash, requestId);
+                return window.PipeableJS.sendFrameIDMessage(elementHash, requestId);
             """,
             arguments: ["elementHash": elementId, "requestId": requestId],
             in: page.frame,
@@ -89,7 +89,7 @@ public class PipeableElement {
     public func textContent() async throws -> String? {
         let result = try await page.webView.callAsyncJavaScript(
             """
-                return window.SophiaJS.textContent(elementHash);
+                return window.PipeableJS.textContent(elementHash);
             """,
             arguments: ["elementHash": elementId],
             in: page.frame,
@@ -102,7 +102,7 @@ public class PipeableElement {
     public func getAttribute(_ attributeName: String) async throws -> String? {
         let result = try await page.webView.callAsyncJavaScript(
             """
-                return window.SophiaJS.getAttribute(elementHash, attributeName);
+                return window.PipeableJS.getAttribute(elementHash, attributeName);
             """,
             arguments: ["elementHash": elementId, "attributeName": attributeName],
             in: page.frame,
@@ -115,7 +115,7 @@ public class PipeableElement {
     public func querySelector(_ selector: String) async throws -> PipeableElement? {
         let result = try await page.webView.callAsyncJavaScript(
             """
-                return window.SophiaJS.$(selector, parentHash);
+                return window.PipeableJS.$(selector, parentHash);
             """,
             arguments: ["selector": selector, "parentHash": elementId],
             in: page.frame,
@@ -132,7 +132,7 @@ public class PipeableElement {
     public func querySelectorAll(_ selector: String) async throws -> [PipeableElement] {
         let result = try await page.webView.callAsyncJavaScript(
             """
-                return window.SophiaJS.$$(selector, parentHash);
+                return window.PipeableJS.$$(selector, parentHash);
             """,
             arguments: ["selector": selector, "parentHash": elementId],
             in: page.frame,
@@ -151,7 +151,7 @@ public class PipeableElement {
     public func waitForSelector(_ selector: String, timeout: Int = 30000, visible: Bool = false) async throws -> PipeableElement? {
         let result = try await page.webView.callAsyncJavaScript(
             """
-                return window.SophiaJS.waitForSelector(selector, opts);
+                return window.PipeableJS.waitForSelector(selector, opts);
             """,
             arguments: [
                 "selector": selector,
@@ -176,7 +176,7 @@ public class PipeableElement {
     public func xpathSelector(_ xpath: String) async throws -> [PipeableElement] {
         let result = try await page.webView.callAsyncJavaScript(
             """
-                return window.SophiaJS.$x(xpath, parentHash);
+                return window.PipeableJS.$x(xpath, parentHash);
             """,
             arguments: ["xpath": xpath, "parentHash": elementId],
             in: page.frame,
@@ -196,7 +196,7 @@ public class PipeableElement {
     public func waitForXPath(_ xpath: String, timeout: Int = 30000, visible: Bool = false) async throws -> PipeableElement? {
         let result = try await page.webView.callAsyncJavaScript(
             """
-                return window.SophiaJS.waitForXPath(xpath, opts);
+                return window.PipeableJS.waitForXPath(xpath, opts);
             """,
             arguments: [
                 "xpath": xpath,

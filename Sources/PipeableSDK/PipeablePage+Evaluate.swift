@@ -51,7 +51,7 @@ public extension PipeablePage {
             functionToInvoke = """
                 function substitutePipeableElements(value) {
                     if (value._type === 'pipeableElement') {
-                        return window.SophiaJS.getElement(value.elementId);
+                        return window.PipeableJS.getElement(value.elementId);
                     } else if (Array.isArray(value)) {
                         return value.map(substitutePipeableElements);
                     } else if (typeof value === 'object') {
