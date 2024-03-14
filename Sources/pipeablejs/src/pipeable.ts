@@ -1,5 +1,5 @@
 (function () {
-    class SophiaPage {
+    class PipeablePage {
         private elementRegistry = new WeakDomRegistry();
 
         private xhrHandles: {
@@ -12,7 +12,7 @@
         private neworkIdleMonitor = new NetworkActivityMonitor();
 
         constructor() {
-            console.log('SophiaJS constructor for frame with url ' + window.location.href);
+            console.log('PipeableJS constructor for frame with url ' + window.location.href);
 
             // this.attachScriptEventListener();
             this.attachXHRListener();
@@ -53,13 +53,13 @@
             }
 
             const elements = parentNode.querySelectorAll(selector);
-            const sophiaEls: string[] = [];
+            const pipeableEls: string[] = [];
             for (let i = 0; i < elements.length; i++) {
                 const el = elements[i];
-                sophiaEls.push(this.wrapHandle(el as HTMLElement));
+                pipeableEls.push(this.wrapHandle(el as HTMLElement));
             }
 
-            return sophiaEls;
+            return pipeableEls;
         }
 
         $x(xpath: string, parentElementHash?: string): string[] {
@@ -73,15 +73,15 @@
             }
 
             const elements = document.evaluate(xpath, parentNode, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
-            const sophiaEls: string[] = [];
+            const pipeableEls: string[] = [];
             for (let i = 0; i < elements.snapshotLength; i++) {
                 const el = elements.snapshotItem(i);
                 if (el) {
-                    sophiaEls.push(this.wrapHandle(el as HTMLElement));
+                    pipeableEls.push(this.wrapHandle(el as HTMLElement));
                 }
             }
 
-            return sophiaEls;
+            return pipeableEls;
         }
 
         async waitForSelector(
@@ -434,7 +434,7 @@
 
             // It's an iframe. We can post a message to get the ID and associate it with the calling request.
             const iframe = el as HTMLIFrameElement;
-            const message = { ctx: 'sophia', payload: { requestId: requestId } };
+            const message = { ctx: 'pipeable', payload: { requestId: requestId } };
             iframe.contentWindow!.postMessage(JSON.stringify(message), '*');
 
             return true;
@@ -492,10 +492,10 @@
                     function (event) {
                         try {
                             const data = JSON.parse(event.data);
-                            if (data.ctx === 'sophia') {
+                            if (data.ctx === 'pipeable') {
                                 // Forward message to native.
                                 window.webkit.messageHandlers.handler.postMessage({
-                                    ctx: 'sophia',
+                                    ctx: 'pipeable',
                                     name: 'frameInfoId',
                                     payload: data.payload,
                                 });
@@ -519,7 +519,7 @@
                 window.addEventListener('message', function (event) {
                     try {
                         const data = JSON.parse(event.data);
-                        if (data.ctx === 'sophia') {
+                        if (data.ctx === 'pipeable') {
                             // You can send the received data to Swift using WKScriptMessageHandler here
                             window.webkit.messageHandlers.handler.postMessage({
                                 payload: {
@@ -718,9 +718,9 @@
 
         private attachOnLoadListeners() {
             window.addEventListener('DOMContentLoaded', () => {
-                console.log('SophiaJS load event for frame with url ' + window.location.href);
+                console.log('PipeableJS load event for frame with url ' + window.location.href);
                 const message = {
-                    ctx: 'sophia',
+                    ctx: 'pipeable',
                     name: 'pageLoadStateChange',
                     payload: {
                         state: 'domcontentloaded',
@@ -731,9 +731,9 @@
             });
 
             window.addEventListener('load', () => {
-                console.log('SophiaJS load event for frame with url ' + window.location.href);
+                console.log('PipeableJS load event for frame with url ' + window.location.href);
                 const message = {
-                    ctx: 'sophia',
+                    ctx: 'pipeable',
                     name: 'pageLoadStateChange',
                     payload: {
                         state: 'load',
@@ -747,9 +747,9 @@
             });
 
             this.neworkIdleMonitor.setOnIdle(() => {
-                console.log('SophiaJS networkidle event for frame with url ' + window.location.href);
+                console.log('PipeableJS networkidle event for frame with url ' + window.location.href);
                 const message = {
-                    ctx: 'sophia',
+                    ctx: 'pipeable',
                     name: 'pageLoadStateChange',
                     payload: {
                         state: 'networkidle',
@@ -938,7 +938,7 @@
     };
 
     // Expose this directly.
-    if (!(window as any).SophiaJS) {
-        (window as any).SophiaJS = new SophiaPage();
+    if (!(window as any).PipeableJS) {
+        (window as any).PipeableJS = new PipeablePage();
     }
 })();

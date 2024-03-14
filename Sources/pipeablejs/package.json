@@ -1,11 +1,11 @@
 {
-  "name": "sophiajs",
+  "name": "pipeablejs",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "tsc && cp ./dist/sophia.js ../PipeableSDK/Resources/",
-    "dev": "tsc-watch --onSuccess \"cp ./dist/sophia.js '../PipeableSDK/Resources/'\"",
+    "build": "tsc && cp ./dist/pipeable.js ../PipeableSDK/Resources/",
+    "dev": "tsc-watch --onSuccess \"cp ./dist/pipeable.js '../PipeableSDK/Resources/'\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

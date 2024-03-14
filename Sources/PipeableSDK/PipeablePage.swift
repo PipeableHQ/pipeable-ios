@@ -48,7 +48,7 @@ public class PipeablePage {
             }
 
             // TODO: Somehow add here schema validation for messages
-            if ctx == "sophia" {
+            if ctx == "pipeable" {
                 print("dict " + String(describing: dict))
                 if let payload = dict["payload"] as? [String: AnyObject] {
                     if name == "frameInfoId" {
@@ -108,7 +108,7 @@ public class PipeablePage {
             let bundle = Bundle(for: PipeablePage.self)
         #endif
 
-        let pathInFramework = bundle.path(forResource: "sophia", ofType: "js")
+        let pathInFramework = bundle.path(forResource: "pipeable", ofType: "js")
 
         if let filepath = pathInFramework {
             contents = try? String(contentsOfFile: filepath, encoding: .utf8)
@@ -133,7 +133,7 @@ public class PipeablePage {
                 origConsoleLog = window.console.log;
                 window.console.log = function(message) {
                     window.webkit.messageHandlers.handler.postMessage({
-                        ctx: 'sophia',
+                        ctx: 'pipeable',
                         name: 'log',
                         payload: { message }
                     });
@@ -253,7 +253,7 @@ public class PipeablePage {
     public func querySelector(_ selector: String) async throws -> PipeableElement? {
         let result = try await webView.callAsyncJavaScript(
             """
-                return window.SophiaJS.$(selector);
+                return window.PipeableJS.$(selector);
             """,
             arguments: ["selector": selector],
             in: frame,
@@ -271,7 +271,7 @@ public class PipeablePage {
     public func querySelectorAll(_ selector: String) async throws -> [PipeableElement] {
         let result = try await webView.callAsyncJavaScript(
             """
-                return window.SophiaJS.$$(selector);
+                return window.PipeableJS.$$(selector);
             """,
             arguments: ["selector": selector],
             in: frame,
@@ -292,7 +292,7 @@ public class PipeablePage {
     public func xpathSelector(_ xpath: String) async throws -> [PipeableElement] {
         let result = try await webView.callAsyncJavaScript(
             """
-                return window.SophiaJS.$x(xpath);
+                return window.PipeableJS.$x(xpath);
             """,
             arguments: ["xpath": xpath],
             in: frame,
@@ -313,7 +313,7 @@ public class PipeablePage {
     public func waitForXPath(_ xpath: String, timeout: Int = 30000, visible: Bool = false) async throws -> PipeableElement? {
         let result = try await webView.callAsyncJavaScript(
             """
-                return window.SophiaJS.waitForXPath(xpath, opts);
+                return window.PipeableJS.waitForXPath(xpath, opts);
             """,
             arguments: [
                 "xpath": xpath,
@@ -338,7 +338,7 @@ public class PipeablePage {
     public func waitForSelector(_ selector: String, timeout: Int = 30000, visible: Bool = false) async throws -> PipeableElement? {
         let result = try await webView.callAsyncJavaScript(
             """
-                return window.SophiaJS.waitForSelector(selector, opts);
+                return window.PipeableJS.waitForSelector(selector, opts);
             """,
             arguments: [
                 "selector": selector,
@@ -362,7 +362,7 @@ public class PipeablePage {
     public func waitForXHR(_ url: String, timeout: Int = 30000) async throws -> XHRResult? {
         let result = try await webView.callAsyncJavaScript(
             """
-                return window.SophiaJS.waitForXHR(url, timeout);
+                return window.PipeableJS.waitForXHR(url, timeout);
             """,
             arguments: ["url": url, "timeout": timeout],
             in: frame,
@@ -384,7 +384,7 @@ public class PipeablePage {
     public func submitActiveForm() async throws -> Bool {
         let result = try await webView.callAsyncJavaScript(
             """
-                return window.SophiaJS.submitActiveForm();
+                return window.PipeableJS.submitActiveForm();
             """,
             arguments: [:],
             in: frame,

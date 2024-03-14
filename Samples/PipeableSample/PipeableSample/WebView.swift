@@ -251,13 +251,12 @@ class WebViewCoordinator: NSObject, WKNavigationDelegate {
             print("Finished loading URL: \(url)")
             // Perform actions based on the URL that finished loading
 
-            webView.evaluateJavaScript("SophiaJS.version()")
+            webView.evaluateJavaScript("PipeableJS.version()")
 
             // Delay this by 3 seconds.
             DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
                 // Your code here will be run after 3 seconds
-                webView.evaluateJavaScript("SophiaJS.clickOnXPath('//button[contains(string(), \"OK\")]')")
-                //                webView.evaluateJavaScript("SophiaBridge.version()");
+                webView.evaluateJavaScript("PipeableJS.clickOnXPath('//button[contains(string(), \"OK\")]')")
             }
         }
     }
