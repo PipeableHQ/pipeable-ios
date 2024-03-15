@@ -24,7 +24,7 @@ final class PipeableElementClickTests: PipeableXCTestCase {
         }
     }
 
-    func testPropagation() async throws {
+    func testBubbles() async throws {
         let page = PipeablePage(webView)
 
         _ = try? await page.goto("\(testServerURL)/click.html")
