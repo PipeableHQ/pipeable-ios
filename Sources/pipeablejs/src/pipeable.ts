@@ -267,6 +267,7 @@
                 // NOTE: technically should only fire this for a subset
                 // of elements (e.g. form elements, links, etc.) or if the tabindex is set,
                 // per https://api.jquery.com/focus/
+                console.log("HELO!!")
                 this._focus(innermostElement);
                 
 
@@ -290,8 +291,11 @@
                     cancelable: false,
                 });
 
+                console.log("HERE!!")
+
                 el.dispatchEvent(event);
                 if (el instanceof HTMLInputElement) {
+                    console.log("firing focus!!")
                     el.focus();
                 }
 
