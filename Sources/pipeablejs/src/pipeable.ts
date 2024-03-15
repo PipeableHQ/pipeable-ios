@@ -263,6 +263,13 @@
                 //         innermostElement.id,
                 // );
 
+                // Always fire a focus event before the click event.
+                // NOTE: technically should only fire this for a subset
+                // of elements (e.g. form elements, links, etc.) or if the tabindex is set,
+                // per https://api.jquery.com/focus/
+                this._focus(innermostElement);
+                
+
                 innermostElement.dispatchEvent(clickEvent);
 
                 return true;
@@ -271,24 +278,39 @@
             return false;
         }
 
-        focus(elementHash: string) {
-            const el = this.elementRegistry.get(elementHash);
-
+        _focus(el?: HTMLElement | Element) {
+            // Ref:
+            // * https://developer.mozilla.org/en-US/docs/Web/API/Element/focus_event
+            // * https://api.jquery.com/focus/
             if (el) {
                 // emit focus event.
                 const event = new FocusEvent('focus', {
                     view: window,
-                    bubbles: true,
-                    cancelable: true,
+                    bubbles: false,
+                    cancelable: false,
                 });
 
                 el.dispatchEvent(event);
-                el.focus();
+                if (el instanceof HTMLInputElement) {
+                    el.focus();
+                }
+
+                // emit focusin event.
+                const event2 = new FocusEvent('focusin', {
+                    view: window,
+                    bubbles: true,
+                    cancelable: false,
+                });
+                el.dispatchEvent(event2);
 
                 return true;
             }
-
             return false;
+        }
+
+        focus(elementHash: string) {
+            const el = this.elementRegistry.get(elementHash);
+            return this._focus(el);
         }
 
         blur(elementHash: string) {

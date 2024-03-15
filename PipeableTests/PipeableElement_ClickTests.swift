@@ -23,6 +23,51 @@ final class PipeableElementClickTests: PipeableXCTestCase {
             try await outerContainerEl?.click()
         }
     }
+    
+    func testPropagation() async throws {
+        let page = PipeablePage(webView)
+
+        _ = try? await page.goto("\(testServerURL)/click.html")
+
+        let clicksBefore = try await page.evaluate("window.clicksOuter")
+        guard let numClicksBefore = clicksBefore as? Int else {
+            XCTFail("Could not read clicks")
+            return
+        }
+        let focusesBefore = try await page.evaluate("window.focusesOuter")
+        guard let numFocusesBefore = focusesBefore as? Int else {
+            XCTFail("Could not read focuses")
+            return
+        }
+        let focusesInBefore = try await page.evaluate("window.focusesInOuter")
+        guard let numFocusesInBefore = focusesInBefore as? Int else {
+            XCTFail("Could not read focuses")
+            return
+        }
+
+        let outerContainerEl = try await page.querySelector("#outer_container")
+        try await outerContainerEl?.click()
+
+        let clicksAfter = try await page.evaluate("window.clicksOuter")
+        guard let numClicksAfter = clicksAfter as? Int else {
+            XCTFail("Could not read clicks")
+            return
+        }
+        let focusesAfter = try await page.evaluate("window.focusesOuter")
+        guard let numFocusesAfter = focusesAfter as? Int else {
+            XCTFail("Could not read focuses")
+            return
+        }
+        let focusesInAfter = try await page.evaluate("window.focusesInOuter")
+        guard let numFocusesInAfter = focusesInAfter as? Int else {
+            XCTFail("Could not read focusesIn")
+            return
+        }
+
+        XCTAssertEqual(numFocusesAfter, numFocusesBefore, "Focus should not bubble")
+        XCTAssertEqual(numFocusesInAfter, numFocusesInBefore + 1, "FocusIn not registered")
+        XCTAssertEqual(numClicksAfter, numClicksBefore + 1, "Click not registered")
+    }
 
     func testClickOnInvisibleElementsShouldFail() async throws {
         let page = PipeablePage(webView)
@@ -54,6 +99,16 @@ final class PipeableElementClickTests: PipeableXCTestCase {
             XCTFail("Could not read clicks")
             return
         }
+        let focusesBefore = try await page.evaluate("window.focuses")
+        guard let numFocusesBefore = focusesBefore as? Int else {
+            XCTFail("Could not read focuses")
+            return
+        }
+        let focusesInBefore = try await page.evaluate("window.focusesIn")
+        guard let numFocusesInBefore = focusesInBefore as? Int else {
+            XCTFail("Could not read focuses")
+            return
+        }
 
         try await action(page)
 
@@ -62,7 +117,19 @@ final class PipeableElementClickTests: PipeableXCTestCase {
             XCTFail("Could not read clicks")
             return
         }
+        let focusesAfter = try await page.evaluate("window.focuses")
+        guard let numFocusesAfter = focusesAfter as? Int else {
+            XCTFail("Could not read focuses")
+            return
+        }
+        let focusesInAfter = try await page.evaluate("window.focusesIn")
+        guard let numFocusesInAfter = focusesInAfter as? Int else {
+            XCTFail("Could not read focusesIn")
+            return
+        }
 
+        XCTAssertEqual(numFocusesAfter, numFocusesBefore + 1, "Focus not registered")
+        XCTAssertEqual(numFocusesInAfter, numFocusesInBefore + 1, "FocusIn not registered")
         XCTAssertEqual(numClicksAfter, numClicksBefore + 1, "Click not registered")
     }
 }

@@ -25,13 +25,21 @@
       <a
         id="normal_inlinejs_link"
         onclick="window.clicks++; return false"
+        onfocus="window.focuses++; return false"
+        onfocusin="window.focusesIn++"
         href="#"
         >Inline link</a
       >
 
-      <div id="outer_container">
+      <div 
+        id="outer_container"
+        onclick="window.clicksOuter++; return false"
+        onfocus="window.focusesOuter++; return false"
+        >
         <a
           onclick="window.clicks++; return false"
+          onfocus="window.focuses++; return false"
+          onfocusin="window.focusesIn++"
           href="#"
           style="display: block; width: 100%"
           >Link inside container</a
@@ -39,7 +47,7 @@
       </div>
 
       <div id="eventually_visible_container" style="display: none">
-        <div id="eventually_visible" onclick="window.clicks++">
+        <div id="eventually_visible" onclick="window.clicks++" onfocus="window.focuses++">
           Eventually visible
         </div>
       </div>
@@ -47,6 +55,11 @@
 
     <script type="text/javascript">
       window.clicks = 0;
+      window.clicksOuter = 0;
+      window.focuses = 0;
+      window.focusesOuter = 0;
+      window.focusesIn = 0;
+      window.focusesInOuter = 0;
 
       document
         .getElementById("normal_link")
@@ -54,6 +67,32 @@
           window.clicks++;
           return false;
         });
+      document
+        .getElementById("normal_link")
+        .addEventListener("focus", function () {
+          window.focuses++;
+          return false;
+        });
+      document
+        .getElementById("normal_link")
+        .addEventListener("focusin", function () {
+          window.focusesIn++;
+          return false;
+        });
+      // add focusin listener to div manually since they don't 
+      // normally support focusin
+      document
+        .getElementById("outer_container")
+        .addEventListener("focusin", function () {
+        window.focusesInOuter++;
+        return false;
+      });
+      document
+        .getElementById("eventually_visible")
+        .addEventListener("focusin", function () {
+        window.focusesIn++;
+        return false;
+      });
 
       setTimeout(function () {
         document.getElementById("eventually_visible_container").style.display =
