@@ -51,7 +51,7 @@ public class PipeableElement {
             contentWorld: WKContentWorld.page
         )
     }
-    
+
     public func blur() async throws {
         _ = try await page.webView.callAsyncJavaScript(
             """

@@ -23,7 +23,7 @@ final class PipeableElementClickTests: PipeableXCTestCase {
             try await outerContainerEl?.click()
         }
     }
-    
+
     func testPropagation() async throws {
         let page = PipeablePage(webView)
 
