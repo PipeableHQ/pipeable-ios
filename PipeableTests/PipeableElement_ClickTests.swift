@@ -41,7 +41,7 @@ final class PipeableElementClickTests: PipeableXCTestCase {
         }
         let focusesInBefore = try await page.evaluate("window.focusesInOuter")
         guard let numFocusesInBefore = focusesInBefore as? Int else {
-            XCTFail("Could not read focuses")
+            XCTFail("Could not read focuses in")
             return
         }
 
@@ -60,13 +60,42 @@ final class PipeableElementClickTests: PipeableXCTestCase {
         }
         let focusesInAfter = try await page.evaluate("window.focusesInOuter")
         guard let numFocusesInAfter = focusesInAfter as? Int else {
-            XCTFail("Could not read focusesIn")
+            XCTFail("Could not read focuses in")
             return
         }
 
-        XCTAssertEqual(numFocusesAfter, numFocusesBefore, "Focus should not bubble")
-        XCTAssertEqual(numFocusesInAfter, numFocusesInBefore + 1, "FocusIn not registered")
+        XCTAssertEqual(numFocusesAfter, numFocusesBefore, "Focus does not buble")
+        XCTAssertEqual(numFocusesInAfter, numFocusesInBefore + 1, "Focus in not registered")
         XCTAssertEqual(numClicksAfter, numClicksBefore + 1, "Click not registered")
+    }
+
+    func testClickThenOnBlur() async throws {
+        let page = PipeablePage(webView)
+
+        _ = try? await page.goto("\(testServerURL)/click.html")
+
+        let onBlursBefore = try await page.evaluate("window.onBlurs")
+        guard let numOnBlursBefore = onBlursBefore as? Int else {
+            XCTFail("could not read on blurs")
+            return
+        }
+
+        // type some text
+        let textInEl = try await page.querySelector("#text_input")
+        try await textInEl?.focus()
+        try await textInEl?.type("hello")
+
+        // click on another element to make sure onblur is fired for our text input
+        let linkEl = try await page.querySelector("#normal_link")
+        try await linkEl?.click()
+
+        let onBlursAfter = try await page.evaluate("window.onBlurs")
+        guard let numOnBlursAfter = onBlursAfter as? Int else {
+            XCTFail("could not read on blurs")
+            return
+        }
+
+        XCTAssertEqual(numOnBlursAfter, numOnBlursBefore + 1, "Blur not registered")
     }
 
     func testClickOnInvisibleElementsShouldFail() async throws {
@@ -106,7 +135,7 @@ final class PipeableElementClickTests: PipeableXCTestCase {
         }
         let focusesInBefore = try await page.evaluate("window.focusesIn")
         guard let numFocusesInBefore = focusesInBefore as? Int else {
-            XCTFail("Could not read focuses")
+            XCTFail("Could not read focuses in")
             return
         }
 
@@ -124,12 +153,12 @@ final class PipeableElementClickTests: PipeableXCTestCase {
         }
         let focusesInAfter = try await page.evaluate("window.focusesIn")
         guard let numFocusesInAfter = focusesInAfter as? Int else {
-            XCTFail("Could not read focusesIn")
+            XCTFail("Could not read focuses in")
             return
         }
 
         XCTAssertEqual(numFocusesAfter, numFocusesBefore + 1, "Focus not registered")
-        XCTAssertEqual(numFocusesInAfter, numFocusesInBefore + 1, "FocusIn not registered")
+        XCTAssertEqual(numFocusesInAfter, numFocusesInBefore + 1, "Focus in not registered")
         XCTAssertEqual(numClicksAfter, numClicksBefore + 1, "Click not registered")
     }
 }

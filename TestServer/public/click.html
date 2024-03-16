@@ -47,10 +47,12 @@
       </div>
 
       <div id="eventually_visible_container" style="display: none">
-        <div id="eventually_visible" onclick="window.clicks++" onfocus="window.focuses++">
+        <!--Set the tab index to be non negative so the focus event fires on click-->
+        <div tabindex="0" id="eventually_visible" onclick="window.clicks++" onfocus="window.focuses++">
           Eventually visible
         </div>
       </div>
+      <input type="text" id="text_input"/>
     </div>
 
     <script type="text/javascript">
@@ -58,8 +60,16 @@
       window.clicksOuter = 0;
       window.focuses = 0;
       window.focusesOuter = 0;
+      window.onBlurs = 0;
       window.focusesIn = 0;
       window.focusesInOuter = 0;
+
+      document
+        .getElementById("text_input")
+        .addEventListener("blur", function (ev){
+            window.onBlurs++;
+            // console.log("onblur event", JSON.stringify(ev, null, 2));
+        })
 
       document
         .getElementById("normal_link")
@@ -79,20 +89,21 @@
           window.focusesIn++;
           return false;
         });
-      // add focusin listener to div manually since they don't 
-      // normally support focusin
+
       document
         .getElementById("outer_container")
         .addEventListener("focusin", function () {
-        window.focusesInOuter++;
-        return false;
-      });
+          window.focusesInOuter++;
+          return false;
+        });
+    
       document
         .getElementById("eventually_visible")
         .addEventListener("focusin", function () {
-        window.focusesIn++;
-        return false;
-      });
+          window.focusesIn++;
+          return false;
+        });
+
 
       setTimeout(function () {
         document.getElementById("eventually_visible_container").style.display =
