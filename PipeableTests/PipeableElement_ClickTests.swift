@@ -120,8 +120,10 @@ final class PipeableElementClickTests: PipeableXCTestCase {
 
     func testClickOnContainerWithDisabledElementInside() async throws {
         // Clicking on a container with a disabled element inside the container,
-        // This currently almost matches Playwright except that we
-        // also record a click on the disabled element.
+        // this currently almost matches Playwright except that we
+        // also record a click on the disabled element (and playwright does not).
+        // Because we are using the built in method to emit focus events
+        // for HTMLElement the focus behavior matches Playwright.
         let page = PipeablePage(webView)
 
         _ = try? await page.goto("\(testServerURL)/click.html")
