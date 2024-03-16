@@ -26,7 +26,7 @@
         id="normal_inlinejs_link"
         onclick="window.clicks++; return false"
         onfocus="window.focuses++; return false"
-        onfocusin="window.focusesIn++"
+        onfocusin="window.focusesIn++; return false"
         href="#"
         >Inline link</a
       >
@@ -39,7 +39,7 @@
         <a
           onclick="window.clicks++; return false"
           onfocus="window.focuses++; return false"
-          onfocusin="window.focusesIn++"
+          onfocusin="window.focusesIn++; return false"
           href="#"
           style="display: block; width: 100%"
           >Link inside container</a
@@ -52,7 +52,23 @@
           Eventually visible
         </div>
       </div>
+      <br />
       <input type="text" id="text_input"/>
+      <br />
+      <div 
+        id="disabled_element_container"
+        onclick="window.clicksOuter++; return false"
+        onfocus="window.focusesOuter++; return false"
+        >
+        <input
+          type="button"
+          disabled id="disabled_element"
+          onclick="window.clicks++; return false"
+          onfocus="window.focuses++; return false"
+          onfocusin="window.focusesIn++; return false"
+          value="Disabled element"
+          />
+      </div>
     </div>
 
     <script type="text/javascript">
@@ -100,6 +116,13 @@
         .getElementById("eventually_visible")
         .addEventListener("focusin", function () {
           window.focusesIn++;
+          return false;
+        });
+
+      document
+        .getElementById("disabled_element_container")
+        .addEventListener("focusin", function () {
+          window.focusesInOuter++;
           return false;
         });
 
