@@ -263,6 +263,15 @@
                 //         innermostElement.id,
                 // );
 
+                // Always fire a focus event before the click event.
+                // NOTE: technically should only fire this for a subset
+                // of elements (e.g. form elements, links, etc.) or if the tabindex is set,
+                // per https://api.jquery.com/focus/. We do this in case the previous
+                // element we were interacting with has "blur" handlers and we 
+                // want to make sure to trigger them.
+                this._focus(innermostElement);
+                
+
                 innermostElement.dispatchEvent(clickEvent);
 
                 return true;
@@ -271,24 +280,36 @@
             return false;
         }
 
-        focus(elementHash: string) {
-            const el = this.elementRegistry.get(elementHash);
-
+        private _focus(el?: HTMLElement | Element) {
             if (el) {
-                // emit focus event.
-                const event = new FocusEvent('focus', {
-                    view: window,
-                    bubbles: true,
-                    cancelable: true,
-                });
-
-                el.dispatchEvent(event);
-                el.focus();
+                if (el instanceof HTMLElement) {
+                    (el as any).focus();
+                } else {
+                    // If the element doesn't have a focus method, we can still emit the focus event.
+                    const event = new FocusEvent('focus', {
+                        view: window,
+                        bubbles: false,
+                        cancelable: false,
+                    });
+                    el.dispatchEvent(event);
+    
+                    // emit focusin event.
+                    const event2 = new FocusEvent('focusin', {
+                        view: window,
+                        bubbles: true,
+                        cancelable: false,
+                    });
+                    el.dispatchEvent(event2);
+                }
 
                 return true;
             }
-
             return false;
+        }
+
+        focus(elementHash: string) {
+            const el = this.elementRegistry.get(elementHash);
+            return this._focus(el);
         }
 
         blur(elementHash: string) {
