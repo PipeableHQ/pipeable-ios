@@ -13,48 +13,12 @@ struct PipeableWebView: View {
     var onClose: () -> Void
     var onResult: (ResultStatus) -> Void
 
-    @State var working = false
-    @State var done = false
     @State var statusText = ""
     @State var statusAnimated = false
 
     var body: some View {
         ZStack {
-            WebViewWrapper(orders: $orders, onClose: onClose, onStatusChange: onStatusChange)
-                .blur(radius: working ? 2.5 : 0)
-                .allowsHitTesting(!working)
-        }
-    }
-
-    func onStatusChange(_ status: Status, _ newOrders: [AmazonOrder]) {
-        orders = newOrders
-
-        if status == .login {
-            statusText = "👤  Please log into your account"
-            statusAnimated = false
-            working = false
-        } else if status == .working {
-            statusText = "🤖  Robot working, please wait"
-            statusAnimated = true
-            working = true
-        } else if status == .done {
-            statusText = "✅  Orders fetched!"
-            statusAnimated = false
-            working = false
-            done = true
-
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                onResult(.success)
-            }
-        } else if status == .failure {
-            statusText = "❌  Could not complete operation"
-            statusAnimated = false
-            working = false
-            done = true
-
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                onResult(.failure)
-            }
+            WebViewWrapper(orders: $orders, onClose: onClose)
         }
     }
 }
@@ -70,12 +34,11 @@ struct WebViewWrapper: UIViewControllerRepresentable {
     @Binding var orders: [AmazonOrder]
 
     var onClose: () -> Void
-    var onStatusChange: (_ status: Status, _ orders: [AmazonOrder]) -> Void
     var initialized = false
 
     // This function makes the WKWebView
     func makeUIViewController(context: UIViewControllerRepresentableContext<WebViewWrapper>) -> WKWebViewController {
-        let uiViewController = WKWebViewController(onClose: onClose, onStatusChange: onStatusChange)
+        let uiViewController = WKWebViewController(onClose: onClose)
         uiViewController.orders = orders
         return uiViewController
     }
@@ -106,13 +69,11 @@ class WKWebViewController: UIViewController {
     var webView: WKWebView
     var isStarted = false
     var onClose: () -> Void
-    var onStatusChange: (_ status: Status, _ orders: [AmazonOrder]) -> Void
     var orders: [AmazonOrder] = []
 
-    init(onClose: @escaping () -> Void, onStatusChange: @escaping (_ status: Status, _ orders: [AmazonOrder]) -> Void) {
+    init(onClose: @escaping () -> Void) {
         self.webView = WKWebView()
         self.onClose = onClose
-        self.onStatusChange = onStatusChange
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -163,70 +124,11 @@ class WKWebViewController: UIViewController {
         // No re-entry.
         isStarted = true
 
-        let year = 2018
         let page = PipeablePage(webView)
 
-        onStatusChange(.login, [])
+        _ = try? await page.goto("https://news.ycombinator.com", waitUntil: .networkidle)
 
-        _ = try await page.goto("https://www.amazon.com/gp/css/order-history/ref=ppx_yo2ov_mob_b_filter_y\(year)_all?ie=UTF8&digitalOrders=0&orderFilter=year-\(year)&search=&startIndex=0&unifiedOrders=0")
-
-        // TODO: waitForURL doesn't get triggered for URLs that are not final, and these are redirect URLs. We can detect them in another way, but what API do we use for that? waitForResponse?
-
-        try await page.waitForURL { url in
-            url.contains("orderFilter=year-\(year)")
-        }
-
-        onStatusChange(.working, [])
-
-        do {
-            let result = try await runScript(
-                """
-                    const orderEls = await page.querySelectorAll("#ordersContainer .js-item");
-
-                    const result = [];
-
-                    for (const orderEl of orderEls) {
-                        const orderImage = await orderEl.querySelector("img");
-                        const imageAlt = await orderImage.getAttribute("alt");
-
-                        const orderDateEl = await orderEl.querySelector(".a-size-small")
-
-                        const orderDateRawText = await orderDateEl.textContent();
-                        const orderDate = orderDateRawText.replace(/Ordered on/i, "").replace(/Delivered/i, "").trim();
-
-                        const anOrder = {
-                            item: imageAlt,
-                            orderDate: orderDate
-                        };
-                        result.push(anOrder);
-                    }
-
-                    return result;
-                """, page
-            )
-
-            print(String(describing: result.toObject()))
-
-            if let array = result.toObject() as? [Any] {
-                // Iterate over each element in the array, which are now expected to be dictionaries
-                for element in array {
-                    if let dictionary = element as? [String: Any] {
-                        // Extract 'item' and 'field' values from the dictionary
-                        let item = dictionary["item"] as? String
-                        let orderDate = dictionary["orderDate"] as? String
-
-                        let anOrder = AmazonOrder(item: item ?? "", date: orderDate ?? "")
-                        orders.append(anOrder)
-                    }
-                }
-            }
-
-            onStatusChange(.done, orders)
-        } catch {
-            print("Got error: \(error)")
-            onStatusChange(.failure, orders)
-            return
-        }
+        print("Hello!")
     }
 }
 

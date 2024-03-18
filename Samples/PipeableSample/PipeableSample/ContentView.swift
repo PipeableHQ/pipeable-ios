@@ -32,14 +32,6 @@ struct ContentView: View {
     }
 }
 
-
-struct CardBoundsKey: PreferenceKey {
-    static var defaultValue: [CGRect] = []
-    static func reduce(value: inout [CGRect], nextValue: () -> [CGRect]) {
-        value.append(contentsOf: nextValue())
-    }
-}
-
 struct MainScreen: View {
     @Environment(\.colorScheme)
     var colorScheme
@@ -63,15 +55,15 @@ struct MainScreen: View {
             HStack(alignment: .center) {
                 Text("Connect with your Amazon account to fetch your latest orders and use the information in your app!"
                 )
-                    .font(.title3)
-                    .padding(.all, 10)
-                    .background(
-                        RoundedRectangle(cornerRadius: 15)
-                            .stroke(Color.secondary, lineWidth: 2)
-                    )
-                    .background(Color.secondary.opacity(0.2))
-                    .cornerRadius(15)
-                    .padding(.all, 10)
+                .font(.title3)
+                .padding(.all, 10)
+                .background(
+                    RoundedRectangle(cornerRadius: 15)
+                        .stroke(Color.secondary, lineWidth: 2)
+                )
+                .background(Color.secondary.opacity(0.2))
+                .cornerRadius(15)
+                .padding(.all, 10)
 
                 Spacer()
             }
@@ -83,14 +75,12 @@ struct MainScreen: View {
                     .frame(width: 30)
                     .padding()
 
-
                 VStack(alignment: .leading) {
                     Button("Connect your Amazon account") {
                         onButtonTapped()
                     }
                     .font(.headline)
                 }
-
 
                 Spacer()
             }
@@ -116,20 +106,8 @@ struct MainScreen: View {
     }
 }
 
-
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
     }
-}
-
-func maskString(_ str: String) -> String {
-    let endIndex = str.endIndex
-    guard str.count > 4 else { return str }
-
-    let last4 = str[str.index(endIndex, offsetBy: -4)...]
-    let toBeReplaced = str[..<str.index(endIndex, offsetBy: -4)]
-
-    let masked = toBeReplaced.map { $0 == " " ? " " : "*" }
-    return (masked + [String(last4)]).joined()
 }
