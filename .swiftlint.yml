@@ -90,6 +90,7 @@ identifier_name:
     - a
     - b
     - vm
+    - ms
 
 indentation_width:
   indentation_width: 4

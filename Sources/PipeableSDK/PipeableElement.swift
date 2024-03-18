@@ -12,7 +12,7 @@ public class PipeableElement {
     public func click(timeout: Int? = nil) async throws {
         let timeout = timeout ?? 30000
 
-        let result = try await page.webView.callAsyncJavaScript(
+        _ = try await page.webView.callAsyncJavaScript(
             """
                 return window.PipeableJS.click(elementHash, { timeout: timeout });
             """,
@@ -20,8 +20,6 @@ public class PipeableElement {
             in: page.frame,
             contentWorld: WKContentWorld.page
         )
-
-        print(result ?? "No result")
     }
 
     public func type(_ text: String, delay: Int = 10) async throws {
@@ -175,7 +173,6 @@ public class PipeableElement {
             in: page.frame,
             contentWorld: WKContentWorld.page
         )
-        print(result ?? "No result")
 
         if let elementId = result as? String {
             return PipeableElement(page, elementId)
@@ -193,7 +190,6 @@ public class PipeableElement {
             in: page.frame,
             contentWorld: WKContentWorld.page
         )
-        print(result ?? "No result")
 
         if let elementIds = result as? [String] {
             return elementIds.map { (elementId: String) -> PipeableElement in
@@ -220,7 +216,6 @@ public class PipeableElement {
             in: page.frame,
             contentWorld: WKContentWorld.page
         )
-        print(result ?? "No result")
 
         if let elementId = result as? String {
             return PipeableElement(page, elementId)

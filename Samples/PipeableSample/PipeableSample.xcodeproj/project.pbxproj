@@ -11,7 +11,7 @@
 		A450D1CB2B5EB4AA00079EAF /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A450D1CA2B5EB4AA00079EAF /* ContentView.swift */; };
 		A450D1CD2B5EB4AC00079EAF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A450D1CC2B5EB4AC00079EAF /* Assets.xcassets */; };
 		A450D1D02B5EB4AC00079EAF /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A450D1CF2B5EB4AC00079EAF /* Preview Assets.xcassets */; };
-		A450D1DC2B5EB7C200079EAF /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A450D1DB2B5EB7C200079EAF /* WebView.swift */; };
+		A450D1DC2B5EB7C200079EAF /* PipeableWebViewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A450D1DB2B5EB7C200079EAF /* PipeableWebViewWrapper.swift */; };
 		A4F1A2F42B669A960037EA99 /* PipeableSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A4F1A2F32B669A960037EA99 /* PipeableSDK.framework */; };
 		A4F1A2F52B669A960037EA99 /* PipeableSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A4F1A2F32B669A960037EA99 /* PipeableSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -36,7 +36,7 @@
 		A450D1CA2B5EB4AA00079EAF /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		A450D1CC2B5EB4AC00079EAF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A450D1CF2B5EB4AC00079EAF /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		A450D1DB2B5EB7C200079EAF /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
+		A450D1DB2B5EB7C200079EAF /* PipeableWebViewWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PipeableWebViewWrapper.swift; sourceTree = "<group>"; };
 		A47E2D862B62B3CB003D70A1 /* Pipeable.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Pipeable.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4F1A2F32B669A960037EA99 /* PipeableSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PipeableSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -74,10 +74,10 @@
 			isa = PBXGroup;
 			children = (
 				A450D1C82B5EB4AA00079EAF /* PipeableSampleApp.swift */,
+				A450D1DB2B5EB7C200079EAF /* PipeableWebViewWrapper.swift */,
 				A450D1CA2B5EB4AA00079EAF /* ContentView.swift */,
 				A450D1CC2B5EB4AC00079EAF /* Assets.xcassets */,
 				A450D1CE2B5EB4AC00079EAF /* Preview Content */,
-				A450D1DB2B5EB7C200079EAF /* WebView.swift */,
 			);
 			path = PipeableSample;
 			sourceTree = "<group>";
@@ -175,7 +175,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A450D1DC2B5EB7C200079EAF /* WebView.swift in Sources */,
+				A450D1DC2B5EB7C200079EAF /* PipeableWebViewWrapper.swift in Sources */,
 				A450D1CB2B5EB4AA00079EAF /* ContentView.swift in Sources */,
 				A450D1C92B5EB4AA00079EAF /* PipeableSampleApp.swift in Sources */,
 			);
@@ -312,7 +312,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PipeableSample/Preview Content\"";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 53V5TASS2X;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Pipeable Sample";
@@ -345,7 +345,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"PipeableSample/Preview Content\"";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 53V5TASS2X;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Pipeable Sample";

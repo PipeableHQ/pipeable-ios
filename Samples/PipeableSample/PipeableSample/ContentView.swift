@@ -1,49 +1,24 @@
-//
-//  ContentView.swift
-//  Default Client
-//
-//  Created by Petar Dobrev on 7/12/23.
-//
-
 import SwiftUI
 
-struct AmazonOrder: Identifiable {
-    var id = UUID()
-    let item: String
-    let date: String
-}
+// swiftlint:disable line_length
 
 struct ContentView: View {
     @State var showWeb = false
     @State var password = ""
     @State var centralIndex = 0
-    @State private var orders: [AmazonOrder] = []
+    @State private var items: [NewsItem] = []
 
     var body: some View {
         ZStack {
-            MainScreen(orders: $orders) {
+            MainScreen(items: $items) {
                 showWeb = true
             }
             .sheet(isPresented: $showWeb) {
-                PipeableWebView(
-                    orders: $orders,
-                    onClose: {
-                        showWeb = false
-                    },
-                    onResult: { _ in
-                        showWeb = false
-                    }
-                )
+                PipeableWebViewWrapper(items: $items) {
+                    showWeb = false
+                }
             }
         }
-    }
-}
-
-
-struct CardBoundsKey: PreferenceKey {
-    static var defaultValue: [CGRect] = []
-    static func reduce(value: inout [CGRect], nextValue: () -> [CGRect]) {
-        value.append(contentsOf: nextValue())
     }
 }
 
@@ -51,7 +26,7 @@ struct MainScreen: View {
     @Environment(\.colorScheme)
     var colorScheme
 
-    @Binding var orders: [AmazonOrder]
+    @Binding var items: [NewsItem]
     var onButtonTapped: () -> Void
 
     var body: some View {
@@ -68,36 +43,41 @@ struct MainScreen: View {
             }
 
             HStack(alignment: .center) {
-                Text("Connect with your Amazon account to fetch your latest orders and use the information in your app!"
+                Text(
+                    """
+                    Pipeable is a mobile webview automation framework.
+
+                    In this demo we will show how one can automate searching for web automation posts on Hacker News and collecting the results.
+                    """
                 )
-                    .font(.title3)
-                    .padding(.all, 10)
-                    .background(
-                        RoundedRectangle(cornerRadius: 15)
-                            .stroke(Color.secondary, lineWidth: 2)
-                    )
-                    .background(Color.secondary.opacity(0.2))
-                    .cornerRadius(15)
-                    .padding(.all, 10)
+                // Full width.
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .font(.title3)
+                .padding(.all, 10)
+                .background(
+                    RoundedRectangle(cornerRadius: 15)
+                        .stroke(Color.secondary, lineWidth: 2)
+                )
+                .background(Color.secondary.opacity(0.2))
+                .cornerRadius(15)
+                .padding(.all, 10)
 
                 Spacer()
             }
 
             HStack {
-                Image("Amazon")
+                Image("YC")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 30)
                     .padding()
 
-
                 VStack(alignment: .leading) {
-                    Button("Connect your Amazon account") {
+                    Button("Search Hacker News") {
                         onButtonTapped()
                     }
                     .font(.headline)
                 }
-
 
                 Spacer()
             }
@@ -106,14 +86,11 @@ struct MainScreen: View {
             .cornerRadius(10)
             .padding()
 
-            Text("Orders").font(.title2).bold()
+            Text("Items").font(.title2).bold()
 
-            List(orders) { order in
+            List(items) { item in
                 HStack {
-                    Text(order.item)
-                    Spacer()
-                    Text("Ordered on \(order.date)").frame(width: 120)
-                        .font(.footnote)
+                    Text(item.itemName)
                 }
             }
             .listStyle(.plain)
@@ -123,20 +100,13 @@ struct MainScreen: View {
     }
 }
 
+struct NewsItem: Identifiable {
+    var id = UUID()
+    let itemName: String
+}
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
     }
-}
-
-func maskString(_ str: String) -> String {
-    let endIndex = str.endIndex
-    guard str.count > 4 else { return str }
-
-    let last4 = str[str.index(endIndex, offsetBy: -4)...]
-    let toBeReplaced = str[..<str.index(endIndex, offsetBy: -4)]
-
-    let masked = toBeReplaced.map { $0 == " " ? " " : "*" }
-    return (masked + [String(last4)]).joined()
 }

@@ -28,7 +28,7 @@ class PipeablePageDelegate: NSObject, WKNavigationDelegate {
         )
     }
 
-    func webView(_ webView: WKWebView, didFailProvisionalNavigation _: WKNavigation, withError error: Error) {
+    func webView(_: WKWebView, didFailProvisionalNavigation _: WKNavigation, withError _: Error) {
         // TODO: Figure out how to deal with Apple Login...
 //        loadPageState.error(
 //            error: PipeableError.navigationError(error.localizedDescription),
