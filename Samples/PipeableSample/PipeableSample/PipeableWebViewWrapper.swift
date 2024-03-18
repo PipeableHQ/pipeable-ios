@@ -49,7 +49,8 @@ struct PipeableWebViewWrapper: UIViewRepresentable {
 
             _ = try await page.waitForSelector(".Story_title", visible: true)
 
-            // Hold a bit, so it's visible.
+            // For demo purposes only: hold the screen a bit, so it's visible.
+            // Not required for the actual automation, just like the other sleep()s.
             try? await sleep(ms: 2000)
 
             let stories = try await page.querySelectorAll(".Story_title a > span")
@@ -73,7 +74,10 @@ struct PipeableWebViewWrapper: UIViewRepresentable {
         return webView
     }
 
-    func updateUIView(_: PipeableWebView, context _: Context) {}
+    func updateUIView(_: PipeableWebView, context _: Context) {
+        // Since our demo app is very simple, everything happens during creation
+        // and no ui view updates are triggered.
+    }
 }
 
 func sleep(ms: UInt64) async throws {
