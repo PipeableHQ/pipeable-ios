@@ -164,7 +164,7 @@ class WKWebViewController: UIViewController {
         isStarted = true
 
         let year = 2018
-        let page = PipeablePage(webView, nil)
+        let page = PipeablePage(webView)
 
         onStatusChange(.login, [])
 
