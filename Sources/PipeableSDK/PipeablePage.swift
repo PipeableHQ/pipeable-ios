@@ -43,13 +43,13 @@ public class PipeablePage {
             guard let dict = message.body as? [String: AnyObject] else {
                 return
             }
+
             guard let ctx = dict["ctx"] as? String, let name = dict["name"] as? String else {
                 return
             }
 
             // TODO: Somehow add here schema validation for messages
             if ctx == "pipeable" {
-                print("dict " + String(describing: dict))
                 if let payload = dict["payload"] as? [String: AnyObject] {
                     if name == "frameInfoId" {
                         guard let requestId = payload["requestId"] as? String else {
@@ -82,6 +82,12 @@ public class PipeablePage {
                         }
 
                         pageLoadState.changeState(state: state, url: url)
+                    } else if name == "log" {
+                        guard let message = payload["state"] as? String else {
+                            return
+                        }
+
+                        print("[CONSOLE] \(message)")
                     }
                 }
             }
@@ -106,6 +112,28 @@ public class PipeablePage {
 
         var contents: String?
 
+        // Logging override.
+        if debugPrintConsoleLogs ?? false {
+            let loggingOverrideScript = WKUserScript(
+                source:
+                """
+                origConsoleLog = window.console.log;
+                window.console.log = function(message) {
+                    window.webkit.messageHandlers.handler.postMessage({
+                        ctx: 'pipeable',
+                        name: 'log',
+                        payload: { message }
+                    });
+
+                    origConsoleLog.apply(null, arguments);
+                };
+                """,
+                injectionTime: .atDocumentStart,
+                forMainFrameOnly: true
+            )
+            config.userContentController.addUserScript(loggingOverrideScript)
+        }
+
         #if SWIFT_PACKAGE
             let bundle = Bundle.module
         #else
@@ -129,27 +157,6 @@ public class PipeablePage {
             fatalError("Could not find bundled JS")
         }
 
-        // Logging override.
-        if debugPrintConsoleLogs ?? false {
-            let loggingOverrideScript = WKUserScript(
-                source:
-                """
-                origConsoleLog = window.console.log;
-                window.console.log = function(message) {
-                    window.webkit.messageHandlers.handler.postMessage({
-                        ctx: 'pipeable',
-                        name: 'log',
-                        payload: { message }
-                    });
-
-                    origConsoleLog.apply(null, arguments);
-                };
-                """,
-                injectionTime: .atDocumentStart,
-                forMainFrameOnly: true
-            )
-            config.userContentController.addUserScript(loggingOverrideScript)
-        }
         pageLoadState = PageLoadState()
 
         // This is the main frame / page.
@@ -164,8 +171,13 @@ public class PipeablePage {
     }
 
     deinit {
+        // Remove outselves.
         if frame == nil {
+            // Controller.
             self.webView.configuration.userContentController.removeScriptMessageHandler(forName: "handler")
+
+            // Delegate.
+            self.webView.navigationDelegate = nil
         }
     }
 
@@ -180,8 +192,6 @@ public class PipeablePage {
     ///  - Throws: PipeableError.navigationError if the navigation fails.
 
     public func goto(_ url: String, waitUntil: WaitUntilOption = .load, timeout: Int = 30000) async throws -> PipeableHTTPResponse? {
-        print("page goto \(url) timeout \(timeout) waitUntil \(waitUntil)")
-
         pageLoadState.changeState(state: .notloaded, url: nil)
 
         if let urlObj = URL(string: url) {
@@ -263,7 +273,6 @@ public class PipeablePage {
             in: frame,
             contentWorld: WKContentWorld.page
         )
-        print(result ?? "No result")
 
         if let elementId = result as? String {
             return PipeableElement(self, elementId)
@@ -281,8 +290,6 @@ public class PipeablePage {
             in: frame,
             contentWorld: WKContentWorld.page
         )
-
-        print(result ?? "No result")
 
         if let elementIds = result as? [String] {
             return elementIds.map { (elementId: String) -> PipeableElement in
@@ -302,8 +309,6 @@ public class PipeablePage {
             in: frame,
             contentWorld: WKContentWorld.page
         )
-
-        print(result ?? "No result")
 
         if let elementIds = result as? [String] {
             return elementIds.map { (elementId: String) -> PipeableElement in
@@ -330,8 +335,6 @@ public class PipeablePage {
             contentWorld: WKContentWorld.page
         )
 
-        print("Wait for XPath result \(result ?? "")")
-
         if let elementId = result as? String {
             return PipeableElement(self, elementId)
         }
@@ -354,7 +357,6 @@ public class PipeablePage {
             in: frame,
             contentWorld: WKContentWorld.page
         )
-        print(result ?? "No result")
 
         if let elementId = result as? String {
             return PipeableElement(self, elementId)

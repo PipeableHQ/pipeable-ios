@@ -24,6 +24,7 @@
 		A4A7A9262B56BD7500982E63 /* Pipeable.docc in Sources */ = {isa = PBXBuildFile; fileRef = A4A7A9252B56BD7500982E63 /* Pipeable.docc */; };
 		A4A7A9312B56BD7500982E63 /* PipeableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4A7A9302B56BD7500982E63 /* PipeableTests.swift */; };
 		A4A7A9322B56BD7500982E63 /* Pipeable.h in Headers */ = {isa = PBXBuildFile; fileRef = A4A7A9242B56BD7500982E63 /* Pipeable.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A4CA67792BA87F61004ABE90 /* PipeableWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4CA67782BA87F61004ABE90 /* PipeableWebView.swift */; };
 		A4DF83B52B8CD0B3000EFCEA /* PipeablePageDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4DF83B42B8CD0B3000EFCEA /* PipeablePageDelegate.swift */; };
 		A4FF74BE2BA352E90046936C /* pipeable.js in Resources */ = {isa = PBXBuildFile; fileRef = A4FF74BD2BA352E90046936C /* pipeable.js */; };
 		E81BD5AA2B6D4233007DFC02 /* BaseWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E81BD5A92B6D4233007DFC02 /* BaseWrapper.swift */; };
@@ -68,6 +69,7 @@
 		A4A7A9252B56BD7500982E63 /* Pipeable.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Pipeable.docc; sourceTree = "<group>"; };
 		A4A7A92B2B56BD7500982E63 /* PipeableSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PipeableSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4A7A9302B56BD7500982E63 /* PipeableTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PipeableTests.swift; sourceTree = "<group>"; };
+		A4CA67782BA87F61004ABE90 /* PipeableWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PipeableWebView.swift; sourceTree = "<group>"; };
 		A4DF83B42B8CD0B3000EFCEA /* PipeablePageDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PipeablePageDelegate.swift; sourceTree = "<group>"; };
 		A4FF74BD2BA352E90046936C /* pipeable.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = pipeable.js; sourceTree = "<group>"; };
 		E81BD5A92B6D4233007DFC02 /* BaseWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseWrapper.swift; sourceTree = "<group>"; };
@@ -174,6 +176,7 @@
 				A4DF83B42B8CD0B3000EFCEA /* PipeablePageDelegate.swift */,
 				E8AC39A12B615BC900D413BF /* Script */,
 				A40BE0952B8393A800906441 /* PageLoadState.swift */,
+				A4CA67782BA87F61004ABE90 /* PipeableWebView.swift */,
 			);
 			path = PipeableSDK;
 			sourceTree = "<group>";
@@ -353,6 +356,7 @@
 				A43DC2952B8CD780005E416D /* ScriptContext.swift in Sources */,
 				A4A7A9262B56BD7500982E63 /* Pipeable.docc in Sources */,
 				E8AC39A52B615C1D00D413BF /* Script.swift in Sources */,
+				A4CA67792BA87F61004ABE90 /* PipeableWebView.swift in Sources */,
 				A40BE0962B8393A800906441 /* PageLoadState.swift in Sources */,
 				A478D6C42B98B594000B11CC /* PipeablePage+Evaluate.swift in Sources */,
 				E81BD5AE2B6D430A007DFC02 /* PageWrapper.swift in Sources */,
