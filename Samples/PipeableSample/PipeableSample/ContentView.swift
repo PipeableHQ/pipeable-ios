@@ -1,10 +1,3 @@
-//
-//  ContentView.swift
-//  Default Client
-//
-//  Created by Petar Dobrev on 7/12/23.
-//
-
 import SwiftUI
 
 struct AmazonOrder: Identifiable {

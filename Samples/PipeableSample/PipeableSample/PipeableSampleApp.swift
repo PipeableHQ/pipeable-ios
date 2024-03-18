@@ -1,10 +1,3 @@
-//
-//  PipeableSampleApp.swift
-//  PipeableSample
-//
-//  Created by Petar Dobrev on 1/22/24.
-//
-
 import SwiftUI
 
 @main
