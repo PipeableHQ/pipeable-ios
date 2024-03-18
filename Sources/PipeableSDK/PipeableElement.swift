@@ -24,7 +24,7 @@ public class PipeableElement {
         print(result ?? "No result")
     }
 
-    public func type(_ text: String, _ delay: Int = 10) async throws {
+    public func type(_ text: String, delay: Int = 10) async throws {
         _ = try await page.webView.callAsyncJavaScript(
             """
                 return window.PipeableJS.type(elementHash, text, opts);
