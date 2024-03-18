@@ -52,6 +52,17 @@ public class PipeableElement {
         )
     }
 
+    public func blur() async throws {
+        _ = try await page.webView.callAsyncJavaScript(
+            """
+                return window.PipeableJS.blur(elementHash);
+            """,
+            arguments: ["elementHash": elementId],
+            in: page.frame,
+            contentWorld: WKContentWorld.page
+        )
+    }
+
     // TODO: this should be frame, not page here I thinks -- we need to separate those. Maybe Page extends frame -- yes!
     public func contentFrame() async throws -> PipeablePage? {
         let requestId = randomString(length: 10)
