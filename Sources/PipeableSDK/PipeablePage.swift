@@ -94,7 +94,11 @@ public class PipeablePage {
         case networkidle
     }
 
-    public init(_ webView: WKWebView, _ frame: WKFrameInfo? = nil, debugPrintConsoleLogs: Bool? = nil) {
+    public convenience init(_ webView: WKWebView, debugPrintConsoleLogs: Bool? = nil) {
+        self.init(webView, nil, debugPrintConsoleLogs: debugPrintConsoleLogs)
+    }
+
+    init(_ webView: WKWebView, _ frame: WKFrameInfo? = nil, debugPrintConsoleLogs: Bool? = nil) {
         self.webView = webView
         self.frame = frame
 
