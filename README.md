@@ -2,6 +2,10 @@
 
 _Currently in alpha state_
 
+Check out our blog post announcing the release of Pipeable for iOS: [Introducing Pipeable](https://www.pipeable.com/blog/introducing-pipeable).
+
+To quickly try out a sample app, check out our [Samples repository](https://github.com/PipeableHQ/pipeable-ios-samples).
+
 ## Introduction
 
 Pipeable is a WebView automation framework similar to Puppeteer / Playwright which allows the developer to script a sequence of action to be performed inside a WebView.
@@ -70,7 +74,8 @@ The starting point of every automation is the `PipeablePage` object. It binds to
 ```swift
 import PipeableSDK
 
-let page = PipeablePage(webView)
+let webView = PipeableWebView()
+let page = webView.page
 ```
 
 ### Navigation
