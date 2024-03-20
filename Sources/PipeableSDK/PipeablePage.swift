@@ -257,7 +257,8 @@ public class PipeablePage {
                     return false
                 }
             },
-            timeout: timeout
+            timeout: timeout,
+            ignoreNavigationErrors: true
         )
     }
 

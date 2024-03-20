@@ -73,4 +73,48 @@ final class PipeablePageWaitForURLTests: PipeableXCTestCase {
 
         XCTFail("Should have timed out")
     }
+
+    func testWaitForURLShouldNotReportNavigationErrors() async throws {
+        // If a navigation fails due to an error, it should not propagate to the
+        // waitForURL() call.
+        let page = PipeablePage(webView)
+
+        _ = try await page.goto(
+            "\(testServerURL)/load_latency/0/index.html",
+            waitUntil: .domcontentloaded
+        )
+
+        // Start asynchronously waiting for URL. We will navigate to a
+        // non-existing page in the meantime
+
+        let waitForPredicate = { url in
+            url == "\(testServerURL)/load_latency/0/another.html"
+        }
+
+        let waitForURL = Task {
+            try await page.waitForURL(waitForPredicate, waitUntil: .domcontentloaded)
+        }
+
+        // Navigate to a non-existing page
+        do {
+            _ = try await page.goto(
+                "http://localhost:3001/non-existing-page",
+                waitUntil: .domcontentloaded
+            )
+
+            XCTFail("Should have received an error")
+        } catch {
+            // Good. The navigation errored out.
+        }
+
+        // Now navigate to the proper url.
+        _ = try await page.goto("\(testServerURL)/load_latency/0/another.html")
+
+        // Wait for the waitForURL to finish
+        do {
+            try await waitForURL.value
+        } catch {
+            XCTFail("Unexpected error \(error)")
+        }
+    }
 }

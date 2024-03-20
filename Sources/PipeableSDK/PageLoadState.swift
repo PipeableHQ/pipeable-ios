@@ -39,7 +39,11 @@ class PageLoadState {
         signalLoadStateChange()
     }
 
-    func waitForLoadStateChange(predicate: @escaping (_ state: LoadState, _ url: String?) -> Bool, timeout: Int) async throws {
+    func waitForLoadStateChange(
+        predicate: @escaping (_ state: LoadState, _ url: String?) -> Bool,
+        timeout: Int,
+        ignoreNavigationErrors: Bool = false
+    ) async throws {
         // Test if we're not already in the sought state.
         if predicate(state, currentURL) {
             return
@@ -56,6 +60,10 @@ class PageLoadState {
 
             let removeListener = self.subscribeToLoadStateChange { state, url, error in
                 if let error = error {
+                    if ignoreNavigationErrors {
+                        return false
+                    }
+
                     // Clean up timer.
                     timeoutTask?.cancel()
 
@@ -121,7 +129,8 @@ class PageLoadState {
     private func signalLoadStateChange() {
         synchronizationQueue.sync {
             // Signal all the subscribers that the load state has changed.
-            for (index, callback) in callbacks.enumerated() where callback.callback(state, currentURL, loadError) {
+            let cbs = callbacks.enumerated().reversed()
+            for (index, callback) in cbs where callback.callback(state, currentURL, loadError) {
                 callbacks.remove(at: index)
             }
         }
