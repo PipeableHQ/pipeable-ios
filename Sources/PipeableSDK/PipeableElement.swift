@@ -63,7 +63,7 @@ public class PipeableElement {
 
     // TODO: this should be frame, not page here I thinks -- we need to separate those. Maybe Page extends frame -- yes!
     public func contentFrame() async throws -> PipeablePage? {
-        let requestId = randomString(length: 10)
+        let requestId = UUID().uuidString
         let result = try await page.webView.callAsyncJavaScript(
             """
                 return window.PipeableJS.sendFrameIDMessage(elementHash, requestId);

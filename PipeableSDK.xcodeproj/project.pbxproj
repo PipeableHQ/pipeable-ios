@@ -24,6 +24,7 @@
 		A4A7A9262B56BD7500982E63 /* Pipeable.docc in Sources */ = {isa = PBXBuildFile; fileRef = A4A7A9252B56BD7500982E63 /* Pipeable.docc */; };
 		A4A7A9312B56BD7500982E63 /* PipeableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4A7A9302B56BD7500982E63 /* PipeableTests.swift */; };
 		A4A7A9322B56BD7500982E63 /* Pipeable.h in Headers */ = {isa = PBXBuildFile; fileRef = A4A7A9242B56BD7500982E63 /* Pipeable.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A4A9E0CB2BAB1CDC007FA2ED /* PipeablePage+Selectors.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4A9E0CA2BAB1CDC007FA2ED /* PipeablePage+Selectors.swift */; };
 		A4CA67792BA87F61004ABE90 /* PipeableWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4CA67782BA87F61004ABE90 /* PipeableWebView.swift */; };
 		A4DF83B52B8CD0B3000EFCEA /* PipeablePageDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4DF83B42B8CD0B3000EFCEA /* PipeablePageDelegate.swift */; };
 		A4FF74BE2BA352E90046936C /* pipeable.js in Resources */ = {isa = PBXBuildFile; fileRef = A4FF74BD2BA352E90046936C /* pipeable.js */; };
@@ -69,6 +70,7 @@
 		A4A7A9252B56BD7500982E63 /* Pipeable.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Pipeable.docc; sourceTree = "<group>"; };
 		A4A7A92B2B56BD7500982E63 /* PipeableSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PipeableSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4A7A9302B56BD7500982E63 /* PipeableTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PipeableTests.swift; sourceTree = "<group>"; };
+		A4A9E0CA2BAB1CDC007FA2ED /* PipeablePage+Selectors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PipeablePage+Selectors.swift"; sourceTree = "<group>"; };
 		A4CA67782BA87F61004ABE90 /* PipeableWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PipeableWebView.swift; sourceTree = "<group>"; };
 		A4DF83B42B8CD0B3000EFCEA /* PipeablePageDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PipeablePageDelegate.swift; sourceTree = "<group>"; };
 		A4FF74BD2BA352E90046936C /* pipeable.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = pipeable.js; sourceTree = "<group>"; };
@@ -172,6 +174,7 @@
 				A43DC5892B7277C100D0670B /* PipeableElement.swift */,
 				A4A7A9252B56BD7500982E63 /* Pipeable.docc */,
 				A434C6152B5964B300B8011C /* PipeablePage.swift */,
+				A4A9E0CA2BAB1CDC007FA2ED /* PipeablePage+Selectors.swift */,
 				A478D6C32B98B594000B11CC /* PipeablePage+Evaluate.swift */,
 				A4DF83B42B8CD0B3000EFCEA /* PipeablePageDelegate.swift */,
 				E8AC39A12B615BC900D413BF /* Script */,
@@ -362,6 +365,7 @@
 				E81BD5AE2B6D430A007DFC02 /* PageWrapper.swift in Sources */,
 				E81BD5B02B6D45B6007DFC02 /* ElementWrapper.swift in Sources */,
 				A434C6162B5964B300B8011C /* PipeablePage.swift in Sources */,
+				A4A9E0CB2BAB1CDC007FA2ED /* PipeablePage+Selectors.swift in Sources */,
 				E8C2784F2B8E0D9100B8B176 /* Serializer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
