@@ -2,6 +2,10 @@
 
 _Currently in alpha state_
 
+Check out our blog post announcing the release of Pipeable for iOS: [Introducing Pipeable](https://www.pipeable.com/blog/introducing-pipeable).
+
+To quickly try out a sample app, check out our [Samples repository](https://github.com/PipeableHQ/pipeable-ios-samples).
+
 ## Introduction
 
 Pipeable is a WebView automation framework similar to Puppeteer / Playwright which allows the developer to script a sequence of action to be performed inside a WebView.
@@ -70,7 +74,8 @@ The starting point of every automation is the `PipeablePage` object. It binds to
 ```swift
 import PipeableSDK
 
-let page = PipeablePage(webView)
+let webView = PipeableWebView()
+let page = webView.page
 ```
 
 ### Navigation
@@ -93,9 +98,12 @@ if let element = element {
   // Do something with the element.
 }
 
-let xpathSelector = try await page.xpathSelector("//div[contains(string(), 'Text on page')]");
+let xpathSelector = try await page.xpathSelector(
+    "//div[contains(string(), 'Text on page')]"
+);
 
-// There are also waitFor* versions of the selectors, which wait until elements are attached or become visible
+// There are also waitFor* versions of the selectors,
+// which wait until elements are attached or become visible.
 
 let visibleElement = try await page.waitForSelector(".appears_with_delay", visible: true)
 
@@ -112,7 +120,7 @@ One can click, hover, select, focus and type on elements.
 
 ```swift
 try await element.click();
-try await element.type("Text", /* delay in ms between characters*/ 10)
+try await element.type("Text", delay: 10)
 ```
 
 ### Waiting for events
@@ -123,7 +131,12 @@ Here are some tools to do that:
 
 ```swift
 
-try await page.waitForURL({ url in url == "http://site.com/goal_page"}, timeout: 30_000)
+try await page.waitForURL(
+    { url in url == "http://site.com/goal_page" },
+    timeout: 30_000
+)
 
-let repsonse = try await page.waitForResponse({ res in res.url == "http://site.com/api/async_api" })
+let repsonse = try await page.waitForResponse(
+    { res in res.url == "http://site.com/api/async_api" }
+)
 ```
