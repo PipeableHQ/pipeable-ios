@@ -1,9 +1,6 @@
 import Foundation
 import WebKit
 
-// swiftlint:disable type_body_length
-// swiftlint:disable file_length
-
 public class PipeablePage {
     var webView: WKWebView
     var frame: WKFrameInfo?
@@ -264,107 +261,6 @@ public class PipeablePage {
         )
     }
 
-    public func querySelector(_ selector: String) async throws -> PipeableElement? {
-        let result = try await webView.callAsyncJavaScript(
-            """
-                return window.PipeableJS.$(selector);
-            """,
-            arguments: ["selector": selector],
-            in: frame,
-            contentWorld: WKContentWorld.page
-        )
-
-        if let elementId = result as? String {
-            return PipeableElement(self, elementId)
-        }
-
-        return nil
-    }
-
-    public func querySelectorAll(_ selector: String) async throws -> [PipeableElement] {
-        let result = try await webView.callAsyncJavaScript(
-            """
-                return window.PipeableJS.$$(selector);
-            """,
-            arguments: ["selector": selector],
-            in: frame,
-            contentWorld: WKContentWorld.page
-        )
-
-        if let elementIds = result as? [String] {
-            return elementIds.map { (elementId: String) -> PipeableElement in
-                PipeableElement(self, elementId)
-            }
-        }
-
-        return []
-    }
-
-    public func xpathSelector(_ xpath: String) async throws -> [PipeableElement] {
-        let result = try await webView.callAsyncJavaScript(
-            """
-                return window.PipeableJS.$x(xpath);
-            """,
-            arguments: ["xpath": xpath],
-            in: frame,
-            contentWorld: WKContentWorld.page
-        )
-
-        if let elementIds = result as? [String] {
-            return elementIds.map { (elementId: String) -> PipeableElement in
-                PipeableElement(self, elementId)
-            }
-        }
-
-        return []
-    }
-
-    public func waitForXPath(_ xpath: String, timeout: Int = 30000, visible: Bool = false) async throws -> PipeableElement? {
-        let result = try await webView.callAsyncJavaScript(
-            """
-                return window.PipeableJS.waitForXPath(xpath, opts);
-            """,
-            arguments: [
-                "xpath": xpath,
-                "opts": [
-                    "timeout": String(timeout),
-                    "visible": visible,
-                ] as [String: Any],
-            ],
-            in: frame,
-            contentWorld: WKContentWorld.page
-        )
-
-        if let elementId = result as? String {
-            return PipeableElement(self, elementId)
-        }
-
-        return nil
-    }
-
-    public func waitForSelector(_ selector: String, timeout: Int = 30000, visible: Bool = false) async throws -> PipeableElement? {
-        let result = try await webView.callAsyncJavaScript(
-            """
-                return window.PipeableJS.waitForSelector(selector, opts);
-            """,
-            arguments: [
-                "selector": selector,
-                "opts": [
-                    "timeout": String(timeout),
-                    "visible": visible,
-                ] as [String: Any],
-            ],
-            in: frame,
-            contentWorld: WKContentWorld.page
-        )
-
-        if let elementId = result as? String {
-            return PipeableElement(self, elementId)
-        }
-
-        return nil
-    }
-
     public func waitForXHR(_ url: String, timeout: Int = 30000) async throws -> XHRResult? {
         let result = try await webView.callAsyncJavaScript(
             """
@@ -464,10 +360,4 @@ enum PipeableError: Error {
     case invalidParameter(String)
     case fatalError(String)
     case initializationError
-}
-
-func randomString(length: Int) -> String {
-    let characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-    // swiftlint:disable:next force_unwrapping
-    return String((0 ..< length).map { _ in characters.randomElement()! })
 }
