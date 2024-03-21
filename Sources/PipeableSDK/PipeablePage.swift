@@ -168,7 +168,6 @@ public class PipeablePage {
     ///   - contents: The script content to be added.
     ///   - injectionTime: Specifies when the script should be injected into the web page. Defaults to `.atDocumentEnd`.
     ///   - forMainFrameOnly: Boolean indicating whether the script should be injected into all frames or just the main frame. Defaults to `false`.
-
     public func addUserScript(_ contents: String, injectionTime: WKUserScriptInjectionTime = .atDocumentEnd, forMainFrameOnly: Bool = false) {
         let userScript = WKUserScript(
             source: contents,
