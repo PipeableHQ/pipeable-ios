@@ -243,7 +243,13 @@ public class PipeablePage {
         )
     }
 
-    // TODO: Implement shorthards for predicates -- string matching, regex matching
+    /// Waits for the WebView to navigate to a URL that matches the given predicate.
+    /// - Parameters:
+    /// - predicate: A closure that takes a URL and returns a boolean.
+    /// - waitUntil: When to consider navigation as finished, defaults to `.load`.
+    /// - timeout: Maximum time to wait for the navigation to finish, defaults to 30000ms.
+    /// - ignoreNavigationErrors: If true, ignores navigation errors and waits for the URL to match the predicate.
+    /// - Throws: PipeableError.navigationError if the navigation fails and ignoreNavigationErrors is false.
     public func waitForURL(
         _ predicate: @escaping (String) -> Bool,
         waitUntil: WaitUntilOption = .load,
