@@ -247,7 +247,8 @@ public class PipeablePage {
     public func waitForURL(
         _ predicate: @escaping (String) -> Bool,
         waitUntil: WaitUntilOption = .load,
-        timeout: Int = 30000
+        timeout: Int = 30000,
+        ignoreNavigationErrors: Bool = false
     ) async throws {
         try await pageLoadState.waitForLoadStateChange(
             predicate: { state, url in
@@ -258,7 +259,7 @@ public class PipeablePage {
                 }
             },
             timeout: timeout,
-            ignoreNavigationErrors: true
+            ignoreNavigationErrors: ignoreNavigationErrors
         )
     }
 

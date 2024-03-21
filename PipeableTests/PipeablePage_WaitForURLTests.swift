@@ -74,9 +74,7 @@ final class PipeablePageWaitForURLTests: PipeableXCTestCase {
         XCTFail("Should have timed out")
     }
 
-    func testWaitForURLShouldNotReportNavigationErrors() async throws {
-        // If a navigation fails due to an error, it should not propagate to the
-        // waitForURL() call.
+    func testWaitForURLProperlyHandlesNavigationErrors() async throws {
         let page = PipeablePage(webView)
 
         _ = try await page.goto(
@@ -84,15 +82,28 @@ final class PipeablePageWaitForURLTests: PipeableXCTestCase {
             waitUntil: .domcontentloaded
         )
 
-        // Start asynchronously waiting for URL. We will navigate to a
-        // non-existing page in the meantime
+        // Start asynchronously waiting for URL.
+        // We will navigate to a non-existing page in the meantime
+        // We will start two waitForURLs -- one that ignores navigation errors
+        // and one that doesnt and confirm they exhibit the correct behavior.
 
         let waitForPredicate = { url in
             url == "\(testServerURL)/load_latency/0/another.html"
         }
 
-        let waitForURL = Task {
-            try await page.waitForURL(waitForPredicate, waitUntil: .domcontentloaded)
+        let waitForURLIgnoreError = Task {
+            try await page.waitForURL(
+                waitForPredicate,
+                waitUntil: .domcontentloaded,
+                ignoreNavigationErrors: true
+            )
+        }
+
+        let waitForURLNoIgnore = Task {
+            try await page.waitForURL(
+                waitForPredicate,
+                waitUntil: .domcontentloaded
+            )
         }
 
         // Navigate to a non-existing page
@@ -110,11 +121,26 @@ final class PipeablePageWaitForURLTests: PipeableXCTestCase {
         // Now navigate to the proper url.
         _ = try await page.goto("\(testServerURL)/load_latency/0/another.html")
 
-        // Wait for the waitForURL to finish
+        // Wait for the waitForURL to finish.
         do {
-            try await waitForURL.value
+            try await waitForURLIgnoreError.value
         } catch {
             XCTFail("Unexpected error \(error)")
+        }
+
+        do {
+            try await waitForURLNoIgnore.value
+            XCTFail("Should have errored with a navigation error")
+        } catch {
+            if let error = error as? PipeableError {
+                if case .navigationError(let reason) = error {
+                    XCTAssertEqual(reason, "Could not connect to the server.")
+                } else {
+                    XCTFail("Unexpected error \(error)")
+                }
+            } else {
+                XCTFail("Unexpected error \(error)")
+            }
         }
     }
 }
