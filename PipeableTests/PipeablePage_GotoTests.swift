@@ -146,7 +146,12 @@ final class PipeablePageGotoTests: PipeableXCTestCase {
             )
         } catch {
             if let error = error as? PipeableError {
-                if case PipeableError.navigationError = error {
+                if case PipeableError.navigationError(let reason) = error {
+                    XCTAssert(
+                        reason.contains("Could not connect to the server"),
+                        "Failed with unexpected error \(reason))"
+                    )
+
                     return
                 } else {
                     XCTFail("Unexpected error \(error)")
