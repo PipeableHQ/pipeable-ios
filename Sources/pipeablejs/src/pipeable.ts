@@ -166,7 +166,7 @@
             return this.wrapHandle(elements.snapshotItem(0) as HTMLElement);
         }
 
-        async waitForXHR(url: string, opts?: { timeout?: number }): Promise<string> {
+        async waitForResponse(url: string, opts?: { timeout?: number }): Promise<string> {
             this.xhrHandles[url] = this.xhrHandles[url] || [];
             const timeout = opts?.timeout || 30_000;
 
@@ -174,7 +174,7 @@
 
             return new Promise<string>((resolve, reject) => {
                 const timeoutId = setTimeout(() => {
-                    reject(`Timeout waiting for XHR ${url}`);
+                    reject(`Timeout waiting for response ${url}`);
                 }, timeout);
 
                 const handle = {
@@ -267,10 +267,9 @@
                 // NOTE: technically should only fire this for a subset
                 // of elements (e.g. form elements, links, etc.) or if the tabindex is set,
                 // per https://api.jquery.com/focus/. We do this in case the previous
-                // element we were interacting with has "blur" handlers and we 
+                // element we were interacting with has "blur" handlers and we
                 // want to make sure to trigger them.
                 this._focus(innermostElement);
-                
 
                 innermostElement.dispatchEvent(clickEvent);
 
@@ -292,7 +291,7 @@
                         cancelable: false,
                     });
                     el.dispatchEvent(event);
-    
+
                     // emit focusin event.
                     const event2 = new FocusEvent('focusin', {
                         view: window,

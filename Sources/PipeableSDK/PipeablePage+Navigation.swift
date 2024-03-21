@@ -114,8 +114,7 @@ public extension PipeablePage {
 
     /// Waits for an asynchornous request made via XMLHttpRequest (XHR) or fetch to complete that matches the specified URL.
     /// - Parameters:
-    ///   - url: Partial URL of the XHR request to wait for. This function will monitor all XHR requests
-    ///     and only proceed once a request to this URL completes.
+    ///   - url: Partial URL of the request to wait for.
     ///   - timeout: The maximum time, in milliseconds, to wait for the XHR request to complete. Defaults to 30000ms (30 seconds).
     ///
     /// - Returns: An optional `XHRResult` object containing details about the completed XHR request, including
@@ -125,10 +124,10 @@ public extension PipeablePage {
     /// - Throws: `PipeableError.invalidResponse` if the function fails to decode the XHR response or if the JavaScript
     ///   execution returns an unexpected result. This error indicates an issue with the response format or a failure
     ///   in the underlying JavaScript execution mechanism.
-    func waitForXHR(_ url: String, timeout: Int = 30000) async throws -> XHRResult? {
+    func waitForResponse(_ url: String, timeout: Int = 30000) async throws -> XHRResult? {
         let result = try await webView.callAsyncJavaScript(
             """
-                return window.PipeableJS.waitForXHR(url, timeout);
+                return window.PipeableJS.waitForResponse(url, timeout);
             """,
             arguments: ["url": url, "timeout": timeout],
             in: frame,
