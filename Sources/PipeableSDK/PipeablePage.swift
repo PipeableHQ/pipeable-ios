@@ -163,6 +163,12 @@ public class PipeablePage {
         }
     }
 
+    /// Adds a script to be included in any page and frame loaded in  the webview.
+    /// - Parameters:
+    ///   - contents: The script content to be added.
+    ///   - injectionTime: Specifies when the script should be injected into the web page. Defaults to `.atDocumentEnd`.
+    ///   - forMainFrameOnly: Boolean indicating whether the script should be injected into all frames or just the main frame. Defaults to `false`.
+
     public func addUserScript(_ contents: String, injectionTime: WKUserScriptInjectionTime = .atDocumentEnd, forMainFrameOnly: Bool = false) {
         let userScript = WKUserScript(
             source: contents,
@@ -173,6 +179,10 @@ public class PipeablePage {
         webView.configuration.userContentController.addUserScript(userScript)
     }
 
+    /// Submits the currently active form on the page.
+    /// Useful when there is no submit button and a form is only submitted from the mobile keyboard.
+    /// - Returns: A boolean indicating whether the form submission was successful.
+    /// - Throws: An error if JavaScript evaluation fails.
     public func submitActiveForm() async throws -> Bool {
         let result = try await webView.callAsyncJavaScript(
             """
@@ -214,6 +224,8 @@ public class PipeablePage {
         }
     }
 
+    /// Retrieves the current URL of the web view.
+    /// - Returns: The current URL, or `nil` if no URL is loaded.
     @MainActor
     public func url() -> URL? {
         return webView.url
