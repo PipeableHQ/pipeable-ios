@@ -97,6 +97,12 @@ public class PipeablePage {
         }
     }
 
+    /// Constructs a `PipeablePage` from an existing `WKWebView`.
+    ///
+    /// - Parameters:
+    ///  - webView: The `WKWebView` to wrap.
+    ///  - debugPrintConsoleLogs: A boolean indicating whether console logs should be printed to the console.
+    ///  Defaults to `false`.
     public convenience init(_ webView: WKWebView, debugPrintConsoleLogs: Bool? = nil) {
         self.init(webView, nil, debugPrintConsoleLogs: debugPrintConsoleLogs)
     }
@@ -248,7 +254,7 @@ public class PipeablePage {
 
 public enum PipeableError: Error {
     /// Navigation failed with the given error
-    case navigationError(   String)
+    case navigationError(String)
 
     /// Queried element not found
     case elementNotFound
