@@ -248,18 +248,18 @@ public class PipeablePage {
 
 public enum PipeableError: Error {
     /// Navigation failed with the given error
-    case navigationError(String)
-    
+    case navigationError(   String)
+
     /// Queried element not found
     case elementNotFound
-    
+
     /// Response could not be parsed
     case invalidResponse
-    
+
     /// Incorrectly supplied parameter to call
     case invalidParameter(String)
-    
+
     /// Received a fatal error and Pipeable cannot continue execution.
     /// For example, we couldn't create a JSHandle for a response.
-    case fatalError(String)    
+    case fatalError(String)
 }
