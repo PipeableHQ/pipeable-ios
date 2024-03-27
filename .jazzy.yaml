@@ -1,0 +1,5 @@
+output: ./docs/api
+min_acl: public
+github_url: https://github.com/PipeableHQ/pipeable-ios
+github_file_prefix: https://github.com/PipeableHQ/pipeable-ios/blob/main
+hide_documentation_coverage: True

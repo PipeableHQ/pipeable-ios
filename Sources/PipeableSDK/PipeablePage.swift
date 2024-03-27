@@ -1,6 +1,21 @@
 import Foundation
 import WebKit
 
+/// PipeablePage provides methods to interact with a web page loaded in the
+/// webview.
+/// It can be constructed by wrapping an existing WKWebView using a constructor
+/// or by using a `PipeableWebView` and acquiring it from there.
+/// Note that in the case of using a constructor, you need to make sure that
+/// the lifecycle of the `PipeablePage` is managed correctly.
+///
+/// Example:
+/// ```swift
+/// let webView = PipeableWebView()
+/// let page = webView.page
+///
+/// try? await page.goto("https://example.com", waitUntil: .load)
+/// let exampleEl = try? await page.querySelector("input[name='example']")
+/// ```
 public class PipeablePage {
     var webView: WKWebView
     var frame: WKFrameInfo?
@@ -231,13 +246,20 @@ public class PipeablePage {
     }
 }
 
-
-// TODO: This is not complete or valid
-enum PipeableError: Error {
+public enum PipeableError: Error {
+    /// Navigation failed with the given error
     case navigationError(String)
+    
+    /// Queried element not found
     case elementNotFound
+    
+    /// Response could not be parsed
     case invalidResponse
+    
+    /// Incorrectly supplied parameter to call
     case invalidParameter(String)
-    case fatalError(String)
-    case initializationError
+    
+    /// Received a fatal error and Pipeable cannot continue execution.
+    /// For example, we couldn't create a JSHandle for a response.
+    case fatalError(String)    
 }
