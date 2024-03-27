@@ -3,7 +3,7 @@ import JavaScriptCore
 
 // Temporarily silencing swiftlint until we refactor this into building blocks
 // swiftlint:disable:next function_body_length
-public func prepareJSContext(_ dispatchGroup: DispatchGroup, _ page: PipeablePage? = nil) -> JSContext {
+func prepareJSContext(_ dispatchGroup: DispatchGroup, _ page: PipeablePage? = nil) -> JSContext {
     guard let context = JSContext() else {
         fatalError("Failed to initialize JSContext")
     }
@@ -11,7 +11,8 @@ public func prepareJSContext(_ dispatchGroup: DispatchGroup, _ page: PipeablePag
     let printFunc: @convention(block) (String) -> Void = { text in print(text) }
     context.setObject(
         unsafeBitCast(printFunc, to: AnyObject.self),
-        forKeyedSubscript: "print" as NSCopying & NSObjectProtocol)
+        forKeyedSubscript: "print" as NSCopying & NSObjectProtocol
+    )
 
     // Set exception handler
     context.exceptionHandler = { _, exception in
@@ -43,13 +44,15 @@ public func prepareJSContext(_ dispatchGroup: DispatchGroup, _ page: PipeablePag
     context.setObject(PageWrapper.self, forKeyedSubscript: "PageWrapper" as (NSCopying & NSObjectProtocol))
     context.setObject(
         ElementWrapper.self,
-        forKeyedSubscript: "ElementWrapper" as (NSCopying & NSObjectProtocol))
+        forKeyedSubscript: "ElementWrapper" as (NSCopying & NSObjectProtocol)
+    )
 
     context.setObject(fakePage, forKeyedSubscript: "fakePage" as (NSCopying & NSObjectProtocol))
     context.setObject(FakePageWrapper.self, forKeyedSubscript: "FakePageWrapper" as (NSCopying & NSObjectProtocol))
     context.setObject(
         FakeElementWrapper.self,
-        forKeyedSubscript: "FakeElementWrapper" as (NSCopying & NSObjectProtocol))
+        forKeyedSubscript: "FakeElementWrapper" as (NSCopying & NSObjectProtocol)
+    )
 
     context.evaluateScript("""
     function completionToAsync(functionName) {
@@ -172,6 +175,14 @@ private func buildMainScript(_ script: String) -> String {
     """
 }
 
+/// Executes a JavaScript Pipeable script.
+///
+/// - Parameters:
+///  - script: The JavaScript script to execute.
+///  - page: The PipeablePage to execute the script in. If nil, the script will be executed in a new context.
+/// - Returns: The result of the script execution.
+/// - Throws: A ScriptError if the script execution fails.
+///
 public func runScript(_ script: String, _ page: PipeablePage? = nil) async throws -> JSValue {
     return try await withCheckedThrowingContinuation { continuation in
         // Use a DispatchGroup so that we wait for the script and all async functions to finish before returning
@@ -190,7 +201,8 @@ public func runScript(_ script: String, _ page: PipeablePage? = nil) async throw
 
                     continuation.resume(throwing: ScriptError.error(
                         reason: error.toString(),
-                        info: ScriptErrorInfo(stack: stack, line: line, column: column, rawObject: rawObject)))
+                        info: ScriptErrorInfo(stack: stack, line: line, column: column, rawObject: rawObject)
+                    ))
                     return
                 }
             }
